@@ -12,7 +12,7 @@ namespace Framework
         }
         public class LuaManager : BaseManager<LuaManager>, IManager
         {
-            public const string AppLuaPath = "Assets/AppLua/";
+            public const string AppLuaPath = "Assets/AppAssets/Lua/";
 
             private XLua.LuaEnv m_LuaEnv;
 
