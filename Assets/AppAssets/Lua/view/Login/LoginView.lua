@@ -1,11 +1,9 @@
 
 LoginView = {
-	m_Text = "",
-	m_Image = "",
-
+	p_Name = "LoginView",
+	m_Text,
+	m_Image,
 }
-
-ViewDefine["Login"].View = LoginView
 setmetatable( LoginView, { __index = BaseView})
 
 function LoginView:init()
