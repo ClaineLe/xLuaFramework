@@ -17,9 +17,12 @@ namespace Framework
             {
             }
 
-            private T LoadAsset<T>(string assetPath) where T:Object
+            private T LoadAsset<T>(string assetPath) where T : Object
             {
-                T asset = Resources.Load<T>(assetPath);
+#if UNITY_EDITOR
+                T asset = UnityEditor.AssetDatabase.LoadAssetAtPath <T> (assetPath);
+#else
+#endif
                 return asset;
             }
 
