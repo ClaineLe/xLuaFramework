@@ -16,7 +16,7 @@ function ProtBufUtility:init( )
 	print("ProtBufUtility")
 	self.m_pb = require 'pb'
 	self.m_protoc = require 'protoc'
-	local protbufStr = G_Manager.AssetMgr.LoadTextAsset(ProtBufFilePath).text
+	local protbufStr = Framework.m_AssetMgr.LoadTextAsset(ProtBufFilePath).text
 	assert(self.m_protoc:load(protbufStr))
 end
 

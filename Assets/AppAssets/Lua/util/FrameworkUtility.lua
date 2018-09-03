@@ -1,5 +1,8 @@
-AppUtility = {}
-function AppUtility:PrintTable(r)
+FrameworkUtility = {
+	
+}
+
+function FrameworkUtility:PrintTable(r)
 	print('================ PrintTable - Start ================')
   	local print_r_cache={}
     local function sub_print_r(t,indent)
