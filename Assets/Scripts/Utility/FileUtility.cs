@@ -11,9 +11,9 @@ namespace Framework
             /// <summary>
             /// 复制文件到目标路径
             /// </summary>
-            /// <param name="scrPath">源目录路径</param>
-            /// <param name="dstPath">目标目录路径</param>
-            static public void DirectoryCopyTo(string scrPath, string dstPath){
+            /// <param name="scrPath">源文件路径</param>
+            /// <param name="dstPath">目标文件路径</param>
+            static public void FileCopyTo(string scrPath, string dstPath){
             }
         }
     }
