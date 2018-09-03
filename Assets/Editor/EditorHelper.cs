@@ -6,14 +6,16 @@ using Framework.Code.Widget;
 
 namespace Framework.Editor
 {
+    using AssetBundle;
     namespace Common
     {
         public class EditorHelper
         {
-            [MenuItem("GameObject/GenerateViewBindabler", false, -1)]
-            public static void GenerateViewBindabler()
+            [MenuItem("FrameworkTools/AssetBundleWnd", false, -1)]
+            public static void ShowAssetBundleWnd()
             {
-              
+                AssetBundleWnd wnd = EditorWindow.GetWindowWithRect<AssetBundleWnd>(new Rect(600, 800, 600, 435), true);
+                wnd.Show();
             }
         }
     }
