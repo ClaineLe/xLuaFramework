@@ -76,7 +76,7 @@ namespace Framework
 
             public bool StartUpLuaFramework()
             {
-                this.DoLuaFile("game.Framework");
+                this.DoLuaFile("code.Framework");
                 XLua.LuaTable frameworkTable = m_LuaEnv.Global.Get<XLua.LuaTable>("Framework");
                 m_FrameworkStart = frameworkTable.Get<XLua.LuaFunction>("Start");
                 m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
