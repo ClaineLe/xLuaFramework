@@ -10,15 +10,13 @@ namespace Framework
         {
             public const string Lua = "LuaManager";
         }
-        public class LuaManager : BaseManager<LuaManager>, IManager
+        public partial class LuaManager : BaseManager<LuaManager>, IManager
         {
-            public const string AppLuaPath = "Assets/AppAssets/Lua/";
-
             private XLua.LuaEnv m_LuaEnv;
 
-            private UnityAction m_LuaStart;
-            private UnityAction m_LuaUpdate;
-            private UnityAction m_LuaRelease;
+            private XLua.LuaFunction m_FrameworkStart;
+            private XLua.LuaFunction m_FrameworkTick;
+            private XLua.LuaFunction m_FrameworkRelease;
 
             private float lastGCTime = 0;
             private const float GCInterval = 1;//1 second 
@@ -32,41 +30,10 @@ namespace Framework
                 this.m_LuaEnv.AddLoader(CustomLoader);
             }
 
-            public byte[] CustomLoader(ref string filepath)
-            {
-#if UNITY_EDITOR
-                return File.ReadAllBytes(AppLuaPath + filepath.Replace('.','\\') + ".lua");
-#else
-                string str = string.Empty;
-#endif
-            }
-            public void DoLuaFile(string luaPath)
-            {
-                this.m_LuaEnv.DoString(string.Format("require '{0}'", luaPath));
-            }
-
-            public void HotFix(string hotfixStr)
-            {
-                this.m_LuaEnv.DoString(hotfixStr);
-            }
-
-            public bool StartUpLuaFramework()
-            {
-                this.DoLuaFile("game.StartUp");
-                m_LuaStart = m_LuaEnv.Global.Get<UnityAction>("LuaStart");
-                m_LuaUpdate = m_LuaEnv.Global.Get<UnityAction>("LuaUpdate");
-                m_LuaRelease = m_LuaEnv.Global.Get<UnityAction>("LuaRelease");
-
-                if (m_LuaStart != null)
-                    m_LuaStart();
-
-                return true;
-            }
-
             public void Tick()
             {
-                if (m_LuaUpdate != null)
-                    m_LuaUpdate();
+                if (m_FrameworkTick != null)
+                    m_FrameworkTick.Call();
 
                 if (Time.time - lastGCTime > GCInterval)
                 {
@@ -77,16 +44,47 @@ namespace Framework
 
             public void Release()
             {
-                if (m_LuaRelease != null)
-                    m_LuaRelease();
+                if (m_FrameworkRelease != null)
+                    m_FrameworkRelease.Call();
 
-                this.m_LuaStart = null;
-                this.m_LuaUpdate = null;
-                this.m_LuaRelease = null;
+                this.m_FrameworkStart = null;
+                this.m_FrameworkTick = null;
+                this.m_FrameworkRelease = null;
 
                 this.m_LuaEnv = null;
             }
-        }
 
+            public void DoLuaFile(string luaPath)
+            {
+                this.m_LuaEnv.DoString(string.Format("require '{0}'", luaPath));
+            }
+
+            public void HotFix(string hotfixStr)
+            {
+                this.m_LuaEnv.DoString(hotfixStr);
+            }
+
+            public byte[] CustomLoader(ref string filepath)
+            {
+#if UNITY_EDITOR
+                string fullPath = LuaRootPath + filepath;
+                return File.ReadAllBytes(fullPath.Replace('.', Path.DirectorySeparatorChar) + ".lua");
+#else
+                string str = string.Empty;
+#endif
+            }
+
+            public bool StartUpLuaFramework()
+            {
+                this.DoLuaFile("game.Framework");
+                XLua.LuaTable frameworkTable = m_LuaEnv.Global.Get<XLua.LuaTable>("Framework");
+                m_FrameworkStart = frameworkTable.Get<XLua.LuaFunction>("Start");
+                m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
+                m_FrameworkRelease = frameworkTable.Get<XLua.LuaFunction>("Release");
+                if (m_FrameworkStart != null)
+                    m_FrameworkStart.Call(frameworkTable);
+                return true;
+            }
+        }
     }
 }
