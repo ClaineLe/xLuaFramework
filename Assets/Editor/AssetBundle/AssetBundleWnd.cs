@@ -159,7 +159,20 @@ namespace Framework.Editor
                     EditorUtility.ClearProgressBar();
                 }
                 GUILayout.Space(10);
-                if (GUILayout.Button("快速", GUILayout.Width(100), GUILayout.Height(30)))
+                if (GUILayout.Button("完整构建", GUILayout.Width(100), GUILayout.Height(30)))
+                {
+                    AssetBundleMark.MarkAssets();
+                    AssetBundleMark.MarkLua();
+                    EditorUtility.ClearProgressBar();
+                }
+                GUILayout.Space(10);
+                if (GUILayout.Button("构建Lua", GUILayout.Width(100), GUILayout.Height(30)))
+                {
+                    AssetBundleMark.MarkLua();
+                    EditorUtility.ClearProgressBar();
+                }
+                GUILayout.Space(10);
+                if (GUILayout.Button("构建资源", GUILayout.Width(100), GUILayout.Height(30)))
                 {
                     AssetBundleMark.MarkAssets();
                     EditorUtility.ClearProgressBar();
