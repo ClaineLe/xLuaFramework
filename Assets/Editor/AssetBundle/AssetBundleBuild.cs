@@ -2,6 +2,7 @@
 using Framework.Util;
 using UnityEditor;
 using UnityEngine;
+using System.IO;
 
 namespace Framework.Editor
 {
@@ -9,25 +10,27 @@ namespace Framework.Editor
     {
         public class AssetBundleBuild
         {
-            static public void BuildAssetBundle(){
-                
-            }
+			public static void BuildAssetBundles(BuildTarget target, UnityEditor.AssetBundleBuild[] builds = null)
+			{
+				if (target != EditorUserBuildSettings.activeBuildTarget) {
+					Debug.LogError("[BuildAssetBundles]Fail. ActiveBuildTarget:" + EditorUserBuildSettings.activeBuildTarget + ", destBuildTarget:" + target);
+					return;
+				}
 
-            static public void BuildPlayer(){
-                
-            }
+				string outputPath = Path.Combine(BundleUtility.StreamAssetPath, BundleUtility.GetPlatformName());
+				if (!Directory.Exists(outputPath))
+					Directory.CreateDirectory(outputPath);
 
-            static public void BuildLua(){
-                List<string> abNameList = new List<string>(AssetDatabase.GetAllAssetBundleNames());
-                abNameList.RemoveAll(a => !a.StartsWith("lua"));
-                for (int i = 0; i < abNameList.Count;i++){
-                    Debug.Log(abNameList[i]);
-                }
-                BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
-                string outPutPath = Application.dataPath + "/../OutPut";
-                DirectoryUtility.Clear(outPutPath);
-                BuildPipeline.BuildAssetBundles(outPutPath, options, BuildTarget.StandaloneOSX);
-            }
+				BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
+				if (builds == null || builds.Length == 0)
+				{
+					BuildPipeline.BuildAssetBundles(outputPath, options, EditorUserBuildSettings.activeBuildTarget);
+				}
+				else
+				{
+					BuildPipeline.BuildAssetBundles(outputPath, builds, options, EditorUserBuildSettings.activeBuildTarget);
+				}
+			}
         }
     }
 }

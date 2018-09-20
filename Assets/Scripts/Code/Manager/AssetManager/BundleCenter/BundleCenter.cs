@@ -216,7 +216,7 @@ namespace Framework
 					operation = new AssetLoadOperationSimulation (assetBundleName, assetName, type);
 				} else
 #endif
-		{
+				{
 					LoadAssetBundle (assetBundleName);
 					operation = new AssetLoadOperation (assetBundleName, assetName, type);
 				}

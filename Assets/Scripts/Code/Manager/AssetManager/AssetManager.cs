@@ -38,49 +38,10 @@ namespace Framework
 				return m_BundleManager.GetLoadedAssetBundle (assetBundleName, out error);
 			}
 
-			public GameObject LoadGameObject (string assetPath)
-			{
-				return LoadAsset<GameObject> (assetPath);
-			}
-
-			public Sprite LoadSprite (string assetPath)
-			{
-				return LoadAsset<Sprite> (assetPath);
-			}
-
-			public Texture LoadTexture (string assetPath)
-			{
-				return LoadAsset<Texture> (assetPath);
-			}
-
-			public TextAsset LoadTextAsset (string assetPath)
-			{
-				return LoadAsset<TextAsset> (assetPath);
-			}
-
-			public AudioClip LoadAudioClip (string assetPath)
-			{
-				return LoadAsset<AudioClip> (assetPath);
-			}
-
-			public Shader LoadShader (string assetPath)
-			{
-				return LoadAsset<Shader> (assetPath);
-			}
-
-			public AnimationClip LoadAnimationClip (string assetPath)
-			{
-				return LoadAsset<AnimationClip> (assetPath);
-			}
-
-			public RuntimeAnimatorController LoadAnimController (string assetPath)
-			{
-				return LoadAsset<RuntimeAnimatorController> (assetPath);
-			}
 
 			public void Release ()
 			{
-
+				this.m_BundleManager = null;
 			}
 
 			public void Tick ()
@@ -92,7 +53,6 @@ namespace Framework
 			{
 				Debug.Log ("AssetManager");
 			}
-
 
 			public void LoadAssetSync<T> (string assetPath, UnityAction<T> callback) where T : UnityEngine.Object
 			{

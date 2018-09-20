@@ -67,10 +67,10 @@ namespace Framework
             public byte[] CustomLoader(ref string filepath)
             {
 #if UNITY_EDITOR
-                string fullPath = LuaRootPath + filepath;
-                return File.ReadAllBytes(fullPath.Replace('.', Path.DirectorySeparatorChar) + ".lua");
+                string fullPath = Application.dataPath + "/" + filepath;
+                return File.ReadAllBytes(fullPath.Replace('.', Path.DirectorySeparatorChar) + ".txt");
 #else
-                string str = string.Empty;
+                return null;
 #endif
             }
 

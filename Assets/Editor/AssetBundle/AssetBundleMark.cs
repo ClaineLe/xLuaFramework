@@ -3,6 +3,7 @@ using Framework.Code.Manager;
 using Framework.Util;
 using UnityEditor;
 using UnityEngine;
+using Framework.Game;
 
 namespace Framework.Editor
 {
@@ -10,49 +11,29 @@ namespace Framework.Editor
     {
 		public class AssetBundleMark
         {
-            static public void MarkAssets(){
-                
-            }
+			public static void BuildAssetBundleName(){
 
-            static public void MarkLua(){
-                string luaRootPath = Path.Combine(Application.dataPath, LuaManager.LuaRootPath);
-                DirectoryInfo directoryInfo = new DirectoryInfo(luaRootPath);
-                DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories("*.*",SearchOption.AllDirectories);
-                string subPath = "Assets/" + LuaManager.AppAssetsRootPath;
-                for (int i = 0; i < directoryInfos.Length;i++){
-                    string assetPath = "Assets/" + directoryInfos[i].FullName.Substring(Application.dataPath.Length+1);
-                    AssetImporter assetImport = AssetImporter.GetAtPath(assetPath);
-                    string abName = assetPath.Substring(subPath.Length).Replace("/", "_").Replace("\\", "_").ToLower();
-                    if(!string.Equals(abName, assetImport.assetBundleName)){
-                        assetImport.assetBundleName = abName;
-                        assetImport.SaveAndReimport();
-                    }
-                }
-            }
+				foreach (string assetbundleName in AssetDatabase.GetAllAssetBundleNames())
+					AssetDatabase.RemoveAssetBundleName (assetbundleName,true);
 
-            static public void Clean()
-            {
-                string[] abNames = AssetDatabase.GetAllAssetBundleNames();
-                for (int i = 0; i < abNames.Length;i++){
-                    AssetDatabase.RemoveAssetBundleName(abNames[i], true);
-                }
-            }
-
-            static private void Mark(string assetFullPath, bool singleton){
-                
-            }
-
-            static private void BaseMark(string assetDir, bool singletonAsset){
-                if(DirectoryUtility.Exists(assetDir))
-                {
-                    if(singletonAsset){
-                        
-                    }
-                    else{
-                        
-                    }
-                }
-            }
+				string path = Application.dataPath + "/" + PathConst.ExportResDirPath;
+				string[] resFile = Directory.GetFiles (path, "*.*", SearchOption.AllDirectories);
+				for (int i = 0; i < resFile.Length; i++) {
+					if (Path.GetExtension (resFile [i]) == ".meta")
+						continue;
+					if (Path.GetExtension (resFile [i]) == ".DS_Store")
+						continue;
+					string dirName = Path.GetDirectoryName (resFile [i]);
+					string fileName = Path.GetFileNameWithoutExtension (resFile [i]);
+					AssetImporter assetImporter = AssetImporter.GetAtPath ("Assets/" + PathConst.ExportResDirPath + resFile[i].Replace (path, string.Empty));
+					Debug.Log ("Assets/" + PathConst.ExportResDirPath + resFile[i].Replace (path, string.Empty));
+					string assetPath = Path.Combine (dirName, fileName).Replace (path, string.Empty);
+					assetPath = assetPath.Replace('/','_').Replace('\\','_');
+					if (assetImporter.assetBundleName != assetPath) {
+						assetImporter.assetBundleName = assetPath;
+					}
+				}
+			}
         }
     }
 }
