@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: 1f9aadd08941643b49f474d01bbd709d
-timeCreated: 1529431900
-licenseType: Free
 TextureImporter:
   fileIDToRecycleName: {}
   externalObjects: {}
@@ -104,5 +102,5 @@ TextureImporter:
     physicsShape: []
   spritePackingTag: 
   userData: 
-  assetBundleName: 
+  assetBundleName: variants_myassets-hd_icon_share_twitter
   assetBundleVariant: 
