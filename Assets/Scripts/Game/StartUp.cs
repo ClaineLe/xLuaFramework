@@ -20,7 +20,8 @@ namespace Framework
                 AppFacade.Instance.AddManager<NetWorkManager>(ManagerName.NetWork);
                 AppFacade.Instance.AddManager<PoolsManager>(ManagerName.Pools);
                 AppFacade.Instance.AddManager<SoundManager>(ManagerName.Sound);
-                AppFacade.Instance.AddManager<TimerManager>(ManagerName.Timer);
+				AppFacade.Instance.AddManager<TimerManager>(ManagerName.Timer);
+				AppFacade.Instance.AddManager<ModelManager>(ManagerName.Model);
                 AppFacade.Instance.AddManager<ViewManager>(ManagerName.View);
 
                 AppFacade.Instance.StartUp();

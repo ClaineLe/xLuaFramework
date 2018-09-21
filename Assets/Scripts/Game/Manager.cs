@@ -15,7 +15,7 @@ namespace Framework
             private static SoundManager m_SoundMgr;
             private static PoolsManager m_PoolsMgr;
             private static NetWorkManager m_NetWorkMgr;
-
+			private static ModelManager m_ModelMgr;
             public static LuaManager LuaMgr
             {
                 get
@@ -98,6 +98,14 @@ namespace Framework
                     return m_LevelMgr;
                 }
             }
+
+			public static ModelManager ModelMgr{
+				get{ 
+					if (m_ModelMgr == null)
+						m_ModelMgr = AppFacade.Instance.GetManager<ModelManager> (ManagerName.Model);
+					return m_ModelMgr;
+				}
+			}
         }
     }
 }
