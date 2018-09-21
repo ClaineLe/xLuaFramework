@@ -1,0 +1,32 @@
+local CSGameObject = CS.UnityEngine.GameObject
+local CSWidgetRoot = CS.Framework.Code.Widget.WidgetRoot
+ViewFactory={
+	
+}
+
+local VIEWASSET_ROOTPATH = "Prefabs/View/"
+local VIEWASSET_EXTENSION = ".prefab"
+local FORMAT_VIEW_NAME = "view.%s"
+local FORMAT_PRESENDER_NAME = "view.%sPresender"
+
+function ViewFactory:LoadViewRoot( viewName )
+	local viewFullPath = self:_getViewPath(viewName) 
+	local goAsset = Framework.m_AssetMgr:LoadAsset(viewFullPath,typeof(CSGameObject))
+	local go = CSGameObject.Instantiate(goAsset)
+	print(goAsset)
+	return go:GetComponent(typeof(CSWidgetRoot))
+end
+
+function ViewFactory:CreateView( viewName )
+
+	local widgetRoot = self:LoadViewRoot(viewName)
+	local view = require (string.format(FORMAT_VIEW_NAME, viewName))
+	local viewTbl = view:Create(widgetRoot)
+	local presender = require (string.format(FORMAT_PRESENDER_NAME, viewName)) 
+	return presender:Create(viewTbl)
+end
+
+
+function ViewFactory:_getViewPath( viewName )
+	return VIEWASSET_ROOTPATH .. viewName .. VIEWASSET_EXTENSION
+end

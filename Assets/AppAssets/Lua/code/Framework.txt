@@ -14,17 +14,11 @@ Framework = {
 
 function Framework:LoadLuaScript()
     require 'cfg.FrameworkConfig'
-
     require 'util.ProtBufUtility'
     require 'util.FrameworkUtility'
-
-    require 'view.BaseView'
-    require 'view.BasePresender'
-    require 'view.Login.LoginView'
-    require 'view.Login.LoginViewPresender'
-    require 'view.ViewFactory'
-    require 'view.ViewDefine'
-
+    require 'code.view.BaseView'
+    require 'code.view.BasePresender'
+    require 'code.view.ViewFactory'
 end
 
 function Framework:InitManagers()
@@ -54,6 +48,6 @@ end
 
 function Framework:StartUp()
 	print("Framework:StartUp")
-	local loginPresender = ViewFactory:CreateView(View.Login)
+	local loginPresender = ViewFactory:CreateView("LoginView")
 	loginPresender:SetLabel("Test_Claine")
 end

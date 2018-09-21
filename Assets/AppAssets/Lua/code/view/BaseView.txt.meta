@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 3a445d446e814469698f1e5129fae05b
+guid: a19a7238a3d95438a81fd06954af3b1e
 TextScriptImporter:
   externalObjects: {}
   userData: 
-  assetBundleName: lua_view_login_loginview
+  assetBundleName: lua_code_view_baseview
   assetBundleVariant: 
