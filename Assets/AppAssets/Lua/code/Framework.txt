@@ -1,6 +1,5 @@
 local CSManager = CS.Framework.Game.Manager
 
-
 Framework = {
 	m_LuaMgr,
     m_AssetMgr,
@@ -10,6 +9,7 @@ Framework = {
     m_NetWorkMgr,
     m_LevenMgr,
     m_EventMgr,
+    m_ViewMgr,
 }
 
 function Framework:LoadLuaScript()
@@ -30,6 +30,7 @@ function Framework:InitManagers()
 	self.m_NetWorkMgr 	= CSManager.NetWorkMgr
 	self.m_LevenMgr		= CSManager.LevenMgr
 	self.m_EventMgr		= CSManager.EventMgr
+    self.m_ViewMgr      = CSManager.ViewMgr
 end
 
 function Framework:Start( )
@@ -49,14 +50,12 @@ end
 function Framework:StartUp()
 	print("Framework:StartUp")
 
-    --同步方法
-	--local loginPresender = ViewFactory:CreateView("LoginView")
-	--loginPresender:SetLabel("Test_Claine")
-
-    --异步方法
     ViewFactory:CreateViewAsync("LoginView",function ( presender )
         presender:SetLabel("Test_Claine")
     end)
+    
+    local loginPresender = ViewFactory:CreateView("LoginView")
+    loginPresender:SetLabel("Test_Claine")
 
 end
 

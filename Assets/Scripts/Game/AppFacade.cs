@@ -12,9 +12,7 @@ namespace Framework
 			private Dictionary<string, IManager> m_Managers = new Dictionary<string, IManager> ();
 
 			private delegate void Delegate_Manager_Init ();
-
 			private delegate void Delegate_Manager_Tick ();
-
 			private delegate void Delegate_Manager_Release ();
 
 			private Delegate_Manager_Init m_MgrInit_Handle;

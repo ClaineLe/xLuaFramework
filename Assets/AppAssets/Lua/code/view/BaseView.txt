@@ -2,10 +2,10 @@ BaseView = {
 }
 
 
-function BaseView:Create( widgetRoot )
+function BaseView:Create( widgetNode )
 	local obj = {}
 	setmetatable( obj, { __index = self })
-	local widgets = widgetRoot:GetWidgets()
+	local widgets = widgetNode:GetWidgets()
 	for i=1,widgets.Length do
 		obj[widgets[i-1].RefName] = widgets[i-1]
 	end

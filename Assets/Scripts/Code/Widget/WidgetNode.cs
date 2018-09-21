@@ -4,7 +4,7 @@ namespace Framework
 {
     namespace Code.Widget
     {
-        public class WidgetRoot : MonoBehaviour, IWidget
+        public class WidgetNode : MonoBehaviour, IWidget
         {
             public string m_RefName;
             public string RefName
