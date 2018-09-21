@@ -4,12 +4,12 @@ ViewFactory={
 	
 }
 
-local VIEWASSET_ROOTPATH = "Assets/AppAssets/Prefabs/View/"
+local VIEWASSET_ROOTPATH = "Prefabs/View/"
 local VIEWASSET_EXTENSION = ".prefab"
 
 function ViewFactory:LoadViewRoot( viewType )
 	local viewFullPath = self:_getViewPath(ViewDefine[viewType].p_Name) 
-	local goAsset = Framework.m_AssetMgr:LoadGameObject(viewFullPath)
+	local goAsset = Framework.m_AssetMgr:LoadAsset(viewFullPath,typeof(CSGameObject))
 	local go = CSGameObject.Instantiate(goAsset)
 	return go:GetComponent(typeof(CSWidgetRoot))
 end

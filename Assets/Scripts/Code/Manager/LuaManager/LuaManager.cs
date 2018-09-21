@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
+using Framework.Game;
 
 namespace Framework
 {
@@ -66,12 +67,9 @@ namespace Framework
 
             public byte[] CustomLoader(ref string filepath)
             {
-#if UNITY_EDITOR
-                string fullPath = Application.dataPath + "/" + filepath;
-                return File.ReadAllBytes(fullPath.Replace('.', Path.DirectorySeparatorChar) + ".txt");
-#else
-                return null;
-#endif
+				string luaPath = "Lua/" + filepath.Replace('.',Path.DirectorySeparatorChar);
+				TextAsset txtAsset = Framework.Game.Manager.AssetMgr.LoadAsset (luaPath, typeof(TextAsset)) as TextAsset;
+				return txtAsset.bytes;
             }
 
             public bool StartUpLuaFramework()

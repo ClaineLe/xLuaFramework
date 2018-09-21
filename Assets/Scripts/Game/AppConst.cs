@@ -15,6 +15,57 @@ namespace Framework
             public const string LuaVersion = "3.0.0";
 
             public const string FileServerIP = "192.168.0.0";
+
+			/** AssetBundle仿真模式 */
+			public static bool SimulateAssetBundleInEditor = true;
+
+			public static string GetPlatformName ()
+			{
+				#if UNITY_EDITOR
+				return GetPlatformForAssetBundles (UnityEditor.EditorUserBuildSettings.activeBuildTarget);
+				#else
+				return GetPlatformForAssetBundles(Application.platform);
+				#endif
+			}
+
+			#if UNITY_EDITOR
+			public static string GetPlatformForAssetBundles (UnityEditor.BuildTarget target)
+			{
+				switch (target) {
+				case UnityEditor.BuildTarget.Android:
+					return "Android";
+				case UnityEditor.BuildTarget.iOS:
+					return "iOS";
+				case UnityEditor.BuildTarget.WebGL:
+					return "WebGL";
+				case UnityEditor.BuildTarget.StandaloneWindows:
+				case UnityEditor.BuildTarget.StandaloneWindows64:
+					return "Windows";
+				case UnityEditor.BuildTarget.StandaloneOSX:
+					return "OSX";
+				default:
+					return null;
+				}
+			}
+			#endif
+
+			public static string GetPlatformForAssetBundles (RuntimePlatform platform)
+			{
+				switch (platform) {
+				case RuntimePlatform.Android:
+					return "Android";
+				case RuntimePlatform.IPhonePlayer:
+					return "iOS";
+				case RuntimePlatform.WebGLPlayer:
+					return "WebGL";
+				case RuntimePlatform.WindowsPlayer:
+					return "Windows";
+				case RuntimePlatform.OSXPlayer:
+					return "OSX";
+				default:
+					return null;
+				}
+			}
         }
     }
 }
