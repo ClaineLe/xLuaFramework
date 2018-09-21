@@ -9,24 +9,41 @@ local VIEWASSET_EXTENSION = ".prefab"
 local FORMAT_VIEW_NAME = "view.%s"
 local FORMAT_PRESENDER_NAME = "view.%sPresender"
 
-function ViewFactory:LoadViewRoot( viewName )
+
+function ViewFactory:_getViewPath( viewName )
+	return VIEWASSET_ROOTPATH .. viewName .. VIEWASSET_EXTENSION
+end
+
+function ViewFactory:_loadViewRoot( viewName )
 	local viewFullPath = self:_getViewPath(viewName) 
 	local goAsset = Framework.m_AssetMgr:LoadAsset(viewFullPath,typeof(CSGameObject))
 	local go = CSGameObject.Instantiate(goAsset)
-	print(goAsset)
 	return go:GetComponent(typeof(CSWidgetRoot))
 end
 
-function ViewFactory:CreateView( viewName )
+function ViewFactory:_loadViewRootAsync( viewName , callback)
+	local viewFullPath = self:_getViewPath(viewName) 
+	local goAsset = Framework.m_AssetMgr:LoadAssetAsync(viewFullPath,function(obj)
+		if obj then 
+			local go = CSGameObject.Instantiate(obj)
+			callback(go:GetComponent(typeof(CSWidgetRoot)))
+		end
+	end,typeof(CSGameObject))
+end
 
-	local widgetRoot = self:LoadViewRoot(viewName)
+function ViewFactory:CreateView( viewName )
+	local widgetRoot = self:_loadViewRoot(viewName)
 	local view = require (string.format(FORMAT_VIEW_NAME, viewName))
 	local viewTbl = view:Create(widgetRoot)
 	local presender = require (string.format(FORMAT_PRESENDER_NAME, viewName)) 
 	return presender:Create(viewTbl)
 end
 
-
-function ViewFactory:_getViewPath( viewName )
-	return VIEWASSET_ROOTPATH .. viewName .. VIEWASSET_EXTENSION
+function ViewFactory:CreateViewAsync( viewName, callback )
+	self:_loadViewRootAsync(viewName,function (widgetRoot)
+		local view = require (string.format(FORMAT_VIEW_NAME, viewName))
+		local viewTbl = view:Create(widgetRoot)
+		local presender = require (string.format(FORMAT_PRESENDER_NAME, viewName)) 
+		callback(presender:Create(viewTbl))
+	end)
 end

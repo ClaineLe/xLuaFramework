@@ -48,6 +48,31 @@ end
 
 function Framework:StartUp()
 	print("Framework:StartUp")
-	local loginPresender = ViewFactory:CreateView("LoginView")
-	loginPresender:SetLabel("Test_Claine")
+
+    --同步方法
+	--local loginPresender = ViewFactory:CreateView("LoginView")
+	--loginPresender:SetLabel("Test_Claine")
+
+    --异步方法
+    ViewFactory:CreateViewAsync("LoginView",function ( presender )
+        presender:SetLabel("Test_Claine")
+    end)
+
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
