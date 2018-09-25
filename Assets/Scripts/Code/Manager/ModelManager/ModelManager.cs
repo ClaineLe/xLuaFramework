@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framework
+namespace Framework.Code
 {
-	namespace Code.Manager
+	namespace Manager
 	{
+		using Assistant;
 		public partial class ManagerName
 		{
 			public const string Model = "ModelManager";
@@ -19,10 +20,19 @@ namespace Framework
 
 			public void Tick ()
 			{
+				if (_model != null)
+					_model.Tick ();
 			}
 
 			public void Release ()
 			{
+				this._model.Release ();
+			}
+
+			private Model _model;
+			public void ActiveModel(Model model){
+				this._model = model;
+				this._model.Start ();
 			}
 		}
 	}

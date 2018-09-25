@@ -1,0 +1,49 @@
+
+local CSModel = CS.Framework.Code.Assistant.Model;
+
+BaseModel = {
+	m_Id,
+	m_Name,
+	m_CSModel,
+}
+
+function BaseModel:Create()
+	local obj = {}
+	setmetatable( obj, { __index = self })
+	obj.m_CSModel = CSModel(self.m_Id,self.m_Name)
+	obj.m_CSModel:InitLuaModel(self)
+	return obj
+end
+
+--虚方法，子类重写
+function BaseModel:Start()
+end
+
+--虚方法，子类重写
+function BaseModel:Tick()
+end
+
+--虚方法，子类重写
+function BaseModel:Release()
+end
+
+function BaseModel:RegiestNetDataReceiver (cmd, handle)
+	self.m_CSModel:RegiestNetDataReceiver (cmd, handle)
+end
+
+function BaseModel:UnRegiestNetDataReceiver(cmd)
+	self.m_CSModel:UnRegiestNetDataReceiver (cmd, handle)
+end
+
+function BaseModel:AddNotify(eventName, handle)
+	self.m_CSModel:AddNotify (cmd, handle)
+end
+
+function BaseModel:RemoveNotify(eventName, handle)
+	self.m_CSModel:RemoveNotify (cmd, handle)
+end
+
+function BaseModel:RemoveEvent(eventName)
+	self.m_CSModel:RemoveEvent (cmd, handle)
+end
+

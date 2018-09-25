@@ -1,0 +1,22 @@
+local LoginModel = {
+	m_Id = 1,
+	m_Name = "LoginModel",
+}
+
+setmetatable( LoginModel, { __index = BaseModel})
+
+function LoginModel:Start()
+	print("LoginModel:Start")
+    local loginPresender = ViewFactory:CreateView("LoginView")
+    loginPresender:SetLabel("Test_Claine")
+end
+
+function LoginModel:Tick()
+	print("LoginModel:Tick")
+end
+
+function LoginModel:Release()
+	print("LoginModel:Release")
+end
+
+return LoginModel

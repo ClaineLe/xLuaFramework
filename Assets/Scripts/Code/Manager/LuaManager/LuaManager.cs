@@ -55,9 +55,9 @@ namespace Framework
                 this.m_LuaEnv = null;
             }
 
-            public void DoLuaFile(string luaPath)
+			public object[] DoLuaFile(string luaPath,string chunkName = "chunk", XLua.LuaTable env = null)
             {
-                this.m_LuaEnv.DoString(string.Format("require '{0}'", luaPath));
+				return this.m_LuaEnv.DoString(string.Format("require '{0}'", luaPath),chunkName,env);
             }
 
             public void HotFix(string hotfixStr)
@@ -74,13 +74,15 @@ namespace Framework
 
             public bool StartUpLuaFramework()
             {
-                this.DoLuaFile("code.Framework");
+				this.DoLuaFile("code.Framework","LuaManager");
+
                 XLua.LuaTable frameworkTable = m_LuaEnv.Global.Get<XLua.LuaTable>("Framework");
                 m_FrameworkStart = frameworkTable.Get<XLua.LuaFunction>("Start");
                 m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
                 m_FrameworkRelease = frameworkTable.Get<XLua.LuaFunction>("Release");
-                if (m_FrameworkStart != null)
-                    m_FrameworkStart.Call(frameworkTable);
+				if (m_FrameworkStart != null) {
+					m_FrameworkStart.Call(frameworkTable);
+				}
                 return true;
             }
         }

@@ -17,6 +17,7 @@ function Framework:LoadLuaScript()
     require 'cfg.FrameworkConfig'
     require 'util.ProtBufUtility'
     require 'util.FrameworkUtility'
+    require 'code.model.BaseModel'
     require 'code.view.BaseView'
     require 'code.view.BasePresender'
     require 'code.view.ViewFactory'
@@ -50,27 +51,25 @@ function Framework:Release()
 end
 
 function Framework:StartUp()
-	print("Framework:StartUp")
+    print("Framework:StartUp")
+--[[
+    FrameworkUtility:PrintTable(CSManager.AssetMgr)
+    FrameworkUtility:PrintTable(CSManager.ModelMgr)
+    FrameworkUtility:PrintTable(Framework.m_ModelMgr)
+    Framework.m_ModelMgr:ActiveModel(1,"LoginModel")
+]]
+    print(Framework.m_ModelMgr)
+    print(Framework.m_ModelMgr.ActiveModel)
+    local loginModelTmp = require('model.LoginModel')
+    local loginModel = loginModelTmp:Create()
 
-    ViewFactory:CreateViewAsync("LoginView",function ( presender )
-        presender:SetLabel("Test_Claine")
-    end)
+    Framework.m_ModelMgr:ActiveModel(loginModel.m_CSModel)
 
-    local loginPresender = ViewFactory:CreateView("LoginView")
-    loginPresender:SetLabel("Test_Claine")
+    --ViewFactory:CreateViewAsync("LoginView",function ( presender )
+    --    presender:SetLabel("Test_Claine")
+    --end)
 
 end
-
-
-
-
-
-
-
-
-
-
-
 
 
 
