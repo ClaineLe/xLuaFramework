@@ -11,39 +11,41 @@ function BaseModel:Create()
 	local obj = {}
 	setmetatable( obj, { __index = self })
 	obj.m_CSModel = CSModel(self.m_Id,self.m_Name)
-	obj.m_CSModel:InitLuaModel(self)
+	obj:Start()
 	return obj
 end
 
---虚方法，子类重写
 function BaseModel:Start()
+	self:OnStart()
 end
 
---虚方法，子类重写
-function BaseModel:Tick()
-end
-
---虚方法，子类重写
 function BaseModel:Release()
+	self:OnRelease()
+end
+
+function BaseModel:OnStart()
+end
+
+function BaseModel:OnRelease()
 end
 
 function BaseModel:RegiestNetDataReceiver (cmd, handle)
 	self.m_CSModel:RegiestNetDataReceiver (cmd, handle)
 end
 
-function BaseModel:UnRegiestNetDataReceiver(cmd)
+function BaseModel:UnRegiestNetDataReceiver (cmd)
 	self.m_CSModel:UnRegiestNetDataReceiver (cmd, handle)
 end
 
-function BaseModel:AddNotify(eventName, handle)
-	self.m_CSModel:AddNotify (cmd, handle)
+function BaseModel:AddNotify (eventName, handle)
+	self.m_CSModel:AddNotify (eventName, handle)
 end
 
-function BaseModel:RemoveNotify(eventName, handle)
-	self.m_CSModel:RemoveNotify (cmd, handle)
+function BaseModel:RemoveNotify (eventName, handle)
+	self.m_CSModel:RemoveNotify (eventName, handle)
 end
 
-function BaseModel:RemoveEvent(eventName)
-	self.m_CSModel:RemoveEvent (cmd, handle)
+function BaseModel:RemoveEvent (eventName)
+	self.m_CSModel:RemoveEvent (eventName)
 end
 

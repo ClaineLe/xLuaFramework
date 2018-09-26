@@ -23,10 +23,6 @@ namespace Framework.Code
 				}
 			}
 
-			private XLua.LuaFunction m_ModelStart;
-			private XLua.LuaFunction m_ModelTick;
-			private XLua.LuaFunction m_ModelRelease;
-
 			protected ObserverNotify<string,UnityEngine.Object> m_ModelNotify;
 			protected ObserverNotify<ushort,byte[]> m_NetworkNotify;
 
@@ -39,33 +35,16 @@ namespace Framework.Code
 				this.Init ();
 			}
 
-			public void InitLuaModel(XLua.LuaTable modelTable){
-				m_ModelStart = modelTable.Get<XLua.LuaFunction>("Start");
-				m_ModelTick = modelTable.Get<XLua.LuaFunction>("Tick");
-				m_ModelRelease = modelTable.Get<XLua.LuaFunction>("Release");
-			}
-
 			public void Init(){
 				Manager.NetWorkMgr.RegiestReceiver (this.ModelId, this.NetWorkMessageReceiver);
 			}
 
-			public virtual void Start(){
-				if (this.m_ModelStart != null)
-					this.m_ModelStart.Call();
-			}
-
-			public virtual void Tick(){
-				if (this.m_ModelTick != null)
-					this.m_ModelTick.Call();
-			}
 
 			public virtual void Release ()
 			{
 				this.m_ModelNotify.ClearObserver ();
 				this.m_NetworkNotify.ClearObserver ();
 				Framework.Game.Manager.NetWorkMgr.UnRegiestReceiver (this.ModelId);
-				if (this.m_ModelRelease != null)
-					this.m_ModelRelease.Call();
 			}
 
 			protected void NetWorkMessageReceiver (ushort cmd, byte[] netData)

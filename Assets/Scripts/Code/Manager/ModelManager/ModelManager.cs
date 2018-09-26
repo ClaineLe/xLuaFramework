@@ -20,19 +20,10 @@ namespace Framework.Code
 
 			public void Tick ()
 			{
-				if (_model != null)
-					_model.Tick ();
 			}
 
 			public void Release ()
 			{
-				this._model.Release ();
-			}
-
-			private Model _model;
-			public void ActiveModel(Model model){
-				this._model = model;
-				this._model.Start ();
 			}
 		}
 	}
