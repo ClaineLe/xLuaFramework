@@ -5,6 +5,10 @@ local LoginViewPresender = {
 
 setmetatable( LoginViewPresender, { __index = BasePresender})
 
+function LoginViewPresender:init()
+	self:SetLabel(self.m_Model.m_Name)	
+end
+
 function LoginViewPresender:SetLabel( label )
 	self.m_View.m_Text.text = label
 end

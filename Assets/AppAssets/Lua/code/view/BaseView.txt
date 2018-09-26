@@ -2,7 +2,7 @@ BaseView = {
 }
 
 
-function BaseView:Create( widgetNode )
+function BaseView:Create(widgetNode )
 	local obj = {}
 	setmetatable( obj, { __index = self })
 	local widgets = widgetNode:GetWidgets()

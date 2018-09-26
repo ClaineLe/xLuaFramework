@@ -5,17 +5,16 @@ local LoginModel = {
 
 setmetatable( LoginModel, { __index = BaseModel})
 
-function LoginModel:Start()
+local PanelDefine = {
+	login = "LoginView"
+}
+
+function LoginModel:OnStart()
 	print("LoginModel:Start")
-    local loginPresender = ViewFactory:CreateView("LoginView")
-    loginPresender:SetLabel("Test_Claine")
+    local loginPresender = ViewFactory:CreateView(self, PanelDefine.login)
 end
 
-function LoginModel:Tick()
-	print("LoginModel:Tick")
-end
-
-function LoginModel:Release()
+function LoginModel:OnRelease()
 	print("LoginModel:Release")
 end
 

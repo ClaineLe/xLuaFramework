@@ -7,23 +7,23 @@ ViewFactory={
 local FORMAT_VIEW_NAME = "view.%s"
 local FORMAT_PRESENDER_NAME = "view.%sPresender"
 
-function ViewFactory:_LoadViewPresender(widgetNode)
+function ViewFactory:_LoadViewPresender(model, widgetNode)
 	local view = require (string.format(FORMAT_VIEW_NAME, widgetNode.name))
 	local viewTbl = view:Create(widgetNode)
 	local presender = require (string.format(FORMAT_PRESENDER_NAME, widgetNode.name)) 
-	return presender:Create(viewTbl)
+	return presender:Create(model, viewTbl)
 end
 
-function ViewFactory:CreateView( viewName )
+function ViewFactory:CreateView(model,  viewName )
 	local widgetNode = Framework.m_ViewMgr:LoadViewNode(viewName)
 	widgetNode.name = viewName
-	return self:_LoadViewPresender(widgetNode)
+	return self:_LoadViewPresender(model, widgetNode)
 end
 
-function ViewFactory:CreateViewAsync( viewName, callback )
+function ViewFactory:CreateViewAsync(model, viewName, callback )
 	Framework.m_ViewMgr:LoadViewNodeAsync(viewName,function (widgetNode)
 		widgetNode.name = viewName
-		callback(self:_LoadViewPresender(widgetNode))
+		callback(self:_LoadViewPresender(model, widgetNode))
 	end)
 end
 

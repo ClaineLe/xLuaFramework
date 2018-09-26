@@ -1,9 +1,11 @@
 BasePresender = {
+	m_Model,
 	m_View,
 }
-function BasePresender:Create(view)
+function BasePresender:Create(model, view)
 	local obj = {}
 	setmetatable( obj, { __index = self })
+	obj.m_Model = model
 	obj.m_View = view
 	obj:init()
 	return obj
