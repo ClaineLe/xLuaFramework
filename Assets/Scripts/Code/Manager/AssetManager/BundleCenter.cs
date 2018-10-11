@@ -221,7 +221,7 @@ namespace Framework
 
 			public UnityEngine.Object LoadAsset(string assetBundleName, string assetName, System.Type type)
 			{
-				Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
+				//Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
 				#if UNITY_EDITOR
 				if (AppConst.SimulateAssetBundleInEditor) {
 					string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (assetBundleName, assetName);
@@ -258,8 +258,7 @@ namespace Framework
 
 			public BaseLoadAssetOperation LoadAssetAsync (string assetBundleName, string assetName, System.Type type)
 			{
-				Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
-
+				//Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
 				BaseLoadAssetOperation operation = null;
 #if UNITY_EDITOR
 				if (AppConst.SimulateAssetBundleInEditor) {

@@ -45,7 +45,6 @@ namespace Framework
 			private IEnumerator LoadAssetAsyncBase (string assetPath, System.Type type, UnityAction<BaseLoadAssetOperation> callback)
 			{
 				string assetbundlename = GetAssetBundleName (assetPath);
-				Debug.Log ("assetbundlename:" + assetbundlename);
 				string assetname = Path.GetFileNameWithoutExtension (assetPath);
 				BaseLoadAssetOperation request = this.m_BundleCenter.LoadAssetAsync (assetbundlename, assetname, type);
 				if (request == null)
@@ -59,7 +58,6 @@ namespace Framework
 			private IEnumerator LoadSceneAsyncBase (string assetPath, bool isAdditive, UnityAction callback)
 			{
 				string assetbundlename = GetAssetBundleName (assetPath);
-				Debug.LogError ("assetbundlename:" + assetbundlename);
 				string assetname = Path.GetFileNameWithoutExtension (assetPath);
 				LoadOperation request = this.m_BundleCenter.LoadSceneAsync (assetbundlename, assetname, isAdditive);
 				if (request == null)
