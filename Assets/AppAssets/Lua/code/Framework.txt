@@ -55,25 +55,16 @@ end
 function Framework:StartUp()
     print("Framework:StartUp")
 
-
     local loginModel = ModelFactory:CreateModel("LoginModel")
---[[
-    FrameworkUtility:PrintTable(CSManager.AssetMgr)
-    FrameworkUtility:PrintTable(CSManager.ModelMgr)
-    FrameworkUtility:PrintTable(Framework.m_ModelMgr)
-    Framework.m_ModelMgr:ActiveModel(1,"LoginModel")
+    --Framework.m_ModelMgr:ActiveModel(1,"LoginModel")
 
 
-    local loginModelTmp = require('model.LoginModel')
-    local loginModel = loginModelTmp:Create()
-
-]]
-
-    --ViewFactory:CreateViewAsync("LoginView",function ( presender )
-    --    presender:SetLabel("Test_Claine")
-    --end)
+    --local loginModelTmp = require('model.LoginModel')
+    --local loginModel = loginModelTmp:Create()
 
 end
+
+return Framework
 
 
 
