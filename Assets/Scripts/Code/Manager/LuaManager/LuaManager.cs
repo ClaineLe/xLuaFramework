@@ -22,6 +22,7 @@ namespace Framework
             private float lastGCTime = 0;
             private const float GCInterval = 1;//1 second 
 
+			private XLua.LuaFunction m_Require;
             public void Init()
             {
                 this.m_LuaEnv = new XLua.LuaEnv();
@@ -29,6 +30,7 @@ namespace Framework
                 this.m_LuaEnv.AddBuildin("lpeg", XLua.LuaDLL.Lua.LoadLpeg);
                 this.m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProfobuf);
                 this.m_LuaEnv.AddLoader(CustomLoader);
+				this.m_Require = m_LuaEnv.Global.Get<XLua.LuaFunction>("require");
             }
 
             public void Tick()
@@ -55,10 +57,14 @@ namespace Framework
                 this.m_LuaEnv = null;
             }
 
-			public object[] DoLuaFile(string luaPath,string chunkName = "chunk", XLua.LuaTable env = null)
+			public object[] LuaRequire(string luaPath)
             {
-				return this.m_LuaEnv.DoString(string.Format("require '{0}'", luaPath),chunkName,env);
+				return this.m_Require.Call (luaPath);
             }
+
+			public XLua.LuaTable TblRequire(string luaPath){
+				return this.m_Require.Call (luaPath)[0] as XLua.LuaTable;
+			}
 
             public void HotFix(string hotfixStr)
             {
@@ -74,9 +80,7 @@ namespace Framework
 
             public bool StartUpLuaFramework()
             {
-				this.DoLuaFile("code.Framework","LuaManager");
-
-                XLua.LuaTable frameworkTable = m_LuaEnv.Global.Get<XLua.LuaTable>("Framework");
+				XLua.LuaTable frameworkTable = this.TblRequire ("code.Framework");
                 m_FrameworkStart = frameworkTable.Get<XLua.LuaFunction>("Start");
                 m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
                 m_FrameworkRelease = frameworkTable.Get<XLua.LuaFunction>("Release");
