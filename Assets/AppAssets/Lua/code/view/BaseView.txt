@@ -1,14 +1,17 @@
 BaseView = {
+	m_EventHandle = {},
+	m_View,
 }
 
 
-function BaseView:Create(widgetNode )
+function BaseView:Create(View)
 	local obj = {}
 	setmetatable( obj, { __index = self })
-	local widgets = widgetNode:GetWidgets()
-	for i=1,widgets.Length do
-		obj[widgets[i-1].RefName] = widgets[i-1]
+	obj.m_View = View
+	for k,v in pairs(obj.m_View._widgets) do
+		obj[k] = v
 	end
+
 	obj:init()
 	return obj
 end
@@ -16,3 +19,4 @@ end
 --虚方法，子类重写
 function BaseView:init()
 end
+
