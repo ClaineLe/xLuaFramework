@@ -11,7 +11,26 @@ local PanelDefine = {
 
 function LoginModel:OnStart()
 	print("LoginModel:Start")
-    local loginPresender = ViewFactory:CreateView(self, PanelDefine.login)
+
+	local luaPresender = ViewFactory:CreateView(PanelDefine.login)
+	luaPresender:SetLabel("Success")
+
+	ViewFactory:CreateViewAsync(PanelDefine.login,function ( presender )
+        presender:SetLabel("Test_Claine")
+    end)
+    
+end
+
+function LoginModel:EventTest1( param )
+	print("OnNotify_Test_1 - " .. param)
+end
+
+function LoginModel:EventTest2( param )
+	print("OnNotify_Test_2 - " .. param)
+end
+
+function LoginModel:EventTest3( param )
+	print("OnNotify_Test_3 - " .. param)
 end
 
 function LoginModel:OnRelease()

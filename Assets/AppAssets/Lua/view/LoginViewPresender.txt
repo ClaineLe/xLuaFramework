@@ -6,7 +6,7 @@ local LoginViewPresender = {
 setmetatable( LoginViewPresender, { __index = BasePresender})
 
 function LoginViewPresender:init()
-	self:SetLabel(self.m_Model.m_Name)	
+	print("[LoginViewPresender:init]")
 end
 
 function LoginViewPresender:SetLabel( label )

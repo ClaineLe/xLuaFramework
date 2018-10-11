@@ -5,6 +5,7 @@ BaseModel = {
 	m_Id,
 	m_Name,
 	m_CSModel,
+	m_Listeners = {},
 }
 
 function BaseModel:Create()
@@ -37,15 +38,27 @@ function BaseModel:UnRegiestNetDataReceiver (cmd)
 	self.m_CSModel:UnRegiestNetDataReceiver (cmd, handle)
 end
 
-function BaseModel:AddNotify (eventName, handle)
-	self.m_CSModel:AddNotify (eventName, handle)
+function BaseModel:Notify (notifyName, param)
+	self.m_CSModel:Notify (notifyName, param)
 end
 
-function BaseModel:RemoveNotify (eventName, handle)
-	self.m_CSModel:RemoveNotify (eventName, handle)
+function BaseModel:AddNotify (notifyName, handle)
+	if not self.m_Listeners[notifyName] then 
+		self.m_Listeners[notifyName] = {}
+	end
+	self.m_Listeners[notifyName][handle] = function ( param )
+		handle(self,param)
+	end 
+	self.m_CSModel:AddNotify (notifyName, self.m_Listeners[notifyName][handle])
 end
 
-function BaseModel:RemoveEvent (eventName)
-	self.m_CSModel:RemoveEvent (eventName)
+function BaseModel:RemoveNotify (notifyName, handle)
+	if handle then 
+		self.m_CSModel:RemoveNotify (notifyName, self.m_Listeners[notifyName][handle])
+	else
+		self.m_CSModel:RemoveNotify (notifyName)
+	end
 end
+
+
 

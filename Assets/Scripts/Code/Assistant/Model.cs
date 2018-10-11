@@ -23,14 +23,14 @@ namespace Framework.Code
 				}
 			}
 
-			protected ObserverNotify<string,UnityEngine.Object> m_ModelNotify;
+			protected ObserverNotify<string,object> m_ModelNotify;
 			protected ObserverNotify<ushort,byte[]> m_NetworkNotify;
 
 			public Model (ushort modelId, string modelName)
 			{
 				this.m_Id = modelId;
 				this.m_Name = modelName;
-				this.m_ModelNotify = new ObserverNotify<string, Object> ();
+				this.m_ModelNotify = new ObserverNotify<string, object> ();
 				this.m_NetworkNotify = new ObserverNotify<ushort, byte[]> ();
 				this.Init ();
 			}
@@ -39,7 +39,6 @@ namespace Framework.Code
 				Manager.NetWorkMgr.RegiestReceiver (this.ModelId, this.NetWorkMessageReceiver);
 			}
 
-
 			public virtual void Release ()
 			{
 				this.m_ModelNotify.ClearObserver ();
@@ -47,8 +46,7 @@ namespace Framework.Code
 				Framework.Game.Manager.NetWorkMgr.UnRegiestReceiver (this.ModelId);
 			}
 
-			protected void NetWorkMessageReceiver (ushort cmd, byte[] netData)
-			{
+			protected void NetWorkMessageReceiver (ushort cmd, byte[] netData){
 				this.m_NetworkNotify.Notify (cmd, netData);
 			}
 
@@ -57,19 +55,19 @@ namespace Framework.Code
 			}
 
 			public void UnRegiestNetDataReceiver(ushort cmd){
-				this.m_NetworkNotify.RemoveObserver (cmd);
+				this.m_NetworkNotify.RemoveNotify (cmd);
 			}
 
-			public void AddNotify(string eventName, NotifyDelegate<UnityEngine.Object> handle){
-				this.m_ModelNotify.AddObserver (eventName, handle);
+			public void Notify(string notifyName,object param){
+				this.m_ModelNotify.Notify (notifyName, param);
 			}
 
-			public void RemoveNotify(string eventName, NotifyDelegate<UnityEngine.Object> handle){
-				this.m_ModelNotify.RemoveNotify (eventName, handle);
+			public void AddNotify(string notifyName, NotifyDelegate<object> handle){
+				this.m_ModelNotify.AddObserver (notifyName, handle);
 			}
 
-			public void RemoveEvent(string eventName){
-				this.m_ModelNotify.RemoveObserver (eventName);
+			public void RemoveNotify(string notifyName, NotifyDelegate<object> handle = null){
+				this.m_ModelNotify.RemoveNotify (notifyName, handle);
 			}
 		}
 	}

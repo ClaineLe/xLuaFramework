@@ -10,12 +10,15 @@ namespace Framework.Code
 		public class ObserverNotify<K,P>
 		{
 			private Dictionary<K, NotifyDelegate<P>> m_DicObserver;
+
+			public ObserverNotify(){
+				this.m_DicObserver = new Dictionary<K, NotifyDelegate<P>> ();
+			}
+
 			public void Notify(K key, P param){
 				if (this.m_DicObserver.ContainsKey (key)) {
 					this.m_DicObserver [key].Invoke (param);
-				} else {
-					Debug.LogError ("[ObserverNotify]Found out Observer. key:" + key);
-				}
+				} 
 			}
 
 			public bool ContainsObserver(K key)
@@ -28,21 +31,18 @@ namespace Framework.Code
 					this.m_DicObserver [key] += handle;
 				} else {
 					this.m_DicObserver [key] = handle;
-					Debug.LogError ("[ObserverNotify]Found out Observer. key:" + key);
 				}
 			}
 
-			public void RemoveObserver(K key){
+			public void RemoveNotify(K key, NotifyDelegate<P> handle = null){
 				if (this.m_DicObserver.ContainsKey (key)) {
-					this.m_DicObserver.Remove (key);
-				}
-			}
-
-			public void RemoveNotify(K key, NotifyDelegate<P> handle){
-				if (this.m_DicObserver.ContainsKey (key)) {
-					this.m_DicObserver [key] -= handle;
-					if (this.m_DicObserver [key].GetInvocationList ().Length == 0)
-						this.RemoveObserver (key);
+					if (handle == null) {
+						this.m_DicObserver.Remove (key);
+					} else {
+						this.m_DicObserver [key] -= handle;
+						if (this.m_DicObserver [key].GetInvocationList ().Length == 0)
+							this.m_DicObserver.Remove (key);
+					}
 				}
 			}
 
