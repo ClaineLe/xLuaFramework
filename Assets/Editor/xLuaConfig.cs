@@ -47,15 +47,32 @@ namespace Framework.Editor
             {
                 get
                 {
-                    return (from type in Assembly.Load("Assembly-CSharp").GetTypes()
-                            where type.Namespace != null && (
+					List<Type> by_property_tmp = (from type in Assembly.Load("Assembly-CSharp").GetTypes()
+						where type.Namespace != null &&
+						!FilterTypeList.Exists (a => a.FullName == type.FullName) &&
+						(
                             type.Namespace.StartsWith("Framework.Code") ||
                             type.Namespace.StartsWith("Framework.Game") ||
-                            type.Namespace.StartsWith("Framework.Util") 
-                            )
+							type.Namespace.StartsWith("Framework.Util") 
+						)
                             select type).ToList();
+					return by_property_tmp;
                 }
             }
+
+			public static List<Type> FilterTypeList{
+				get{
+					List<Type> filterTypeList = new List<Type> ();
+					filterTypeList.Add (typeof(Framework.Code.Manager.LoadSceneSimulationOperation));
+					filterTypeList.Add (typeof(Framework.Code.Manager.LoadAssetOperationSimulation));
+					return filterTypeList;
+				}
+			}
+
+			[BlackList]
+			public static List<List<string>> BlackList = new List<List<string>>()  {
+				new List<string>(){"Framework.Game.AppConst", "GetPlatformForAssetBundles", "UnityEditor.BuildTarget"},
+			};
         }
     }
 }
