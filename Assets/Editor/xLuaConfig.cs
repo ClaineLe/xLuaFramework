@@ -36,8 +36,8 @@ namespace Framework.Editor
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<object>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.Object>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.GameObject>));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Code.Widget.View>));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Code.Widget.Presender>));
+					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Widget.View>));
+					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Widget.Presender>));
                     return cs_call_lua_list_tmp;
                 }
             }
@@ -51,7 +51,7 @@ namespace Framework.Editor
 						where type.Namespace != null &&
 						!FilterTypeList.Exists (a => a.FullName == type.FullName) &&
 						(
-                            type.Namespace.StartsWith("Framework.Code") ||
+                            type.Namespace.StartsWith("Framework.Core") ||
                             type.Namespace.StartsWith("Framework.Game") ||
 							type.Namespace.StartsWith("Framework.Util") 
 						)
@@ -63,8 +63,8 @@ namespace Framework.Editor
 			public static List<Type> FilterTypeList{
 				get{
 					List<Type> filterTypeList = new List<Type> ();
-					filterTypeList.Add (typeof(Framework.Code.Manager.LoadSceneSimulationOperation));
-					filterTypeList.Add (typeof(Framework.Code.Manager.LoadAssetOperationSimulation));
+					filterTypeList.Add (typeof(Framework.Core.Manager.LoadSceneSimulationOperation));
+					filterTypeList.Add (typeof(Framework.Core.Manager.LoadAssetOperationSimulation));
 					return filterTypeList;
 				}
 			}

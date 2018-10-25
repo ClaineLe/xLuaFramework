@@ -1,0 +1,73 @@
+local CSManager = CS.Framework.Game.Manager
+
+Framework = {
+	m_LuaMgr,
+    m_AssetMgr,
+    m_TimerMgr,
+    m_SoundMgr,
+    m_PoolsMgr,
+    m_NetWorkMgr,
+    m_LevenMgr,
+    m_EventMgr,
+    m_ViewMgr,
+    m_ModelMgr,
+}
+
+function Framework:LoadLuaScript()
+    require 'cfg.FrameworkConfig'
+    require 'util.ProtBufUtility'
+    require 'util.FrameworkUtility'
+    require '#core.#model.BaseModel'
+    require '#core.#model.ModelFactory'
+
+    require '#core.view.BaseView'
+    require '#core.view.BasePresender'
+    require '#core.view.ViewFactory'
+end
+
+function Framework:InitManagers()
+    self.m_LuaMgr 		= CSManager.LuaMgr
+	self.m_AssetMgr 	= CSManager.AssetMgr
+	self.m_TimerMgr 	= CSManager.TimerMgr
+	self.m_SoundMgr 	= CSManager.SoundMgr
+	self.m_PoolsMgr 	= CSManager.PoolsMgr
+	self.m_NetWorkMgr 	= CSManager.NetWorkMgr
+	self.m_LevenMgr		= CSManager.LevenMgr
+	self.m_EventMgr		= CSManager.EventMgr
+    self.m_ViewMgr      = CSManager.ViewMgr
+    self.m_ModelMgr     = CSManager.ModelMgr
+end
+
+function Framework:Start( )
+    self:LoadLuaScript()
+    self:InitManagers()
+    self:StartUp()
+end
+
+function Framework:Tick()
+    --print("Framework:Tick")
+end
+
+function Framework:Release()
+	--print("Framework:Release")
+end
+
+function Framework:StartUp()
+    print("Framework:StartUp")
+
+    local loginModel = ModelFactory:CreateModel("LoginModel")
+    --Framework.m_ModelMgr:ActiveModel(1,"LoginModel")
+
+
+    --local loginModelTmp = require('model.LoginModel')
+    --local loginModel = loginModelTmp:Create()
+
+end
+
+return Framework
+
+
+
+
+
+

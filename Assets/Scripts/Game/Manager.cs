@@ -1,4 +1,4 @@
-﻿using Framework.Code.Manager;
+﻿using Framework.Core.Manager;
 
 namespace Framework
 {

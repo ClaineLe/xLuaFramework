@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using Framework.Code.Widget;
+using Framework.Core.Widget;
 
 
 namespace Framework.Editor
@@ -11,58 +11,28 @@ namespace Framework.Editor
     {
 		public class EditorMenuItemsHub
         {
-			[MenuItem ("FrameworkTools/AssetBundles/Build AssetBundleName/All")]
+			[MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/All")]
 			static public void BuildAssetBundleName_All ()
 			{
-				AssetBundleMark.BuildAssetBundleName ();
+				AssetBundleMark.MarkAllAssetBundle ();
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/Build AssetBundles/Android")]
+			[MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/Clear")]
+			static public void BuildAssetBundleName_Clear ()
+			{
+				AssetBundleMark.CleanAssetBundleName ();
+			}
+
+			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/All")]
 			static public void BuildAssetBundles_Android ()
 			{
-				AssetBundleBuild.BuildAssetBundles (BuildTarget.Android);
+				AssetBundleBuild.BuildAllAssetBundle ();
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/Build AssetBundles/Windown")]
-			static public void BuildAssetBundles_Windown ()
+			[MenuItem ("FrameworkTools/AssetBundles/Build Player")]
+			static public void BuildPlayer ()
 			{
-				AssetBundleBuild.BuildAssetBundles (BuildTarget.StandaloneWindows64);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/Build AssetBundles/iOS")]
-			static public void BuildAssetBundles_iOS ()
-			{
-				AssetBundleBuild.BuildAssetBundles (BuildTarget.iOS);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/Build AssetBundles/OSX")]
-			static public void BuildAssetBundles_OSX ()
-			{
-				AssetBundleBuild.BuildAssetBundles (BuildTarget.StandaloneOSX);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/Build Player/Android")]
-			static public void BuildPlayer_Android ()
-			{
-				AssetBundlePacker.BuildPlayer (BuildTarget.Android);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/Build Player/Windown")]
-			static public void BuildPlayer_Windown ()
-			{
-				AssetBundlePacker.BuildPlayer (BuildTarget.StandaloneWindows64);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/Build Player/iOS")]
-			static public void BuildPlayer_iOS ()
-			{
-				AssetBundlePacker.BuildPlayer (BuildTarget.iOS);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/Build Player/OSX")]
-			static public void BuildPlayer_OSX ()
-			{
-				AssetBundlePacker.BuildPlayer (BuildTarget.StandaloneOSX);
+				AssetBundlePacker.BuildPlayer ();
 			}
         }
     }

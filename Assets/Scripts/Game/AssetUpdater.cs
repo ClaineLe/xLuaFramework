@@ -1,8 +1,10 @@
-﻿namespace Framework
+﻿using UnityEngine;
+
+namespace Framework
 {
     namespace Game
     {
-        public class AssetUpdater
+		public class AssetUpdater:MonoBehaviour
         {
 
         }

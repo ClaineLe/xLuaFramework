@@ -30,12 +30,9 @@ namespace Framework.Editor
 			}
 
 
-			public static void BuildPlayer (BuildTarget target)
+			public static void BuildPlayer ()
 			{
-				if (target != EditorUserBuildSettings.activeBuildTarget) {
-					Debug.LogError ("[BuildPlayer]Fail. ActiveBuildTarget:" + EditorUserBuildSettings.activeBuildTarget + ", destBuildTarget:" + target);
-					return;
-				}
+				BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
 
 				var outputPath = PathConst.PlayerOutPutPath + AppConst.GetPlatformForAssetBundles (target);
 				if (!Directory.Exists (outputPath))
@@ -87,7 +84,7 @@ namespace Framework.Editor
 					return;
 
 				// Build and copy AssetBundles.
-				AssetBundleBuild.BuildAssetBundles (target);
+				AssetBundleBuild.BuildAllAssetBundle ();
 				CopyAssetBundlesTo (PathConst.StreamAssetPathInAsset);
 				AssetDatabase.Refresh ();
 

@@ -1,7 +1,7 @@
 ﻿
 using UnityEditor;
 using UnityEditor.UI;
-using Framework.Code.Widget;
+using Framework.Core.Widget;
 
 namespace Framework.Editor
 {

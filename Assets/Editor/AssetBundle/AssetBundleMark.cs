@@ -1,39 +1,48 @@
 ﻿using System.IO;
-using Framework.Code.Manager;
+using Framework.Core.Manager;
 using Framework.Util;
 using UnityEditor;
 using UnityEngine;
 using Framework.Game;
-
+using System.Collections.Generic;
+using Framework.Core.Manager;
 namespace Framework.Editor
 {
     namespace AssetBundle
     {
 		public class AssetBundleMark
         {
-			public static void BuildAssetBundleName(){
-
+			public static void CleanAssetBundleName(){
 				foreach (string assetbundleName in AssetDatabase.GetAllAssetBundleNames())
 					AssetDatabase.RemoveAssetBundleName (assetbundleName,true);
+			}
 
-				string path = Application.dataPath + "/" + PathConst.ExportResDirPath;
-				string[] resFile = Directory.GetFiles (path, "*.*", SearchOption.AllDirectories);
-				for (int i = 0; i < resFile.Length; i++) {
-					if (Path.GetExtension (resFile [i]) == ".meta")
-						continue;
-					if (Path.GetExtension (resFile [i]) == ".DS_Store")
-						continue;
-					string dirName = Path.GetDirectoryName (resFile [i]);
-					string fileName = Path.GetFileNameWithoutExtension (resFile [i]);
-					AssetImporter assetImporter = AssetImporter.GetAtPath ("Assets/" + PathConst.ExportResDirPath + resFile[i].Replace (path, string.Empty));
-					Debug.Log ("Assets/" + PathConst.ExportResDirPath + resFile[i].Replace (path, string.Empty));
-					string assetPath = Path.Combine (dirName, fileName).Replace (path, string.Empty);
-					assetPath = assetPath.Replace('/','_').Replace('\\','_');
-					if (assetImporter.assetBundleName != assetPath) {
-						assetImporter.assetBundleName = assetPath;
+			public static void MarkAssetBundle(string[] paths){
+				string basepath = Path.Combine (Application.dataPath, PathConst.ExportResDirPath);
+				for (int i = 0; i < paths.Length; i++) {
+					string[] assetFiles = Directory.GetFiles (Path.Combine(basepath, paths[i]), "*.*", SearchOption.AllDirectories);
+					List<string> assetFileList = new List<string> (assetFiles);
+					assetFileList.RemoveAll (a=>a.EndsWith (".meta") || a.EndsWith (".DS_Store"));
+					for (int j = 0; j < assetFileList.Count; j++) {
+						string filePath = assetFileList [j];
+						string bundleName = AssetPathController.GetAssetBundleName (filePath.Replace(basepath,string.Empty));
+						AssetImporter importer = AssetImporter.GetAtPath (FileUtil.GetProjectRelativePath (filePath));
+						if (importer != null){
+							if(!string.IsNullOrEmpty(bundleName) && importer.assetBundleName != bundleName)
+								importer.assetBundleName = bundleName;
+						} else {
+							Debug.LogError ("Found out File. Path:" + filePath);
+						}
 					}
 				}
 			}
-        }
+        
+			public static void MarkAllAssetBundle(){
+				MarkAssetBundle (new []{
+					"Lua",
+					"Prefabs",
+				});
+			}
+		}
     }
 }

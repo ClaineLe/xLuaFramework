@@ -1,6 +1,6 @@
 ﻿
 using UnityEditor;
-using Framework.Code.Widget;
+using Framework.Core.Widget;
 
 namespace Framework.Editor
 {

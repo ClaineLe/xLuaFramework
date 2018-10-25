@@ -1,0 +1,64 @@
+
+local CSModel = CS.Framework.Core.Assistant.Model;
+
+BaseModel = {
+	m_Id,
+	m_Name,
+	m_CSModel,
+	m_Listeners = {},
+}
+
+function BaseModel:Create()
+	local obj = {}
+	setmetatable( obj, { __index = self })
+	obj.m_CSModel = CSModel(self.m_Id,self.m_Name)
+	obj:Start()
+	return obj
+end
+
+function BaseModel:Start()
+	self:OnStart()
+end
+
+function BaseModel:Release()
+	self:OnRelease()
+end
+
+function BaseModel:OnStart()
+end
+
+function BaseModel:OnRelease()
+end
+
+function BaseModel:RegiestNetDataReceiver (cmd, handle)
+	self.m_CSModel:RegiestNetDataReceiver (cmd, handle)
+end
+
+function BaseModel:UnRegiestNetDataReceiver (cmd)
+	self.m_CSModel:UnRegiestNetDataReceiver (cmd, handle)
+end
+
+function BaseModel:Notify (notifyName, param)
+	self.m_CSModel:Notify (notifyName, param)
+end
+
+function BaseModel:AddNotify (notifyName, handle)
+	if not self.m_Listeners[notifyName] then 
+		self.m_Listeners[notifyName] = {}
+	end
+	self.m_Listeners[notifyName][handle] = function ( param )
+		handle(self,param)
+	end 
+	self.m_CSModel:AddNotify (notifyName, self.m_Listeners[notifyName][handle])
+end
+
+function BaseModel:RemoveNotify (notifyName, handle)
+	if handle then 
+		self.m_CSModel:RemoveNotify (notifyName, self.m_Listeners[notifyName][handle])
+	else
+		self.m_CSModel:RemoveNotify (notifyName)
+	end
+end
+
+
+

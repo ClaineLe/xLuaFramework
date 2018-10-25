@@ -1,0 +1,43 @@
+
+local LoginView = {
+	m_Text,
+}
+setmetatable( LoginView, { __index = BaseView})
+
+function LoginView:init()
+	print("LoginView:init")
+end
+
+
+
+return LoginView
+
+
+--[[
+
+local _injury = 100--伤害
+local _injuryMul = 0.5--暴击率
+local _critChanceMul = 3--暴击倍数
+
+function GetTotalInjury(_violent)
+    if _violent == true then 
+        if _injuryMul >= 1.0 then 
+			return _injury * _injuryMul * _critChanceMul
+        else
+			return _injury * 1.0 * _critChanceMul
+        end
+	else
+		return _injury * _critChanceMul
+    end
+end
+
+_injuryMul = 0.5
+print("伤害:" .. _injury .. " , 暴击倍数:" .. _critChanceMul .. " ,暴击率:" .. (_injuryMul * 100)  .. "%  最终输出伤害:" .. GetTotalInjury(true))
+
+_injuryMul = 1.0;
+print("伤害:" .. _injury .. " , 暴击倍数:" .. _critChanceMul .. " ,暴击率:" .. (_injuryMul * 100)  .. "%  最终输出伤害:" .. GetTotalInjury(true))
+
+_injuryMul = 1.5;
+print("伤害:" .. _injury .. " , 暴击倍数:" .. _critChanceMul .. " ,暴击率:" .. (_injuryMul * 100)  .. "%  最终输出伤害:" .. GetTotalInjury(true))
+
+]]

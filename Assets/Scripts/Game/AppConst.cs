@@ -16,8 +16,9 @@ namespace Framework
 
             public const string FileServerIP = "192.168.0.0";
 
+			public static bool ActiveAssetUpdater = true;
 			/** AssetBundle仿真模式 */
-			public static bool SimulateAssetBundleInEditor = true;
+			public static bool SimulateAssetBundleInEditor = false;
 
 			public static string GetPlatformName ()
 			{

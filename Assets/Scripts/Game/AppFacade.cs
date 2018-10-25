@@ -1,5 +1,5 @@
-﻿using Framework.Code.Manager;
-using Framework.Code.Singleton;
+﻿using Framework.Core.Manager;
+using Framework.Core.Singleton;
 using System.Collections.Generic;
 
 namespace Framework
@@ -19,12 +19,7 @@ namespace Framework
 			private Delegate_Manager_Tick m_MgrTick_Handle;
 			private Delegate_Manager_Release m_MgrRelease_Handle;
 
-			public void StartUp ()
-			{
-				this.InitManager ();
-			}
-
-			private void InitManager ()
+			public void InitManager ()
 			{
 				if (m_MgrInit_Handle != null)
 					m_MgrInit_Handle ();
@@ -75,6 +70,11 @@ namespace Framework
 				if (this.m_IsDone) {
 					this.TickManager ();
 				}
+			}
+
+			public void OnApplicationQuit()
+			{
+				Release();
 			}
 		}
 	}
