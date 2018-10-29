@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿/**  
+	该脚本用于融合cSharp侧对象在Lua侧的实现。(未完成)
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace Framework.Core
 {
@@ -19,7 +22,7 @@ namespace Framework.Core
 
 			public const string m_CreateFunName = "Create";
 
-			protected void Init(){
+			protected void LuaInit(){
 				
 			}
 
@@ -27,6 +30,10 @@ namespace Framework.Core
 				string luaPath = string.Format (m_LuaPathFormat,this.m_LuaName,this.m_LuaName);
 				XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire (luaPath);
 				this.m_LuaTable = luaTmp.Get<XLua.LuaFunction> (m_CreateFunName).Call (luaTmp, this)[0] as XLua.LuaTable;
+			}
+
+			protected void LuaRelease(){
+				
 			}
 		}
 	}
