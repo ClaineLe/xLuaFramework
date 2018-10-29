@@ -29,16 +29,6 @@ namespace Framework
 					#endif
 				}
 			}
-
-			public static string PersistentDataPath {
-				get {
-					#if UNITY_EDITOR
-					return Application.dataPath + "/../PersistentData/" + AssetBundlesOutputPath + "/";
-					#else
-					return Application.persistentDataPath + "/" + AssetBundlesOutputPath + "/";
-					#endif
-				}
-			}
         }
     }
 }

@@ -74,14 +74,14 @@ namespace Framework
 
             public byte[] CustomLoader(ref string filepath)
             {
-				string luaPath = "Lua/" + filepath.Replace('.',Path.DirectorySeparatorChar);
+				string luaPath = ResPathConst.FORMAT_LUAROOT + filepath.Replace('.',Path.DirectorySeparatorChar);
 				TextAsset txtAsset = Framework.Game.Manager.AssetMgr.LoadAsset (luaPath, typeof(TextAsset)) as TextAsset;
 				return txtAsset.bytes;
             }
 
             public bool StartUpLuaFramework()
             {
-				XLua.LuaTable frameworkTable = this.TblRequire ("#core.Framework");
+				XLua.LuaTable frameworkTable = this.TblRequire (ResPathConst.LUA_FRAMEWORK);
                 m_FrameworkStart = frameworkTable.Get<XLua.LuaFunction>("Start");
                 m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
                 m_FrameworkRelease = frameworkTable.Get<XLua.LuaFunction>("Release");

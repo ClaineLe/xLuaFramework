@@ -18,7 +18,7 @@ namespace Framework
 
 			public static bool ActiveAssetUpdater = true;
 			/** AssetBundle仿真模式 */
-			public static bool SimulateAssetBundleInEditor = false;
+			public static bool SimulateAssetBundleInEditor = true;
 
 			public static string GetPlatformName ()
 			{

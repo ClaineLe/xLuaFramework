@@ -1,11 +1,9 @@
 local CSGameObject = CS.UnityEngine.GameObject
-local CSWidgetNode = CS.Framework.Core.Widget.WidgetNode
 ModelFactory={
 	
 }
-local FORMAT_MODEL_NAME = "model.%s.%s"
 
 function ModelFactory:CreateModel( modelName )
-	local modelTmp = require (string.format(FORMAT_MODEL_NAME, string.sub(modelName,0,string.len(modelName)-5), modelName))
-	return modelTmp:Create()
+	local model = Framework.m_ModelMgr:GetModel(modelName)
+	return model
 end

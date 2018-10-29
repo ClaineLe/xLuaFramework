@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Framework.Core.Manager;
+using Framework.Game;
 
 namespace Framework.Core
 {
@@ -9,12 +11,6 @@ namespace Framework.Core
 		using Manager = Framework.Game.Manager;
 		public class Model
 		{
-			private ushort m_Id;
-			public ushort ModelId {
-				get {
-					return m_Id;
-				}
-			}
 
 			private string m_Name;
 			public string ModelName {
@@ -23,52 +19,54 @@ namespace Framework.Core
 				}
 			}
 
-			protected virtual bool m_IsLuaView{
+			protected virtual bool m_IsLuaModel{
 				get{
 					return true;	
 				}
 			}
 
-			private XLua.LuaTable m_LuaView;
-			public XLua.LuaTable LuaView{
+			private XLua.LuaTable m_LuaModel;
+			public XLua.LuaTable LuaModel{
 				get{ 
-					return m_LuaView;
+					return m_LuaModel;
 				}
 			}
-
+			protected virtual void OnInit (){
+			}
+			protected virtual void OnRelease(){
+			}
 			protected ObserverNotify<string,object> m_ModelNotify;
-			protected ObserverNotify<ushort,byte[]> m_NetworkNotify;
-
-			public Model (ushort modelId, string modelName)
+			private INetWorkFacade m_NetWorkFacade;
+			public Model (string modelName)
 			{
-				this.m_Id = modelId;
 				this.m_Name = modelName;
 				this.m_ModelNotify = new ObserverNotify<string, object> ();
-				this.m_NetworkNotify = new ObserverNotify<ushort, byte[]> ();
 				this.Init ();
 			}
 
 			public void Init(){
-				Manager.NetWorkMgr.RegiestReceiver (this.ModelId, this.NetWorkMessageReceiver);
+				if (this.m_IsLuaModel) {
+					this.InitLuaModel ();
+				}
+				this.OnInit ();
+			}
+
+			private void InitLuaModel(){
+				string luaPath = string.Format (ResPathConst.FORMAT_MODEL_NAME,this.m_Name,this.m_Name);
+				XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire (luaPath);
+				this.m_LuaModel = luaTmp.Get<XLua.LuaFunction> ("Create").Call (luaTmp, this)[0] as XLua.LuaTable;
 			}
 
 			public virtual void Release ()
 			{
 				this.m_ModelNotify.ClearObserver ();
-				this.m_NetworkNotify.ClearObserver ();
-				Framework.Game.Manager.NetWorkMgr.UnRegiestReceiver (this.ModelId);
+				if (this.m_NetWorkFacade != null)
+					this.m_NetWorkFacade.Release ();
+				this.OnRelease ();
 			}
 
-			protected void NetWorkMessageReceiver (ushort cmd, byte[] netData){
-				this.m_NetworkNotify.Notify (cmd, netData);
-			}
-
-			public void RegiestNetDataReceiver (ushort cmd, NotifyDelegate<byte[]> handle){
-				this.m_NetworkNotify.AddObserver (cmd, handle);
-			}
-
-			public void UnRegiestNetDataReceiver(ushort cmd){
-				this.m_NetworkNotify.RemoveNotify (cmd);
+			public void RegiestNetWorkFacade(INetWorkFacade netWorkFacade){
+				this.m_NetWorkFacade = netWorkFacade;
 			}
 
 			public void Notify(string notifyName,object param){

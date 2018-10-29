@@ -8,10 +8,10 @@ BaseModel = {
 	m_Listeners = {},
 }
 
-function BaseModel:Create()
+function BaseModel:Create(csModel)
 	local obj = {}
 	setmetatable( obj, { __index = self })
-	obj.m_CSModel = CSModel(self.m_Id,self.m_Name)
+	obj.m_CSModel = csModel
 	obj:Start()
 	return obj
 end
@@ -28,14 +28,6 @@ function BaseModel:OnStart()
 end
 
 function BaseModel:OnRelease()
-end
-
-function BaseModel:RegiestNetDataReceiver (cmd, handle)
-	self.m_CSModel:RegiestNetDataReceiver (cmd, handle)
-end
-
-function BaseModel:UnRegiestNetDataReceiver (cmd)
-	self.m_CSModel:UnRegiestNetDataReceiver (cmd, handle)
 end
 
 function BaseModel:Notify (notifyName, param)

@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Framework.Game;
+
+
 namespace Framework
 {
     namespace Core.Widget
     {
         public class View : IWidget
         {
-			private const string FORMAT_VIEW_NAME = "view.{0}.{1}";
 
 			private string m_Name;
 			public string Name{
@@ -46,6 +48,10 @@ namespace Framework
 			public Dictionary<string,Presender> _subViews{ get; private set;}
 			public Dictionary<string,IWidget> _widgets{ get; private set;}
 
+			protected virtual void OnInit (){
+			}
+			protected virtual void OnRelease(){
+			}
 			private View(){}
 			public static View Create(GameObject viewNode){
 				View view = new View ();
@@ -55,15 +61,20 @@ namespace Framework
 				view._rectTransform = view._transform as RectTransform;
 				view._subViews = new Dictionary<string, Presender> ();
 				view._widgets = new Dictionary<string, IWidget> ();
-				view.OnCreate ();
+				view.Init ();
 				return view;
 			}
 
-			private void OnCreate(){
+			private void Init(){
 				this.InitWidgets ();
 				if (this.m_IsLuaView) {
 					this.InitLuaView ();
 				}
+				OnInit ();
+			}
+
+			public void Release(){
+				OnRelease ();
 			}
 
             public void InitWidgets() {
@@ -82,7 +93,7 @@ namespace Framework
             }
 
 			public void InitLuaView(){
-				string luaPath = string.Format (FORMAT_VIEW_NAME,this.Name.Remove (this.Name.Length - 4),this.Name);
+				string luaPath = string.Format (ResPathConst.FORMAT_VIEW_NAME,this.Name,this.Name);
 				XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire (luaPath);
 				this.m_LuaView = luaTmp.Get<XLua.LuaFunction> ("Create").Call (luaTmp, this)[0] as XLua.LuaTable;
 			}
