@@ -1,7 +1,8 @@
 BasePresender = {
 	m_View,
 }
-function BasePresender:Create(view)
+function BasePresender:Create(params)
+	local view = params[0]
 	local obj = {}
 	setmetatable( obj, { __index = self })
 	obj.m_View = view

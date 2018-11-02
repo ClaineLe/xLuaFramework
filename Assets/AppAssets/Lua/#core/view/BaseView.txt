@@ -3,7 +3,8 @@ BaseView = {
 }
 
 
-function BaseView:Create(csView)
+function BaseView:Create( params  )
+	local csView = params[0]
 	local obj = {}
 	setmetatable( obj, { __index = self })
 	for k,v in pairs(csView._widgets) do

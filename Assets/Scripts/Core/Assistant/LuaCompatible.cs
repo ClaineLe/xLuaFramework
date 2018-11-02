@@ -40,7 +40,7 @@ namespace Framework.Core
 
             protected void InitLuaTable(params object[] arg) {
                 XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire(_luaPath);
-                this._luaTable = luaTmp.Get<XLua.LuaFunction>("Create").Call(luaTmp, arg[0])[0] as XLua.LuaTable;
+                this._luaTable = luaTmp.Get<XLua.LuaFunction>("Create").Call(luaTmp, arg)[0] as XLua.LuaTable;
             }
 
             public void Release() {
