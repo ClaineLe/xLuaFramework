@@ -63,18 +63,18 @@ namespace Framework.Core
 
             private void initWidgets() {
                 List<Widget.IWidget> widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
-                List<Widget.IWidget> subWidgets = new List<Widget.IWidget>();
-                foreach (var a in this._subViews) {
-                    subWidgets.AddRange(a.Value.m_View._widgets);
+                foreach (var v in this._subViews) {
+                    widgets = v.Value.m_View.clearRepeatWidget(widgets);
                 }
-
-                IEnumerable< Widget.IWidget > iter = widgets.Except(subWidgets);
-                foreach (var a in iter) {
-                    this._widgets.Add(a);
-                }
+                this._widgets = widgets;
             }
 
-			public void SetParent(Transform parent){
+            public List<Widget.IWidget> clearRepeatWidget(List<Widget.IWidget> scrWidgetList) {
+                return scrWidgetList.Except(this._widgets).ToList();
+            }
+
+
+            public void SetParent(Transform parent){
 				this._transform.SetParent(parent);
 			}
 
