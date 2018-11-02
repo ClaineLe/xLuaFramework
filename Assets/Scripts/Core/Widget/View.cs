@@ -24,13 +24,11 @@ namespace Framework.Core
 			private RectTransform _rectTransform;
 
             public Dictionary<string, Presender> _subViews{ get; private set;}
-			public Dictionary<string, Widget.IWidget> _widgets{ get; private set;}
-            public List<Widget.IWidget> _widgetList;
+            public List<Widget.IWidget> _widgets{ get; private set;}
             protected override void onCreate()
             {
                 this._subViews = new Dictionary<string, Presender>();
-                this._widgets = new Dictionary<string, Widget.IWidget>();
-                this._widgetList = new List<Widget.IWidget>();
+                this._widgets = new List<Widget.IWidget>();
             }
             protected override string _luaPath
             {
@@ -67,13 +65,12 @@ namespace Framework.Core
                 List<Widget.IWidget> widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
                 List<Widget.IWidget> subWidgets = new List<Widget.IWidget>();
                 foreach (var a in this._subViews) {
-                    subWidgets.AddRange(a.Value.m_View._widgetList);
+                    subWidgets.AddRange(a.Value.m_View._widgets);
                 }
 
                 IEnumerable< Widget.IWidget > iter = widgets.Except(subWidgets);
                 foreach (var a in iter) {
-                    this._widgets[a.RefName] = a;
-                    this._widgetList.Add(this._widgets[a.RefName]);
+                    this._widgets.Add(a);
                 }
             }
 
