@@ -23,11 +23,11 @@ namespace Framework.Core
 			private Transform _transform;
 			private RectTransform _rectTransform;
 
-            public Dictionary<string, Presender> _subViews{ get; private set;}
+            public List<Presender> _subPresenders{ get; private set;}
             public List<Widget.IWidget> _widgets{ get; private set;}
             protected override void onCreate()
             {
-                this._subViews = new Dictionary<string, Presender>();
+                this._subPresenders = new List<Presender>();
                 this._widgets = new List<Widget.IWidget>();
             }
             protected override string _luaPath
@@ -39,32 +39,36 @@ namespace Framework.Core
             }
             public View SetupViewGo(GameObject viewGo){
                 this._gameObject = viewGo;
-                this._transform = viewGo.transform;
+                this._transform = this._gameObject.transform;
                 this._rectTransform = this._transform as RectTransform;
-                this.initSubView();
+                this.initSubPresender();
                 this.initWidgets();
                 base.InitLuaTable(this);
                 return this;
             }
 
-            private void initSubView() {
+            public View SetupViewGo(Widget.EmptyNode subView){
+                this.m_RefName = subView.RefName;
+                return this.SetupViewGo(subView.gameObject);
+            }
+
+            private void initSubPresender() {
                 Widget.EmptyNode[] subViews = _transform.GetComponentsInChildren<Widget.EmptyNode>();
-                for (int i = 0; i < subViews.Length; i++)
-                {
+                for (int i = 0; i < subViews.Length; i++){
                     Widget.EmptyNode subView = subViews[i];
                     if (string.IsNullOrEmpty(subView.RefName.Trim()))
                         continue;
                     if (subView.gameObject.Equals(this._gameObject))
                         continue;
-                    View view = View.Create(subView.ViewName).SetupViewGo(subView.gameObject);
-                    this._subViews[subView.RefName] = Presender.Create(view.m_Name).SetupView(view);
+                    View view = View.Create(subView.ViewName).SetupViewGo(subView);
+                    this._subPresenders.Add(Presender.Create(view.m_Name).SetupView(view));
                 }
             }
 
             private void initWidgets() {
                 List<Widget.IWidget> widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
-                foreach (var v in this._subViews) {
-                    widgets = v.Value.m_View.clearRepeatWidget(widgets);
+                for (int i = 0; i < _subPresenders.Count; i++) {
+                    widgets = this._subPresenders[i].m_View.clearRepeatWidget(widgets);
                 }
                 this._widgets = widgets;
             }

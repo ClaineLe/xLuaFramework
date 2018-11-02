@@ -13,7 +13,7 @@ namespace Framework.Core
             protected abstract string _luaPath { get; }
 
             private string _name;
-            protected string m_Name {
+            public string m_Name {
                 get {
                     return this._name;
                 }
