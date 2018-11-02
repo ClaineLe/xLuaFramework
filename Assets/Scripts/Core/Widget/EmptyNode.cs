@@ -19,6 +19,9 @@
                         m_RefName = value;
                 }
             }
+
+
+            public string ViewName;
         }
     }
 }

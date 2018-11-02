@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Framework.Game;
+using System.Linq;
 
 namespace Framework.Core
 {
@@ -22,13 +23,14 @@ namespace Framework.Core
 			private Transform _transform;
 			private RectTransform _rectTransform;
 
-            public Dictionary<string,Presender> _subViews{ get; private set;}
+            public Dictionary<string, Presender> _subViews{ get; private set;}
 			public Dictionary<string, Widget.IWidget> _widgets{ get; private set;}
-
+            public List<Widget.IWidget> _widgetList;
             protected override void onCreate()
             {
                 this._subViews = new Dictionary<string, Presender>();
                 this._widgets = new Dictionary<string, Widget.IWidget>();
+                this._widgetList = new List<Widget.IWidget>();
             }
             protected override string _luaPath
             {
@@ -41,23 +43,37 @@ namespace Framework.Core
                 this._gameObject = viewGo;
                 this._transform = viewGo.transform;
                 this._rectTransform = this._transform as RectTransform;
-                this.InitWidgets();
+                this.initSubView();
+                this.initWidgets();
                 base.InitLuaTable(this);
                 return this;
             }
 
-            public void InitWidgets() {
-                Widget.IWidget[] widgets = _transform.GetComponentsInChildren<Widget.IWidget>();
-                for (int i = 0; i < widgets.Length; i++) {
-                    Widget.IWidget widget = widgets[i];
-					if (string.IsNullOrEmpty(widget.RefName.Trim()))
+            private void initSubView() {
+                Widget.EmptyNode[] subViews = _transform.GetComponentsInChildren<Widget.EmptyNode>();
+                for (int i = 0; i < subViews.Length; i++)
+                {
+                    Widget.EmptyNode subView = subViews[i];
+                    if (string.IsNullOrEmpty(subView.RefName.Trim()))
                         continue;
-					if (widgets [i] is View) {
-						View view = widgets [i] as View;
-                        this._subViews[widget.RefName] = Presender.Create(view.m_Name).SetupView(view);
-                    } else {
-						this._widgets [widget.RefName] = widget;
-                    }
+                    if (subView.gameObject.Equals(this._gameObject))
+                        continue;
+                    View view = View.Create(subView.ViewName).SetupViewGo(subView.gameObject);
+                    this._subViews[subView.RefName] = Presender.Create(view.m_Name).SetupView(view);
+                }
+            }
+
+            private void initWidgets() {
+                List<Widget.IWidget> widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
+                List<Widget.IWidget> subWidgets = new List<Widget.IWidget>();
+                foreach (var a in this._subViews) {
+                    subWidgets.AddRange(a.Value.m_View._widgetList);
+                }
+
+                IEnumerable< Widget.IWidget > iter = widgets.Except(subWidgets);
+                foreach (var a in iter) {
+                    this._widgets[a.RefName] = a;
+                    this._widgetList.Add(this._widgets[a.RefName]);
                 }
             }
 

@@ -1,3 +1,4 @@
+local CSColor = CS.UnityEngine.Color
 
 local LoginViewPresender = {
 	
@@ -10,6 +11,9 @@ end
 
 function LoginViewPresender:SetLabel( label )
 	self.m_View.m_Text.text = label
+	self.m_View.m_SubView:SetLabel( label .. label )
+	self.m_View.m_Image.color = CSColor.blue
+
 end
 
 return LoginViewPresender

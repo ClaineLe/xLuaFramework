@@ -1,0 +1,16 @@
+local CSVector2 = CS.UnityEngine.Vector2
+local SubLoginViewPresender = {
+	
+} 
+
+setmetatable( SubLoginViewPresender, { __index = BasePresender})
+
+function SubLoginViewPresender:init()
+end
+
+function SubLoginViewPresender:SetLabel( label )
+	self.m_View.m_Text.text = label
+	self.m_View.m_Image.rectTransform.anchoredPosition = CSVector2.one
+end
+
+return SubLoginViewPresender
