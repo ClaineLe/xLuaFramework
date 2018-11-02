@@ -13,7 +13,7 @@ namespace Framework.Core
             protected abstract string _luaPath { get; }
 
             private string _name;
-            protected string Name {
+            protected string m_Name {
                 get {
                     return this._name;
                 }
@@ -27,15 +27,16 @@ namespace Framework.Core
                 }
             }
 
-            public static T Create(string luaName)
+            public static T Create(string name)
             {
                 T t = new T();
-                t._name = luaName;
+                t._name = name;
                 t.onCreate();
                 return t;
             }
 
             protected abstract void onCreate();
+            protected abstract void onRelease();
 
             protected void InitLuaTable(params object[] arg) {
                 XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire(_luaPath);
@@ -46,9 +47,6 @@ namespace Framework.Core
                 onRelease();
             }
 
-            protected virtual void onRelease() {
-
-            }
         }
     }
 }

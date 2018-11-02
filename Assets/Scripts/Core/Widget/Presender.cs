@@ -16,15 +16,20 @@ namespace Framework.Core
             {
                 get
                 {
-                    return string.Format(ResPathConst.FORMAT_PRESENDER_NAME, Name, Name);
+                    return string.Format(ResPathConst.FORMAT_PRESENDER_NAME, m_Name, m_Name);
                 }
             }
-            public void SetupView(View view) {
+            public Presender SetupView(View view) {
                 this.m_View = view;
                 base.InitLuaTable(this.m_View.m_LuaTable);
+                return this;
 
             }
             protected override void onCreate()
+            {
+            }
+
+            protected override void onRelease()
             {
             }
         }

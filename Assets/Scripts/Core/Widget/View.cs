@@ -8,7 +8,6 @@ namespace Framework.Core
     {
         public class View : LuaCompatible<View>, Widget.IWidget, ILuaCompatible
         {
-			
             public string m_RefName;
             public string RefName
             {
@@ -35,15 +34,16 @@ namespace Framework.Core
             {
                 get
                 {
-                    return string.Format(ResPathConst.FORMAT_VIEW_NAME, Name, Name);
+                    return string.Format(ResPathConst.FORMAT_VIEW_NAME, m_Name, m_Name);
                 }
             }
-            public void SetupViewGo(GameObject viewGo){
+            public View SetupViewGo(GameObject viewGo){
                 this._gameObject = viewGo;
                 this._transform = viewGo.transform;
                 this._rectTransform = this._transform as RectTransform;
                 this.InitWidgets();
                 base.InitLuaTable(this);
+                return this;
             }
 
             public void InitWidgets() {
@@ -54,8 +54,7 @@ namespace Framework.Core
                         continue;
 					if (widgets [i] is View) {
 						View view = widgets [i] as View;
-                        this._subViews[widget.RefName] = Presender.Create(view.Name);
-                        this._subViews[widget.RefName].SetupView(view);
+                        this._subViews[widget.RefName] = Presender.Create(view.m_Name).SetupView(view);
                     } else {
 						this._widgets [widget.RefName] = widget;
                     }
@@ -65,6 +64,10 @@ namespace Framework.Core
 			public void SetParent(Transform parent){
 				this._transform.SetParent(parent);
 			}
+
+            protected override void onRelease()
+            {
+            }
         }
     }
 }

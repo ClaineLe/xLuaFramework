@@ -1,17 +1,14 @@
 BaseView = {
 	m_EventHandle = {},
-	m_csView,
 }
 
 
-function BaseView:Create(View)
+function BaseView:Create(csView)
 	local obj = {}
 	setmetatable( obj, { __index = self })
-	obj.m_csView = View
-	for k,v in pairs(obj.m_csView._widgets) do
+	for k,v in pairs(csView._widgets) do
 		obj[k] = v
 	end
-
 	obj:init()
 	return obj
 end

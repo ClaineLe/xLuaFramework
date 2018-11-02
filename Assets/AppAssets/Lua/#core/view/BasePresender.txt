@@ -1,10 +1,10 @@
 BasePresender = {
-	m_csView,
+	m_View,
 }
 function BasePresender:Create(view)
 	local obj = {}
 	setmetatable( obj, { __index = self })
-	obj.m_csView = view
+	obj.m_View = view
 	obj:init()
 	return obj
 end

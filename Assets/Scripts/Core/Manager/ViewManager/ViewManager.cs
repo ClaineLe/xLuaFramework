@@ -61,10 +61,8 @@ namespace Framework.Core
 				GameObject viewGo = GameObject.Instantiate (viewAsset);
 				viewGo.name = viewName;
 				ConfigView(viewGo);
-                View view = View.Create(viewName);
-                view.SetupViewGo(viewGo);
-                Presender presender = Presender.Create(viewName);
-                presender.SetupView(view);
+                View view = View.Create(viewName).SetupViewGo(viewGo);
+                Presender presender = Presender.Create(viewName).SetupView(view);
                 return presender.m_LuaTable;
 			}
 
@@ -75,10 +73,8 @@ namespace Framework.Core
 						viewGo.name = viewName;
 						ConfigView(viewGo);
 
-                        View view = View.Create(viewName);
-                        view.SetupViewGo(viewGo);
-                        Presender presender = Presender.Create(viewName);
-                        presender.SetupView(view);
+                        View view = View.Create(viewName).SetupViewGo(viewGo);
+                        Presender presender = Presender.Create(viewName).SetupView(view);
                         callback(presender.m_LuaTable);
 					}
 				},typeof(GameObject));
