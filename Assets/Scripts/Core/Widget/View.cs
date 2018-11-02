@@ -21,7 +21,7 @@ namespace Framework.Core
             
 			private GameObject _gameObject;
 			private Transform _transform;
-			private RectTransform _rectTransform;
+			//private RectTransform _rectTransform;
 
             public List<Presender> _subPresenders{ get; private set;}
             public List<Widget.IWidget> _widgets{ get; private set;}
@@ -40,7 +40,7 @@ namespace Framework.Core
             public View SetupViewGo(GameObject viewGo){
                 this._gameObject = viewGo;
                 this._transform = this._gameObject.transform;
-                this._rectTransform = this._transform as RectTransform;
+                //this._rectTransform = this._transform as RectTransform;
                 this.initSubPresender();
                 this.initWidgets();
                 base.InitLuaTable(this);

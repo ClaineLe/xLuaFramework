@@ -29,7 +29,7 @@ namespace Framework
 
             public virtual void Release()
             {
-                GameObject.DestroyObject(_instance.gameObject);
+                GameObject.Destroy(_instance.gameObject);
             }
         }
     }

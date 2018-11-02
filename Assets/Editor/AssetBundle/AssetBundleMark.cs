@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using Framework.Game;
 using System.Collections.Generic;
-using Framework.Core.Manager;
 namespace Framework.Editor
 {
     namespace AssetBundle

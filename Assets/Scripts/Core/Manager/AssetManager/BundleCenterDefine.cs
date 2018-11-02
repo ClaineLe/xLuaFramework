@@ -131,13 +131,12 @@ namespace Framework
 					return;
 				}
 
-				if (isAdditive)
-					m_Operation = UnityEditor.EditorApplication.LoadLevelAdditiveAsyncInPlayMode (levelPaths [0]);
-				else
-					m_Operation = UnityEditor.EditorApplication.LoadLevelAsyncInPlayMode (levelPaths [0]);
-			}
+                LoadSceneParameters loadSceneParams = new LoadSceneParameters();
+                loadSceneParams.loadSceneMode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+                m_Operation = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(levelPaths[0], loadSceneParams);
+            }
 
-			public override bool Update ()
+            public override bool Update ()
 			{
 				return false;
 			}
