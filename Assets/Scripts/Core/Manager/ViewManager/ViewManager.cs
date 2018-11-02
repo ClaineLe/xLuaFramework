@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Framework.Core.Widget;
 using Framework.Game;
+using Framework.Core.Assistant;
 
-namespace Framework
+namespace Framework.Core
 {
-    namespace Core.Manager
+    namespace Manager
     {
         public partial class ManagerName
         {
@@ -57,21 +56,30 @@ namespace Framework
 			{
 			}
 
-			public Presender LoadViewNode(string viewName){
+			public XLua.LuaTable LoadViewNode(string viewName){
 				GameObject viewAsset = Framework.Game.Manager.AssetMgr.LoadAsset (_GetViewPath (viewName), typeof(GameObject)) as GameObject;
 				GameObject viewGo = GameObject.Instantiate (viewAsset);
 				viewGo.name = viewName;
 				ConfigView(viewGo);
-				return Presender.Create (viewGo);
+                View view = View.Create(viewName);
+                view.SetupViewGo(viewGo);
+                Presender presender = Presender.Create(viewName);
+                presender.SetupView(view);
+                return presender.m_LuaTable;
 			}
 
-			public void LoadViewNodeAsync(string viewName, System.Action<Presender> callback){
+			public void LoadViewNodeAsync(string viewName, System.Action<XLua.LuaTable> callback){
 				Framework.Game.Manager.AssetMgr.LoadAssetAsync (_GetViewPath (viewName),viewAsset=>{
 					if(callback != null){
 						GameObject viewGo = GameObject.Instantiate (viewAsset) as GameObject;
 						viewGo.name = viewName;
 						ConfigView(viewGo);
-						callback(Presender.Create (viewGo));
+
+                        View view = View.Create(viewName);
+                        view.SetupViewGo(viewGo);
+                        Presender presender = Presender.Create(viewName);
+                        presender.SetupView(view);
+                        callback(presender.m_LuaTable);
 					}
 				},typeof(GameObject));
 			}
@@ -79,7 +87,6 @@ namespace Framework
 			private void ConfigView(GameObject viewGo){
 				viewGo.transform.SetParent(m_ViewLayer [eViewLayer.Normal].ViewRoot);
 				RectTransform rectView = viewGo.transform as RectTransform;
-				Debug.Log (rectView);
 				rectView.anchorMin = Vector2.zero;
 				rectView.anchorMax = Vector2.one;
 				rectView.anchoredPosition3D = Vector3.zero;

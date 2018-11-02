@@ -3,47 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using Framework.Core.Manager;
 using Framework.Game;
+using XLua;
 
-namespace Framework
+namespace Framework.Core
 {
-	namespace Core.Widget
-	{
-		public class Presender
-		{
+    namespace Assistant
+    {
+		public class Presender : LuaCompatible<Presender>
+        {
 			public View m_View{ get; private set;}
+            protected override string _luaPath
+            {
+                get
+                {
+                    return string.Format(ResPathConst.FORMAT_PRESENDER_NAME, Name, Name);
+                }
+            }
+            public void SetupView(View view) {
+                this.m_View = view;
+                base.InitLuaTable(this.m_View.m_LuaTable);
 
-			protected virtual bool m_IsLuaPresender{
-				get{
-					return true;	
-				}
-			}
-
-			private XLua.LuaTable m_LuaPresender;
-			public XLua.LuaTable LuaPresender{
-				get{ 
-					return m_LuaPresender;
-				}
-			}
-
-			private Presender(){}
-			public static Presender Create(GameObject viewGo){
-				Presender presender = new Presender ();
-				presender.m_View = View.Create (viewGo);;
-				presender.OnCreate ();
-				return presender;
-			}
-
-			private void OnCreate(){
-				if (this.m_IsLuaPresender) {
-					this.InitLuaPresender ();
-				}
-			}
-
-			public void InitLuaPresender(){
-				string luaPath = string.Format (ResPathConst.FORMAT_PRESENDER_NAME,this.m_View.Name,this.m_View.Name);
-				XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire (luaPath);
-				this.m_LuaPresender = luaTmp.Get<XLua.LuaFunction> ("Create").Call (luaTmp, this.m_View.LuaView)[0] as XLua.LuaTable;
-			}
-		}
+            }
+            protected override void onCreate()
+            {
+            }
+        }
 	}
 }

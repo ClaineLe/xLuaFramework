@@ -5,13 +5,13 @@ ViewFactory={
 
 
 function ViewFactory:CreateView(viewName )
-	local csPresender = Framework.m_ViewMgr:LoadViewNode(viewName)
-	return csPresender.LuaPresender
+	local luaPresender = Framework.m_ViewMgr:LoadViewNode(viewName)
+	return luaPresender
 end
 
 function ViewFactory:CreateViewAsync(viewName, callback )
-	Framework.m_ViewMgr:LoadViewNodeAsync(viewName,function (csPresender)
-		callback(csPresender.LuaPresender)
+	Framework.m_ViewMgr:LoadViewNodeAsync(viewName,function (presender)
+		callback(presender)
 	end)
 end
 

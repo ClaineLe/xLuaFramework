@@ -8,65 +8,34 @@ namespace Framework.Core
 {
 	namespace Assistant
 	{
-		using Manager = Framework.Game.Manager;
-		public class Model
-		{
-
-			private string m_Name;
-			public string ModelName {
-				get {
-					return m_Name;
-				}
-			}
-
-			protected virtual bool m_IsLuaModel{
-				get{
-					return true;	
-				}
-			}
-
-			private XLua.LuaTable m_LuaModel;
-			public XLua.LuaTable LuaModel{
-				get{ 
-					return m_LuaModel;
-				}
-			}
-			protected virtual void OnInit (){
-			}
-			protected virtual void OnRelease(){
-			}
+		public class Model : LuaCompatible<Model>
+        {
 			protected ObserverNotify<string,object> m_ModelNotify;
 			private INetWorkFacade m_NetWorkFacade;
-			public Model (string modelName)
-			{
-				this.m_Name = modelName;
-				this.m_ModelNotify = new ObserverNotify<string, object> ();
-				this.Init ();
-			}
 
-			public void Init(){
-				if (this.m_IsLuaModel) {
-					this.InitLuaModel ();
-				}
-				this.OnInit ();
-			}
+            protected override string _luaPath
+            {
+                get
+                {
+                    return string.Format(ResPathConst.FORMAT_MODEL_NAME, Name, Name);
+                }
+            }
 
-			private void InitLuaModel(){
-				string luaPath = string.Format (ResPathConst.FORMAT_MODEL_NAME,this.m_Name,this.m_Name);
-				XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire (luaPath);
-				this.m_LuaModel = luaTmp.Get<XLua.LuaFunction> ("Create").Call (luaTmp, this)[0] as XLua.LuaTable;
-			}
+            protected override void onCreate()
+            {
+                this.m_ModelNotify = new ObserverNotify<string, object>();
+                base.InitLuaTable(this);
+            }
 
-			public virtual void Release ()
+            public void SetupNetWorkFacade(INetWorkFacade netWorkFacade)
+            {
+                this.m_NetWorkFacade = netWorkFacade;
+            }
+            protected override void onRelease ()
 			{
 				this.m_ModelNotify.ClearObserver ();
 				if (this.m_NetWorkFacade != null)
 					this.m_NetWorkFacade.Release ();
-				this.OnRelease ();
-			}
-
-			public void RegiestNetWorkFacade(INetWorkFacade netWorkFacade){
-				this.m_NetWorkFacade = netWorkFacade;
 			}
 
 			public void Notify(string notifyName,object param){

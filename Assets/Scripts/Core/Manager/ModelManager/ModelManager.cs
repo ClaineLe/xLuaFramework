@@ -43,7 +43,8 @@ namespace Framework.Core
 			}
 
 			public Model CreateModel(string modelName){
-				return new Model (modelName);
+                Model model = Model.Create(modelName);
+                return model;
 			}
 		}
 	}

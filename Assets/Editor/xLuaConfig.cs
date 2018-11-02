@@ -34,10 +34,11 @@ namespace Framework.Editor
                     List<Type> cs_call_lua_list_tmp = hotfixArray.ToList();
 					cs_call_lua_list_tmp.Add (typeof(UnityAction));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<object>));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.Object>));
+					cs_call_lua_list_tmp.Add (typeof(UnityAction<XLua.LuaTable>));
+                    cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.Object>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.GameObject>));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Widget.View>));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Widget.Presender>));
+					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Assistant.View>));
+					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Assistant.Presender>));
                     return cs_call_lua_list_tmp;
                 }
             }

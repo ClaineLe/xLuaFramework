@@ -2,21 +2,13 @@
 using UnityEngine;
 using Framework.Game;
 
-
-namespace Framework
+namespace Framework.Core
 {
-    namespace Core.Widget
+    namespace Assistant
     {
-        public class View : IWidget
+        public class View : LuaCompatible<View>, Widget.IWidget, ILuaCompatible
         {
-
-			private string m_Name;
-			public string Name{
-				get{ 
-					return m_Name;
-				}
-			}
-
+			
             public string m_RefName;
             public string RefName
             {
@@ -26,77 +18,49 @@ namespace Framework
                         m_RefName = value;
                 }
             }
-
-			protected virtual bool m_IsLuaView{
-				get{
-					return true;	
-				}
-			}
-
-			private XLua.LuaTable m_LuaView;
-			public XLua.LuaTable LuaView{
-				get{ 
-					return m_LuaView;
-				}
-			}
-
+            
 			private GameObject _gameObject;
 			private Transform _transform;
 			private RectTransform _rectTransform;
 
+            public Dictionary<string,Presender> _subViews{ get; private set;}
+			public Dictionary<string, Widget.IWidget> _widgets{ get; private set;}
 
-			public Dictionary<string,Presender> _subViews{ get; private set;}
-			public Dictionary<string,IWidget> _widgets{ get; private set;}
-
-			protected virtual void OnInit (){
-			}
-			protected virtual void OnRelease(){
-			}
-			private View(){}
-			public static View Create(GameObject viewNode){
-				View view = new View ();
-				view.m_Name = viewNode.name;
-				view._gameObject = viewNode;
-				view._transform = viewNode.transform;
-				view._rectTransform = view._transform as RectTransform;
-				view._subViews = new Dictionary<string, Presender> ();
-				view._widgets = new Dictionary<string, IWidget> ();
-				view.Init ();
-				return view;
-			}
-
-			private void Init(){
-				this.InitWidgets ();
-				if (this.m_IsLuaView) {
-					this.InitLuaView ();
-				}
-				OnInit ();
-			}
-
-			public void Release(){
-				OnRelease ();
-			}
+            protected override void onCreate()
+            {
+                this._subViews = new Dictionary<string, Presender>();
+                this._widgets = new Dictionary<string, Widget.IWidget>();
+            }
+            protected override string _luaPath
+            {
+                get
+                {
+                    return string.Format(ResPathConst.FORMAT_VIEW_NAME, Name, Name);
+                }
+            }
+            public void SetupViewGo(GameObject viewGo){
+                this._gameObject = viewGo;
+                this._transform = viewGo.transform;
+                this._rectTransform = this._transform as RectTransform;
+                this.InitWidgets();
+                base.InitLuaTable(this);
+            }
 
             public void InitWidgets() {
-				IWidget[] widgets = _transform.GetComponentsInChildren<IWidget>();
+                Widget.IWidget[] widgets = _transform.GetComponentsInChildren<Widget.IWidget>();
                 for (int i = 0; i < widgets.Length; i++) {
-					IWidget widget = widgets[i];
+                    Widget.IWidget widget = widgets[i];
 					if (string.IsNullOrEmpty(widget.RefName.Trim()))
                         continue;
 					if (widgets [i] is View) {
 						View view = widgets [i] as View;
-						this._subViews [widget.RefName] = Presender.Create (view._gameObject);
-					} else {
+                        this._subViews[widget.RefName] = Presender.Create(view.Name);
+                        this._subViews[widget.RefName].SetupView(view);
+                    } else {
 						this._widgets [widget.RefName] = widget;
-					}
+                    }
                 }
             }
-
-			public void InitLuaView(){
-				string luaPath = string.Format (ResPathConst.FORMAT_VIEW_NAME,this.Name,this.Name);
-				XLua.LuaTable luaTmp = Framework.Game.Manager.LuaMgr.TblRequire (luaPath);
-				this.m_LuaView = luaTmp.Get<XLua.LuaFunction> ("Create").Call (luaTmp, this)[0] as XLua.LuaTable;
-			}
 
 			public void SetParent(Transform parent){
 				this._transform.SetParent(parent);
