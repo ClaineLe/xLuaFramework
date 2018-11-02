@@ -5,7 +5,6 @@ local SubLoginView = {
 setmetatable( SubLoginView, { __index = BaseView})
 
 function SubLoginView:init()
-	print("LoginView:init")
 end
 
 

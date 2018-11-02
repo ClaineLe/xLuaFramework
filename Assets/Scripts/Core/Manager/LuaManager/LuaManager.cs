@@ -63,7 +63,6 @@ namespace Framework
             }
 
 			public XLua.LuaTable TblRequire(string luaPath){
-				Debug.Log (luaPath);
 				return this.m_Require.Call (luaPath)[0] as XLua.LuaTable;
 			}
 

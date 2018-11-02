@@ -5,10 +5,7 @@ local LoginView = {
 setmetatable( LoginView, { __index = BaseView})
 
 function LoginView:init()
-	print("LoginView:init")
 end
-
-
 
 return LoginView
 
