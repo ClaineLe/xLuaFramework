@@ -8,7 +8,7 @@ namespace Framework
 	{
 		public class AppFacade : SingletonMono<AppFacade>
 		{
-			private bool m_IsDone = false;
+            private bool m_IsDone;
 			private Dictionary<string, IManager> m_Managers = new Dictionary<string, IManager> ();
 
 			private delegate void Delegate_Manager_Init ();
@@ -19,7 +19,11 @@ namespace Framework
 			private Delegate_Manager_Tick m_MgrTick_Handle;
 			private Delegate_Manager_Release m_MgrRelease_Handle;
 
-			public void InitManager ()
+            protected override void onInit()
+            {
+                m_IsDone = false;
+            }
+            public void InitManager ()
 			{
 				if (m_MgrInit_Handle != null)
 					m_MgrInit_Handle ();
@@ -53,7 +57,7 @@ namespace Framework
 				return default(T);
 			}
 
-			public override void Release ()
+            protected override void onRelease ()
 			{
 				if (this.m_MgrRelease_Handle != null)
 					this.m_MgrRelease_Handle ();
@@ -76,6 +80,7 @@ namespace Framework
 			{
 				Release();
 			}
-		}
+
+        }
 	}
 }

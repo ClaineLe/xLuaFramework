@@ -16,7 +16,7 @@ namespace Framework
 
             public const string FileServerIP = "192.168.0.0";
 
-			public static bool ActiveAssetUpdater = true;
+			public static bool ActiveAssetUpdater = false;
 			/** AssetBundle仿真模式 */
 			public static bool SimulateAssetBundleInEditor = true;
 

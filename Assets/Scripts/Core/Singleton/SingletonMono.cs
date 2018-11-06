@@ -16,21 +16,27 @@ namespace Framework
                     {
                         GameObject mono = new GameObject(typeof(T).Name);
                         _instance = mono.AddComponent<T>();
+                        _instance.Init();
                         DontDestroyOnLoad(mono);
                     }
                     return _instance;
                 }
             }
 
-            public virtual void Init()
+            public void Init()
             {
-
+                this.onInit();
             }
 
-            public virtual void Release()
+            public void Release()
             {
                 GameObject.Destroy(_instance.gameObject);
+                _instance = null;
+                this.onRelease();
             }
+
+            protected abstract void onInit();
+            protected abstract void onRelease();
         }
     }
 }
