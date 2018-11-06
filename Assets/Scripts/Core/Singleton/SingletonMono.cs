@@ -35,8 +35,8 @@ namespace Framework
                 this.onRelease();
             }
 
-            protected abstract void onInit();
-            protected abstract void onRelease();
+            protected virtual void onInit() { }
+            protected virtual void onRelease() { }
         }
     }
 }

@@ -6,14 +6,14 @@ namespace Framework
 {
     namespace Game
     {
-        public class StartUp : MonoBehaviour
+        public class AppStartUp : MonoBehaviour
         {
             public void Start()
             {
-                AssetUpdater.Instance.Run(Lanucher);
+                UpdaterModel.Instance.Lanucher(StartUpFramework);
             }
 
-            public void Lanucher()
+            public void StartUpFramework()
             {
                 AppFacade.Instance.AddManager<AssetManager>(ManagerName.Asset);
                 AppFacade.Instance.AddManager<EventManager>(ManagerName.Event);
@@ -28,10 +28,6 @@ namespace Framework
                 AppFacade.Instance.InitManager();
                 Manager.LuaMgr.StartUpLuaFramework();
             }
-
-            private void InitApp(){
-				
-			}
 		}
     }
 }
