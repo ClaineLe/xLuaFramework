@@ -14,11 +14,12 @@ namespace Framework
             public const string ResVersion = "2.0.0";
             public const string LuaVersion = "3.0.0";
 
-            public const string FileServerIP = "192.168.0.0";
+            public const string AppInfoFileName = "AASS.txt";
+            public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/";
 
-			public static bool ActiveAssetUpdater = false;
+			public static bool ActiveAssetUpdater = true;
 			/** AssetBundle仿真模式 */
-			public static bool SimulateAssetBundleInEditor = true;
+			public static bool SimulateAssetBundleInEditor = false;
 
 			public static string GetPlatformName ()
 			{
