@@ -84,7 +84,7 @@ namespace Framework.Editor
 					return;
 
 				// Build and copy AssetBundles.
-				AssetBundleBuild.BuildAllAssetBundle ();
+				AssetBundleBuild.BuildAssetBundle_all ();
 				CopyAssetBundlesTo (PathConst.StreamAssetPathInAsset);
 				AssetDatabase.Refresh ();
 

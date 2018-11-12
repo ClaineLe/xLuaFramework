@@ -11,22 +11,34 @@ namespace Framework.Editor
     {
 		public class EditorMenuItemsHub
         {
-			[MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/All")]
+			[MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/all")]
 			static public void BuildAssetBundleName_All ()
 			{
 				AssetBundleMark.MarkAllAssetBundle ();
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/Clear")]
+			[MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/clear")]
 			static public void BuildAssetBundleName_Clear ()
 			{
 				AssetBundleMark.CleanAssetBundleName ();
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/All")]
-			static public void BuildAssetBundles_Android ()
+			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/lua")]
+			static public void BuildAssetBundles_LUA ()
 			{
-				AssetBundleBuild.BuildAllAssetBundle ();
+				AssetBundleBuild.BuildAssetBundle_lua ();
+			}
+
+			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/res")]
+			static public void BuildAssetBundles_RES ()
+			{
+				AssetBundleBuild.BuildAssetBundle_res ();
+			}
+
+			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/all")]
+			static public void BuildAssetBundles_ALL ()
+			{
+				AssetBundleBuild.BuildAssetBundle_all ();
 			}
 
 			[MenuItem ("FrameworkTools/AssetBundles/Build Player")]
