@@ -5,14 +5,18 @@ namespace Framework
 {
     namespace Game
     {
+		public enum eChange{
+			Official = 1,
+		}
+
         public class AppConst
         {
 			public const string AppName = "xLuaFramework";
 
-            public const int Change = 1;
             public const string AppVersion = "1.0.0";
             public const string ResVersion = "2.0.0";
             public const string LuaVersion = "3.0.0";
+			public const eChange Change = eChange.Official;
 
             public const string AppInfoFileName = "AASS.txt";
             public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/";
