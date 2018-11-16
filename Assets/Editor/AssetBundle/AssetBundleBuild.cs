@@ -11,39 +11,41 @@ namespace Framework.Editor
 	{
 		public class AssetBundleBuild
 		{
-			public static void BuildAssetBundle_lua ()
-			{
-				UnityEditor.AssetBundleBuild[] builds = GetBuilds (new List<string>(){
-					"lua_",
-				});
-				BuildAssetBundleBase (builds);
-			}
-
 			public static void BuildAssetBundle_res ()
 			{
-				UnityEditor.AssetBundleBuild[] builds = GetBuilds (null,new List<string>(){
-					"lua_",
+				BuildAssetBundleBase (AppConst.ResVersion,"res",new []{
+					"prefab",
+					"scene",
 				});
-				BuildAssetBundleBase (builds);
+			}
+
+			public static void BuildAssetBundle_lua ()
+			{
+				BuildAssetBundleBase (AppConst.LuaVersion,"lua",new []{
+					"lua",
+				});
+			}
+
+			public static void BuildAssetBundle_xls ()
+			{
+				BuildAssetBundleBase (AppConst.XlsVersion,"xls",new []{
+					"xls",
+				});
 			}
 
 			public static void BuildAssetBundle_all(){
+				BuildAssetBundle_xls ();
 				BuildAssetBundle_lua ();
 				BuildAssetBundle_res ();
-				return;
-				UnityEditor.AssetBundleBuild[] builds = GetBuilds ();
-				BuildAssetBundleBase (builds);
 			}
 
-			private static UnityEditor.AssetBundleBuild[] GetBuilds(List<string> startWith = null, List<string> filterStrs = null ){
+			private static UnityEditor.AssetBundleBuild[] GetBuilds(string[] filterStrs){
 				List<UnityEditor.AssetBundleBuild> buildList = new List<UnityEditor.AssetBundleBuild> ();
 				List<string> abNameList = new List<string>(AssetDatabase.GetAllAssetBundleNames ());
 
-				if (startWith != null && startWith.Count > 0) 
-					abNameList = abNameList.FindAll (a => startWith.Exists(b=>a.StartsWith(b)));
-
-				if (filterStrs != null && filterStrs.Count > 0) 
-					abNameList.RemoveAll (a => filterStrs.Exists(b=>a.StartsWith(b)));
+				List<string> filters = new List<string> (filterStrs);
+				if (filters != null && filters.Count > 0) 
+					abNameList = abNameList.FindAll (a => filters.Exists(b=>a.StartsWith(b)));
 
 				for (int i = 0; i < abNameList.Count; i++) {
 					UnityEditor.AssetBundleBuild build = new UnityEditor.AssetBundleBuild ();
@@ -55,19 +57,25 @@ namespace Framework.Editor
 				return buildList.ToArray ();
 			}
 
-			private static void BuildAssetBundleBase(UnityEditor.AssetBundleBuild[] builds = null){
-				System.Version resVersion = new System.Version( AppConst.ResVersion + "." + AppConst.LuaVersion);
-				BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-				string outputPath = Path.Combine (PathConst.StreamAssetPath, AppConst.GetPlatformForAssetBundles (target));
-				if (!Directory.Exists (outputPath))
-					Directory.CreateDirectory (outputPath);
+			private static void BuildAssetBundleBase(int versionFlag, string pathFlag, string[] filterStrs){
+				if (filterStrs.Length > 0) {
+					UnityEditor.AssetBundleBuild[] builds = GetBuilds (filterStrs);
+					if (builds.Length > 0) {
+						BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
+						string outputPath = Path.Combine (PathConst.StreamAssetPath, AppConst.GetPlatformForAssetBundles (target));
+						outputPath = Path.Combine (outputPath, pathFlag);
+						outputPath = Path.Combine (outputPath, versionFlag.ToString());
+						if (!Directory.Exists (outputPath))
+							Directory.CreateDirectory (outputPath);
 
-				BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
-				Debug.Log (EditorUserBuildSettings.activeBuildTarget);
-				if(builds == null)
-					BuildPipeline.BuildAssetBundles (outputPath, options,target );
-				else
-					BuildPipeline.BuildAssetBundles (outputPath, builds, options, target);
+						BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
+						Debug.Log (EditorUserBuildSettings.activeBuildTarget);
+						if(builds == null)
+							BuildPipeline.BuildAssetBundles (outputPath, options,target );
+						else
+							BuildPipeline.BuildAssetBundles (outputPath, builds, options, target);
+					}
+				}
 			}
 		}
 	}

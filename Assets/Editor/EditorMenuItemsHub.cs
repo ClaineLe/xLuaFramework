@@ -23,16 +23,22 @@ namespace Framework.Editor
 				AssetBundleMark.CleanAssetBundleName ();
 			}
 
+			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/res")]
+			static public void BuildAssetBundles_RES ()
+			{
+				AssetBundleBuild.BuildAssetBundle_res ();
+			}
+
 			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/lua")]
 			static public void BuildAssetBundles_LUA ()
 			{
 				AssetBundleBuild.BuildAssetBundle_lua ();
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/res")]
-			static public void BuildAssetBundles_RES ()
+			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/xls")]
+			static public void BuildAssetBundles_XLS ()
 			{
-				AssetBundleBuild.BuildAssetBundle_res ();
+				AssetBundleBuild.BuildAssetBundle_xls ();
 			}
 
 			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/all")]
