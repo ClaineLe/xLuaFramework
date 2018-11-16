@@ -55,8 +55,12 @@ namespace Framework
 			{
 				Debug.Log ("Simulation Mode: " + (AppConst.SimulateAssetBundleInEditor ? "Enabled" : "Disabled"));
 				if (!AppConst.SimulateAssetBundleInEditor) {
-					m_BaseDownloadingURL = System.IO.Path.Combine (PathConst.StreamAssetPath, AppConst.GetPlatformName ()) + System.IO.Path.DirectorySeparatorChar;
-					AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (m_BaseDownloadingURL + AppConst.GetPlatformName ());
+					string resVersion = AppConst.ResVersion.ToString ();
+					m_BaseDownloadingURL = ResPathConst.BaseResPath;
+					#if UNITY_EDITOR
+						m_BaseDownloadingURL += "res/" + resVersion + "/";
+					#endif
+					AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (m_BaseDownloadingURL + resVersion);
 					m_AssetBundleManifest = manifestAssetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 				}
 			}

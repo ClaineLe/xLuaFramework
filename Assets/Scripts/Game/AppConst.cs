@@ -13,9 +13,15 @@ namespace Framework
         {
 			public const string AppName = "xLuaFramework";
 
-            public const string AppVersion = "1.0.0";
-            public const string ResVersion = "2.0.0";
-            public const string LuaVersion = "3.0.0";
+			public const int ResVersion = 1111;
+			public const int LuaVersion = 2222;
+			public const int XlsVersion = 3333;
+			public static string AssetVersion{
+				get{ 
+					return string.Format ("{0}.{1}.{2}", ResVersion, LuaVersion, XlsVersion);
+				}
+			}
+
 			public const eChange Change = eChange.Official;
 
             public const string AppInfoFileName = "AASS.txt";

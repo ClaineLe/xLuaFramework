@@ -17,6 +17,12 @@ namespace Framework
 			public const string FORMAT_LUAROOT = "Lua/";
 			public const string LUA_FRAMEWORK = "#core.Framework";
 			public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
+
+			public static string BaseResPath{
+				get{
+					return PathConst.StreamAssetPath + AppConst.GetPlatformName () + "/";
+				}
+			}
 		}
 	}
 }

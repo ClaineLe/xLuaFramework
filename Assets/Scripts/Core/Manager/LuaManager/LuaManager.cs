@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.Events;
 using Framework.Game;
 
@@ -22,9 +23,17 @@ namespace Framework
             private float lastGCTime = 0;
             private const float GCInterval = 1;//1 second 
 
+
+			private string m_BaseLuaPath;
 			private XLua.LuaFunction m_Require;
             public void Init()
             {
+				this.m_assetBundleDic = new Dictionary<string, AssetBundle> ();
+				m_BaseLuaPath = ResPathConst.BaseResPath;
+				#if UNITY_EDITOR
+					if (!AppConst.SimulateAssetBundleInEditor)
+						m_BaseLuaPath += "lua/" + AppConst.LuaVersion.ToString () + "/";
+				#endif
                 this.m_LuaEnv = new XLua.LuaEnv();
                 this.m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
                 this.m_LuaEnv.AddBuildin("lpeg", XLua.LuaDLL.Lua.LoadLpeg);
@@ -74,9 +83,34 @@ namespace Framework
             public byte[] CustomLoader(ref string filepath)
             {
 				string luaPath = ResPathConst.FORMAT_LUAROOT + filepath.Replace('.',Path.DirectorySeparatorChar);
-				TextAsset txtAsset = Framework.Game.Manager.AssetMgr.LoadAsset (luaPath, typeof(TextAsset)) as TextAsset;
+
+				string assetBundleName = AssetPathController.GetAssetBundleName (luaPath);
+				string assetName = Path.GetFileNameWithoutExtension (luaPath);
+
+				TextAsset txtAsset;
+				#if UNITY_EDITOR
+				if (AppConst.SimulateAssetBundleInEditor) {
+					string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (assetBundleName, assetName);
+					if (assetPaths.Length == 0) {
+						Debug.LogError ("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
+						return null;
+					}
+					txtAsset = UnityEditor.AssetDatabase.LoadMainAssetAtPath (assetPaths [0]) as TextAsset;
+				} else
+				#endif
+				{
+					if (!this.m_assetBundleDic.ContainsKey(assetBundleName)) {
+						this.m_assetBundleDic [assetBundleName] = AssetBundle.LoadFromFile (m_BaseLuaPath + assetBundleName);
+					}
+
+					txtAsset = this.m_assetBundleDic [assetBundleName].LoadAsset<TextAsset> (assetName);
+
+				}
 				return txtAsset.bytes;
             }
+
+			private Dictionary<string,AssetBundle> m_assetBundleDic;
+
 
             public bool StartUpLuaFramework()
             {
