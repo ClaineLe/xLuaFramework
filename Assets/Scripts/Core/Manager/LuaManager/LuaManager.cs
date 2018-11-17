@@ -36,6 +36,14 @@ namespace Framework
                 this.m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProfobuf);
                 this.m_LuaEnv.AddLoader(CustomLoader);
 				this.m_Require = m_LuaEnv.Global.Get<XLua.LuaFunction>("require");
+                this.InitConfig();
+            }
+
+            private void InitConfig() {
+                XLua.LuaTable cfgTable = this.m_LuaEnv.NewTable();
+                cfgTable.Set<string, string>("Name", "Cddddlaine");
+                cfgTable.Set<string, int>("Age", 30);
+                m_LuaEnv.Global.Set<string, XLua.LuaTable>("cfgTest", cfgTable);
             }
 
             public void Tick()

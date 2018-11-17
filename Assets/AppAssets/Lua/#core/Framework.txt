@@ -39,9 +39,14 @@ function Framework:InitManagers()
 end
 
 function Framework:Start( )
-    self:LoadLuaScript()
-    self:InitManagers()
-    self:StartUp()
+ 
+    print(cfgTest.Name)
+    print(cfgTest.Age)
+
+
+    --self:LoadLuaScript()
+    --self:InitManagers()
+    --self:StartUp()
 end
 
 function Framework:Tick()
