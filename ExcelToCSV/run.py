@@ -5,14 +5,18 @@ import codecs
 import sys
 import os
 import shutil
+
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
 
 CUR_DIR_FULL_PATH = os.path.dirname(os.path.realpath(__file__))
 
+PROJECT_CSV_FULL_PATH = CUR_DIR_FULL_PATH + "/../Assets/AppAssets/Xls"
+
 EXCEL_DIR_PATH = CUR_DIR_FULL_PATH + "/excel"
-CSV_DIR_PATH = CUR_DIR_FULL_PATH + "/csv"
 EXCEL_SUFFIX_NAME = ".xlsx"
+
+CSV_DIR_PATH = CUR_DIR_FULL_PATH + "/csv"
 CSV_SUFFIX_NAME = ".csv"
 
 def sheet_to_csv(xlsx_name,sheet):
@@ -54,18 +58,29 @@ def collect_all_excel():
 				if not file.startswith("~$"):
 					excel_to_sheet(file)
 
-def delete_all_csv():
-    ls = os.listdir(CSV_DIR_PATH)
+def delete_all_csv(dest_path):
+    ls = os.listdir(dest_path)
     for i in ls:
-        c_path = os.path.join(CSV_DIR_PATH, i)
+        c_path = os.path.join(dest_path, i)
         if os.path.isdir(c_path):
             del_file(c_path)
         else:
             os.remove(c_path)
     print("clear all csv success!")
 
+def copy_csv_to_project():
+	for root, dirs, files in os.walk( CSV_DIR_PATH):  
+		for file in files:  
+			if os.path.splitext(file)[1] == CSV_SUFFIX_NAME:  
+				scr_full_path = CSV_DIR_PATH + "/" + file
+				dst_full_path = PROJECT_CSV_FULL_PATH + "/" + file
+				shutil.copy(scr_full_path,dst_full_path)
+
 if __name__ == '__main__':
-	delete_all_csv()
+	print(PROJECT_CSV_FULL_PATH)
+	delete_all_csv(CSV_DIR_PATH)
 	collect_all_excel()
+	delete_all_csv(PROJECT_CSV_FULL_PATH)
+	copy_csv_to_project()
 	print("export excel to csv finish !!!!!!!!!!")
 	os.system("pause")
