@@ -34,9 +34,9 @@ namespace Framework.Editor
 			}
 
 			public static void BuildAssetBundle_all(){
-				BuildAssetBundle_xls ();
-				BuildAssetBundle_lua ();
-				BuildAssetBundle_res ();
+                BuildAssetBundle_res();
+                BuildAssetBundle_lua();
+                BuildAssetBundle_xls();
 			}
 
 			private static UnityEditor.AssetBundleBuild[] GetBuilds(string[] filterStrs){

@@ -38,7 +38,7 @@ namespace Framework.Editor
         
 			public static void MarkAllAssetBundle(){
 				MarkAssetBundle (new []{
-					//"Xls",
+					"Xls",
 					"Lua",
 					"Prefabs",
 					"Scenes"
