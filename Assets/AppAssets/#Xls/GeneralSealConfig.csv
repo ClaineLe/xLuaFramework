@@ -1,0 +1,10 @@
+SERVER_NAME,GeneralSealConfig,,
+CLIENT_NAME,GeneralSealConfig,,
+PK,,,
+编号（品质）,印绶道具id,绑定需要的数目,解绑消耗
+需要印绶的品质类型 ,,,填消耗json
+3.0,3.0,3.0,3.0
+id,itemId,number,consume
+uint32,int32,int32,string
+5.0,122.0,1.0,"[[1,1,100]]"
+6.0,123.0,1.0,"[[1,1,100]]"

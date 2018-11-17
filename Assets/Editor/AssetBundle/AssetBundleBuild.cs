@@ -29,7 +29,7 @@ namespace Framework.Editor
 			public static void BuildAssetBundle_xls ()
 			{
 				BuildAssetBundleBase (AppConst.XlsVersion,"xls",new []{
-					"xls",
+					"#xls",
 				});
 			}
 
