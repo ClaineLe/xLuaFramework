@@ -1,0 +1,11 @@
+SERVER_NAME,CityStarConfig,文件输出标记,,
+CLIENT_NAME,CityStarConfig,,,
+PK,,,,
+id,增加或减少的守军数量, 替换的npc的id,百分比,概率
+城池星级,增加或减少的守军数量, 替换的npc的id, 城池血量增加或减少的百分百,
+3.0,3.0,3.0,3.0,2.0
+id,count,npcId,rate,probability
+uint32,float,string,float,float
+1.0,1.0,"11,12,13,14",1.1,0.666
+2.0,0.5,"21,22",1.2,1.0
+3.0,0.5,23.0,1.4,1.0
