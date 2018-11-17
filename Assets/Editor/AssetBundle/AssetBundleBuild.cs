@@ -68,8 +68,8 @@ namespace Framework.Editor
 						if (!Directory.Exists (outputPath))
 							Directory.CreateDirectory (outputPath);
 
-						BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression;
-						Debug.Log (EditorUserBuildSettings.activeBuildTarget);
+                        BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle;
+
 						if(builds == null)
 							BuildPipeline.BuildAssetBundles (outputPath, options,target );
 						else
