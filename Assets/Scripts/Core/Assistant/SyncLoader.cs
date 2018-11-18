@@ -12,6 +12,11 @@ namespace Framework.Core
         {
             private Dictionary<string, AssetBundle> assetBundleDic;
             private string _basePath;
+			public string BasePath{
+				get{ 
+					return _basePath;
+				}
+			}
             private SyncLoader() { }
             public static SyncLoader Create(string relativePath)
             {
