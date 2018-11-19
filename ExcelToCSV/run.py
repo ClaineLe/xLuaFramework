@@ -12,29 +12,32 @@ CUR_DIR_FULL_PATH = os.path.dirname(os.path.realpath(__file__))
 EXCEL_DIR_PATH = CUR_DIR_FULL_PATH + "/excel"
 CSV_DIR_PATH = CUR_DIR_FULL_PATH + "/csv"
 PROJECT_CSV_FULL_PATH = CUR_DIR_FULL_PATH + "/../Assets/AppAssets/#Xls"
-#row_value = row_value.replace('\n','<br/>')
+
+USE_COL_NUM = 2
+
+USE_CLIENT_NUMFLAG = 1
+USE_SERVER_NUMFLAG = 2
+USE_ALL_NUMFLAG = 3
+
+def save_csv(csv_file_name, csv_data):
+	csv_full_path = CSV_DIR_PATH + "/" + csv_file_name + ".csv"
+	file = open(csv_full_path, 'w')
+	file.write(csv_data)
 
 def sheet_to_csv(xlsx_name,sheet):
 	try:
 		if sheet.nrows < 1 and sheet.ncols < 1:
 			return
-		csv_file_name = sheet.cell_value(1, 1)
+		csv_file_name = sheet.cell_value(0, 0)
 		if csv_file_name.strip():
-			csv_full_path = CSV_DIR_PATH + "/" + csv_file_name + ".csv"
-			file = open(csv_full_path, 'w')
+			use_cols = collect_use_cols(sheet)
 			row_data = ""
-			for row_num in range(sheet.nrows):
+			for row_num in range(3,sheet.nrows):
 				for col_num in range(sheet.ncols):
-					tmp_cell_value = sheet.cell_value(row_num, col_num)
-					tmp_cell_type = sheet.cell_type(row_num, col_num)
-					if tmp_cell_type == 1:
-						tmp_cell_value = tmp_cell_value.replace("\n","</br>")
-					elif tmp_cell_type == 2:
-						tmp_cell_value = int(tmp_cell_value)
-					tmp_cell_value = str(tmp_cell_value).strip()
-					row_data = row_data + "{0},".format(tmp_cell_value)
+					if col_num in use_cols:
+						row_data = row_data + "{0},".format(parse_cell(sheet,row_num, col_num))
 				row_data = row_data[:-1] + "\n"
-			file.write(row_data[:-1])
+			save_csv(csv_file_name, row_data[:-1])
 			print("Export Success: => " + sheet.name + "(" + csv_file_name + ")")
 	except BaseException,err:
 		print("---------------------------------------------------")
@@ -43,9 +46,18 @@ def sheet_to_csv(xlsx_name,sheet):
 		print("[sheet] " + sheet.name)
 		print(err)
 		print("---------------------------------------------------")
-
 		os.system("pause")
 		os.exit()
+
+def parse_cell(sheet, row, col):
+	tmp_cell_value = sheet.cell_value(row, col)
+	tmp_cell_type = sheet.cell_type(row, col)
+	if tmp_cell_type == 1:
+		tmp_cell_value = tmp_cell_value.replace("\n","</br>")
+	elif tmp_cell_type == 2:
+		tmp_cell_value = int(tmp_cell_value)
+	return tmp_cell_value
+
 
 def excel_to_sheet(xlsx_name):
 	xlsx_full_path = EXCEL_DIR_PATH + "/" + xlsx_name
@@ -61,6 +73,14 @@ def collect_all_excel():
 			if os.path.splitext(file)[1] == ".xlsx":  
 				if not file.startswith("~$"):
 					excel_to_sheet(file)
+
+def collect_use_cols(sheet):
+	use_col_list = []
+	for col_num in range(sheet.ncols):
+		value = int(sheet.cell_value(USE_COL_NUM,col_num))
+		if(value == USE_CLIENT_NUMFLAG or value == USE_ALL_NUMFLAG):
+			use_col_list.append(int(col_num))
+	return use_col_list
 
 def delete_all_csv(dest_path):
     ls = os.listdir(dest_path)
