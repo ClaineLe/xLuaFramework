@@ -150,6 +150,13 @@ public class CsvParser
         private readonly List<string[]> _lines = new List<string[]>();
         private readonly List<string> _currentLine = new List<string>();
 
+        public ParserContext()
+        {
+            MaxColumnsToRead = 1000;
+        }
+
+        public int MaxColumnsToRead { get; set; }
+        
         public void AddChar(char ch)
         {
             _currentValue.Append(ch);
@@ -157,7 +164,8 @@ public class CsvParser
 
         public void AddValue()
         {
-            _currentLine.Add(_currentValue.ToString());
+            if (_currentLine.Count < MaxColumnsToRead)
+                _currentLine.Add(_currentValue.ToString());
             _currentValue.Remove(0, _currentValue.Length);
         }
 
@@ -183,42 +191,65 @@ public class CsvParser
 
     #endregion
 
-    public string[][] Parse(TextReader reader)
-    {
-        var context = new ParserContext();
 
+    public static string[][] Parse(string input)
+    {
+        ParserContext context = new ParserContext();
         ParserState currentState = ParserState.LineStartState;
         string next;
-        while ((next = reader.ReadLine()) != null)
+
+        using (StringReader reader = new StringReader(input))
         {
-            foreach (char ch in next)
+            while ((next = reader.ReadLine()) != null)
             {
-                switch (ch)
+                foreach (char ch in next)
                 {
-                    case CommaCharacter:
-                        currentState = currentState.Comma(context);
+                    switch (ch)
+                    {
+                        case CommaCharacter:
+                            currentState = currentState.Comma(context);
+                            break;
+                        case QuoteCharacter:
+                            currentState = currentState.Quote(context);
+                            break;
+                        default:
+                            currentState = currentState.AnyChar(ch, context);
+                            break;
+                    }
+                }
+                currentState = currentState.EndOfLine(context);
+            }
+        }
+
+        List<string[]> allLines = context.GetAllLines();
+        if (allLines.Count > 0)
+        {
+            bool isEmpty = true;
+            for (int i = allLines.Count - 1; i >= 0; i--)
+            {
+// ReSharper disable RedundantAssignment
+                isEmpty = true;
+// ReSharper restore RedundantAssignment
+                for (int j = 0; j < allLines[i].Length; j++)
+                {
+                    if (!String.IsNullOrEmpty(allLines[i][j]))
+                    {
+                        isEmpty = false;
                         break;
-                    case QuoteCharacter:
-                        currentState = currentState.Quote(context);
-                        break;
-                    default:
-                        currentState = currentState.AnyChar(ch, context);
-                        break;
+                    }
+                }
+                if (!isEmpty)
+                {
+                    if (i < allLines.Count - 1)
+                        allLines.RemoveRange(i + 1, allLines.Count - i - 1);
+                    break;
                 }
             }
-            currentState = currentState.EndOfLine(context);
+            if (isEmpty)
+                allLines.RemoveRange(0, allLines.Count);
         }
-        List<string[]> allLines = context.GetAllLines();
         return allLines.ToArray();
     }
 
-	public static string[][] Parse(string input)
-	{
-		CsvParser parser = new CsvParser();
-		
-		using (StringReader reader = new StringReader(input))
-		{
-			return parser.Parse(reader);
-		}
-	}
+	
 }

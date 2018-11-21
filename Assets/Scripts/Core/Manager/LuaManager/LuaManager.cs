@@ -85,12 +85,13 @@ namespace Framework
 
                 configData.Names = lineArray[0].Split(',');
                 configData.Types = lineArray[1].Split(',');
-
-                //Dictionary<string, List<string>> dicc = CsvHelper.AnalysisCsvByStr(lineArray[2].Trim());
-                //foreach (var kv in dicc)
-                //    Debug.Log(kv.Key + ":" + kv.Value);
-                //return;
-			}
+                configData.Datas = CsvParser.Parse(csv);
+                Debug.Log(configData.Datas.Length);
+                for (int i = 0; i < configData.Datas.Length; i++) {
+                    for (int j = 0; j < configData.Datas[i].Length; j++)
+                        Debug.Log(configData.Datas[i][j]);
+                }
+            }
 
 
 
