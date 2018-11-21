@@ -1,4 +1,4 @@
-
+import pandas as pd
 import xlrd
 import sys
 import os
@@ -19,53 +19,19 @@ USE_CLIENT_NUMFLAG = 1
 USE_SERVER_NUMFLAG = 2
 USE_ALL_NUMFLAG = 3
 
-def save_csv(csv_file_name, csv_data):
-	csv_full_path = CSV_DIR_PATH + "/" + csv_file_name + ".csv"
-	file = open(csv_full_path, 'w')
-	file.write(csv_data)
-
-def sheet_to_csv(xlsx_name,sheet):
-	try:
-		if sheet.nrows < 1 and sheet.ncols < 1:
-			return
-		csv_file_name = sheet.cell_value(0, 0)
-		if csv_file_name.strip():
-			use_cols = collect_use_cols(sheet)
-			row_data = ""
-			for row_num in range(3,sheet.nrows):
-				for col_num in range(sheet.ncols):
-					if col_num in use_cols:
-						row_data = row_data + "{0},".format(parse_cell(sheet,row_num, col_num))
-				row_data = row_data[:-1] + "\n"
-			save_csv(csv_file_name, row_data[:-1])
-			print("Export Success: => " + sheet.name + "(" + csv_file_name + ")")
-	except BaseException,err:
-		print("---------------------------------------------------")
-		print("[Export Excel To Csv Error]")
-		print("[xlsx] " + xlsx_name)
-		print("[sheet] " + sheet.name)
-		print(err)
-		print("---------------------------------------------------")
-		os.system("pause")
-		os.exit()
-
-def parse_cell(sheet, row, col):
-	tmp_cell_value = sheet.cell_value(row, col)
-	tmp_cell_type = sheet.cell_type(row, col)
-	if tmp_cell_type == 1:
-		tmp_cell_value = tmp_cell_value.replace("\n","</br>")
-	elif tmp_cell_type == 2:
-		tmp_cell_value = int(tmp_cell_value)
-	return tmp_cell_value
-
-
 def excel_to_sheet(xlsx_name):
 	xlsx_full_path = EXCEL_DIR_PATH + "/" + xlsx_name
 	workbook = xlrd.open_workbook(xlsx_full_path)
 	for sheet in workbook.sheets():
 		if sheet.visibility == 0:
 			if not sheet.name.startswith("#"):
-				sheet_to_csv(xlsx_name,sheet)
+				df = pd.DataFrame(pd.read_excel(xlsx_full_path, sheet.name, header=1))
+				use_columns = []
+				for cName in df:
+					if(df[cName][0] == 1 or df[cName][0] ==3):
+						use_columns.append(cName)
+				df.drop(df.index[[0,0]],inplace=True)
+				df.to_csv(CSV_DIR_PATH + "/" + sheet.name + ".csv", columns = use_columns, index = False)
 
 def collect_all_excel():
 	for root, dirs, files in os.walk( EXCEL_DIR_PATH):  

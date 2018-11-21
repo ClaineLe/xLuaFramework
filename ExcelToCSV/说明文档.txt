@@ -1,2 +1,3 @@
 python工具：python-2.7.15.amd64.msi
 xlrd插件包：xlrd-1.1.0.tar.gz
+pandas插件包：pip install pandas
