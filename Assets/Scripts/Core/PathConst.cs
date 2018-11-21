@@ -23,7 +23,7 @@ namespace Framework
 			public static string StreamAssetPath {
 				get {
 					#if UNITY_EDITOR
-					return Application.dataPath + "/../" + AssetBundlesOutputPath + "/";
+					return Application.dataPath + "/../" + AssetBundlesOutputPath + "/" + AppConst.Change.ToString() + "/";
 					#else
 					return StreamAssetPathInAsset;
 					#endif
