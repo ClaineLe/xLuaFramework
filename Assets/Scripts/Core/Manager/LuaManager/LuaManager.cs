@@ -42,43 +42,54 @@ namespace Framework
 
             private void InitConfig() {
 				DirectoryInfo cfgDirInfo = new DirectoryInfo ("Assets/AppAssets/#Xls");
-				FileInfo[] csvFileInfos = cfgDirInfo.GetFiles ();
+                ConfigData configData = new ConfigData();
+                FileInfo[] csvFileInfos = cfgDirInfo.GetFiles ();
 				for (int i = 0; i < csvFileInfos.Length; i++) {
 					if (csvFileInfos [i].Extension == ".manifest" || csvFileInfos [i].Extension == ".meta")
 						continue;
-					Debug.Log ("==================");
-					string[][] Array = load (this.m_XlsLoader.LoadAsset<TextAsset> ("#Xls/" + Path.GetFileNameWithoutExtension (csvFileInfos [i].Name)).text);
-					for (int j = 0; j < Array [2].Length; j++) {
-						Debug.Log (Array[2][j].Replace("</br>","\n"));
-					}
-					XLua.LuaTable cfgTable = this.m_LuaEnv.NewTable();
+					Debug.Log ("==================" + csvFileInfos[i].Name);
+
+                    load (configData, (UnityEditor.AssetDatabase.LoadMainAssetAtPath("Assets/AppAssets/#Xls/" + csvFileInfos[i].Name) as TextAsset).text);
+                    //load (configData, this.m_XlsLoader.LoadAsset<TextAsset> ("#Xls/" + Path.GetFileNameWithoutExtension (csvFileInfos [i].Name)).text);
+                    /*string[][] Array = load(configData, this.m_XlsLoader.LoadAsset<TextAsset> ("#Xls/" + Path.GetFileNameWithoutExtension (csvFileInfos [i].Name)).text);
+                    for (int row = 0; row < Array.Length; row++)
+                    {
+                        for (int col = 0; col < Array[row].Length; col++)
+                        {
+                            Debug.Log(Array[row][col].Replace("</br>", "\n"));
+                        }
+                    }
+                    XLua.LuaTable cfgTable = this.m_LuaEnv.NewTable();
 					cfgTable.Set<string, string>("Name", "Cddddlaine");
 					cfgTable.Set<string, int>("Age", 30);
 					m_LuaEnv.Global.Set<string, XLua.LuaTable>(Array[1][1], cfgTable);
-				}
+                    */
+                }
             }
 
+            public class ConfigData
+            {
+                public string[] Names;
+                public string[] Types;
+                public string[][] Datas;
+            }
 
-
-
-
-			string[][] load (string csv)  
-			{  
-				string[][] Array;  
-
+			void load (ConfigData configData, string csv)  
+			{
+                Debug.LogError(csv);
 				//读取每一行的内容  
 				string [] lineArray = csv.Split ("\n"[0]);  
 
-				//创建二维数组  
-				Array = new string [lineArray.Length][];  
+                //创建二维数组  
+                configData.Datas = new string [lineArray.Length-2][];
 
-				//把csv中的数据储存在二位数组中  
-				for(int i =0;i < lineArray.Length; i++)  
-				{  
-					Array[i] = lineArray[i].Split (',');  
-				}  
+                configData.Names = lineArray[0].Split(',');
+                configData.Types = lineArray[1].Split(',');
 
-				return Array;
+                //Dictionary<string, List<string>> dicc = CsvHelper.AnalysisCsvByStr(lineArray[2].Trim());
+                //foreach (var kv in dicc)
+                //    Debug.Log(kv.Key + ":" + kv.Value);
+                //return;
 			}
 
 
