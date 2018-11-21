@@ -16,6 +16,8 @@ namespace Framework
             private static PoolsManager m_PoolsMgr;
             private static NetWorkManager m_NetWorkMgr;
 			private static ModelManager m_ModelMgr;
+			private static ConfigManager m_ConfigMgr;
+
             public static LuaManager LuaMgr
             {
                 get
@@ -106,6 +108,18 @@ namespace Framework
 					return m_ModelMgr;
 				}
 			}
+
+			public static ConfigManager ConfigMgr{
+				get{ 
+					if (m_ConfigMgr == null)
+						m_ConfigMgr = AppFacade.Instance.GetManager<ConfigManager> (ManagerName.Config);
+					return m_ConfigMgr;
+				}
+			}
+
+
+
+
         }
     }
 }

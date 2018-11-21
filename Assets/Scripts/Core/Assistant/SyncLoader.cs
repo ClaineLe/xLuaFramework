@@ -55,6 +55,10 @@ namespace Framework.Core
                 }
                 return this.assetBundleDic[bundleName];
             }
+
+			public void Dispose(){
+				
+			}
         }
     }
 }

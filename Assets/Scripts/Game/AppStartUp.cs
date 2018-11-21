@@ -24,7 +24,8 @@ namespace Framework
                 AppFacade.Instance.AddManager<SoundManager>(ManagerName.Sound);
                 AppFacade.Instance.AddManager<TimerManager>(ManagerName.Timer);
                 AppFacade.Instance.AddManager<ModelManager>(ManagerName.Model);
-                AppFacade.Instance.AddManager<ViewManager>(ManagerName.View);
+				AppFacade.Instance.AddManager<ViewManager>(ManagerName.View);
+				AppFacade.Instance.AddManager<ConfigManager>(ManagerName.Config);
                 AppFacade.Instance.InitManager();
                 Manager.LuaMgr.StartUpLuaFramework();
             }

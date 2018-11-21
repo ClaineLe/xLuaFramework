@@ -24,64 +24,42 @@ namespace Framework
             private float lastGCTime = 0;
             private const float GCInterval = 1;//1 second 
 
+			private List<string> m_cSharpAddTable;
             private XLua.LuaFunction m_Require;
-			private SyncLoader m_LuaLoader;
-			private SyncLoader m_XlsLoader;
+			private SyncLoader m_Loader;
             public void Init()
             {
-                m_LuaLoader = SyncLoader.Create(ResPathConst.LuaRelativePath);
-                m_XlsLoader = SyncLoader.Create(ResPathConst.XlsRelativePath);
-
+				m_Loader = SyncLoader.Create(ResPathConst.LuaRelativePath);
+				m_cSharpAddTable = new List<string> ();
                 this.m_LuaEnv = new XLua.LuaEnv();
                 this.m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
                 this.m_LuaEnv.AddBuildin("lpeg", XLua.LuaDLL.Lua.LoadLpeg);
                 this.m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProfobuf);
                 this.m_LuaEnv.AddLoader(CustomLoader);
 				this.m_Require = m_LuaEnv.Global.Get<XLua.LuaFunction>("require");
-                this.LoadConfig();
             }
 
-            private void UnLoadConfig() {
-                XLua.LuaTable CfgTable;
-                m_LuaEnv.Global.Get<string, XLua.LuaTable>("C", out CfgTable);
-                if (CfgTable != null)
-                {
-                    CfgTable.Dispose();
-                    CfgTable = null;
-                    m_LuaEnv.Global.Set<string, XLua.LuaTable>("C", CfgTable);
-                }
-            }
 
-            private void LoadConfig() {
-                string csvListStr = this.m_XlsLoader.LoadAsset<TextAsset>("#Xls/xls_list.txt").text;
-                string[] xlsList = csvListStr.Trim().Split('\n');
+			public void DisposeGlobalLuaTable(string cfgName){
+				XLua.LuaTable CfgTable;
+				m_LuaEnv.Global.Get<string, XLua.LuaTable>(cfgName, out CfgTable);
+				if (CfgTable != null)
+				{
+					CfgTable.Dispose();
+				}
+			} 
 
-                XLua.LuaTable CfgTable = m_LuaEnv.NewTable();
-                m_LuaEnv.Global.Set<string, XLua.LuaTable>("C", CfgTable);
+			public void SetGlobalLuaTable(string cfgName, XLua.LuaTable cfgTable){
+				if (!m_cSharpAddTable.Exists (a => a.Equals (cfgName)))
+					m_cSharpAddTable.Add (cfgName);
+				m_LuaEnv.Global.Set<string, XLua.LuaTable>(cfgName, cfgTable);
+			}
 
-                for (int i = 0; i < xlsList.Length; i++)
-                {
-                    string csvStr = this.m_XlsLoader.LoadAsset<TextAsset>("#Xls/" + xlsList[i] + ".csv").text;
-
-                    string[][] cellData = CsvParser.Parse(csvStr);
-                    XLua.LuaTable cfgTable = this.m_LuaEnv.NewTable();
-                    m_LuaEnv.Global.Set<string, XLua.LuaTable>("Cfg_" + xlsList[i], cfgTable);
-                    string[] titles = cellData[0];
-                    string[] types = cellData[1];
-                    for (int row = 2; row < cellData.Length; row++)
-                    {
-                        XLua.LuaTable rowTable = this.m_LuaEnv.NewTable();
-                        for (int col = 1; col < cellData[row].Length; col++)
-                        {
-                            rowTable.Set<string, string>(titles[col], cellData[row][col]);
-                        }
-                        cfgTable.Set<int, XLua.LuaTable>(int.Parse(cellData[row][0]), rowTable);
-                    }
-                }
-            }
-
-            public void ReLoadConfig() {
-            }
+			private void ClearGlobalLuaTable(){
+				for (int i = 0; i < m_cSharpAddTable.Count; i++)
+					DisposeGlobalLuaTable (m_cSharpAddTable[i]);
+				m_cSharpAddTable = new List<string> ();
+			}
 
             public void Tick()
             {
@@ -97,6 +75,9 @@ namespace Framework
 
             public void Release()
             {
+				this.ClearGlobalLuaTable ();
+				this.m_Loader.Dispose ();
+
                 if (m_FrameworkRelease != null)
                     m_FrameworkRelease.Call();
 
@@ -106,6 +87,10 @@ namespace Framework
 
                 this.m_LuaEnv = null;
             }
+
+			public XLua.LuaTable CreatLuaTable(){
+				return this.m_LuaEnv.NewTable ();
+			}
 
 			public object[] LuaRequire(string luaPath)
             {
@@ -124,7 +109,7 @@ namespace Framework
             public byte[] CustomLoader(ref string filepath)
             {
 				string luaPath = ResPathConst.FORMAT_LUAROOT + filepath.Replace('.',Path.DirectorySeparatorChar);
-				TextAsset txtAsset = this.m_LuaLoader.LoadAsset<TextAsset>(luaPath);
+				TextAsset txtAsset = this.m_Loader.LoadAsset<TextAsset>(luaPath);
 				return txtAsset.bytes;
             }
 
