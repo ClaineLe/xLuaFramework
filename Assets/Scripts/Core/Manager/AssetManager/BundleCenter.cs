@@ -55,12 +55,11 @@ namespace Framework
 			{
 				Debug.Log ("Simulation Mode: " + (AppConst.SimulateAssetBundleInEditor ? "Enabled" : "Disabled"));
 				if (!AppConst.SimulateAssetBundleInEditor) {
-					string resVersion = AppConst.ResVersion.ToString ();
-					m_BaseDownloadingURL = ResPathConst.BaseResPath;
-					#if UNITY_EDITOR
-						m_BaseDownloadingURL += "res/" + resVersion + "/";
-					#endif
-					AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (m_BaseDownloadingURL + resVersion);
+					m_BaseDownloadingURL = ResPathConst.BaseResPath + ResPathConst.ResRelativePath;
+                    Debug.Log(m_BaseDownloadingURL);
+                    Debug.Log(ResPathConst.ResRelativePath);
+                    Debug.Log(m_BaseDownloadingURL + AppConst.ResVersion);
+                    AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (m_BaseDownloadingURL + AppConst.ResVersion);
 					m_AssetBundleManifest = manifestAssetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 				}
 			}

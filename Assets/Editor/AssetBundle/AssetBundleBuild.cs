@@ -13,7 +13,7 @@ namespace Framework.Editor
 		{
 			public static void BuildAssetBundle_res ()
 			{
-				BuildAssetBundleBase (AppConst.ResVersion,"res",new []{
+				BuildAssetBundleBase (ResPathConst.ResRelativePath, new []{
 					"prefab",
 					"scene",
 				});
@@ -21,14 +21,14 @@ namespace Framework.Editor
 
 			public static void BuildAssetBundle_lua ()
 			{
-				BuildAssetBundleBase (AppConst.LuaVersion,"lua",new []{
+				BuildAssetBundleBase (ResPathConst.LuaRelativePath, new []{
 					"lua",
 				});
 			}
 
 			public static void BuildAssetBundle_xls ()
 			{
-				BuildAssetBundleBase (AppConst.XlsVersion,"xls",new []{
+				BuildAssetBundleBase (ResPathConst.XlsRelativePath, new []{
 					"#xls",
 				});
 			}
@@ -57,14 +57,13 @@ namespace Framework.Editor
 				return buildList.ToArray ();
 			}
 
-			private static void BuildAssetBundleBase(int versionFlag, string pathFlag, string[] filterStrs){
+			private static void BuildAssetBundleBase(string outRelativePath, string[] filterStrs){
 				if (filterStrs.Length > 0) {
 					UnityEditor.AssetBundleBuild[] builds = GetBuilds (filterStrs);
 					if (builds.Length > 0) {
 						BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
 						string outputPath = Path.Combine (PathConst.StreamAssetPath, AppConst.GetPlatformForAssetBundles (target));
-						outputPath = Path.Combine (outputPath, pathFlag);
-						outputPath = Path.Combine (outputPath, versionFlag.ToString());
+						outputPath = Path.Combine (outputPath, outRelativePath);
 						if (!Directory.Exists (outputPath))
 							Directory.CreateDirectory (outputPath);
 

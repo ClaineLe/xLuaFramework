@@ -14,7 +14,6 @@ Framework = {
 }
 
 function Framework:LoadLuaScript()
-    require 'cfg.FrameworkConfig'
     require 'util.ProtBufUtility'
     require 'util.FrameworkUtility'
     require '#core.#model.BaseModel'
@@ -40,12 +39,16 @@ end
 
 function Framework:Start( )
  
-    print(BattleNoticeConfig.Name)
-    print(BattleNoticeConfig.Age)
 
 
-    --self:LoadLuaScript()
-    --self:InitManagers()
+    self:LoadLuaScript()
+    self:InitManagers()
+
+    print(Cfg_CityStarConfig[1].count)
+    print(Cfg_CityStarConfig[2].npcId)
+    print(Cfg_CityStarConfig[1].npcId)
+
+
     --self:StartUp()
 end
 

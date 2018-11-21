@@ -29,78 +29,59 @@ namespace Framework
 			private SyncLoader m_XlsLoader;
             public void Init()
             {
-				m_LuaLoader = SyncLoader.Create("lua/" + AppConst.LuaVersion.ToString() + "/");
-				m_XlsLoader = SyncLoader.Create("xls/" + AppConst.XlsVersion.ToString() + "/");
+                m_LuaLoader = SyncLoader.Create(ResPathConst.LuaRelativePath);
+                m_XlsLoader = SyncLoader.Create(ResPathConst.XlsRelativePath);
+
                 this.m_LuaEnv = new XLua.LuaEnv();
                 this.m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
                 this.m_LuaEnv.AddBuildin("lpeg", XLua.LuaDLL.Lua.LoadLpeg);
                 this.m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProfobuf);
                 this.m_LuaEnv.AddLoader(CustomLoader);
 				this.m_Require = m_LuaEnv.Global.Get<XLua.LuaFunction>("require");
-                this.InitConfig();
+                this.LoadConfig();
             }
 
-            private void InitConfig() {
-				DirectoryInfo cfgDirInfo = new DirectoryInfo ("Assets/AppAssets/#Xls");
-                ConfigData configData = new ConfigData();
-                FileInfo[] csvFileInfos = cfgDirInfo.GetFiles ();
-				for (int i = 0; i < csvFileInfos.Length; i++) {
-					if (csvFileInfos [i].Extension == ".manifest" || csvFileInfos [i].Extension == ".meta")
-						continue;
-					Debug.Log ("==================" + csvFileInfos[i].Name);
+            private void UnLoadConfig() {
+                XLua.LuaTable CfgTable;
+                m_LuaEnv.Global.Get<string, XLua.LuaTable>("C", out CfgTable);
+                if (CfgTable != null)
+                {
+                    CfgTable.Dispose();
+                    CfgTable = null;
+                    m_LuaEnv.Global.Set<string, XLua.LuaTable>("C", CfgTable);
+                }
+            }
 
-                    load (configData, (UnityEditor.AssetDatabase.LoadMainAssetAtPath("Assets/AppAssets/#Xls/" + csvFileInfos[i].Name) as TextAsset).text);
-                    //load (configData, this.m_XlsLoader.LoadAsset<TextAsset> ("#Xls/" + Path.GetFileNameWithoutExtension (csvFileInfos [i].Name)).text);
-                    /*string[][] Array = load(configData, this.m_XlsLoader.LoadAsset<TextAsset> ("#Xls/" + Path.GetFileNameWithoutExtension (csvFileInfos [i].Name)).text);
-                    for (int row = 0; row < Array.Length; row++)
-                    {
-                        for (int col = 0; col < Array[row].Length; col++)
-                        {
-                            Debug.Log(Array[row][col].Replace("</br>", "\n"));
-                        }
-                    }
+            private void LoadConfig() {
+                string csvListStr = this.m_XlsLoader.LoadAsset<TextAsset>("#Xls/xls_list.txt").text;
+                string[] xlsList = csvListStr.Trim().Split('\n');
+
+                XLua.LuaTable CfgTable = m_LuaEnv.NewTable();
+                m_LuaEnv.Global.Set<string, XLua.LuaTable>("C", CfgTable);
+
+                for (int i = 0; i < xlsList.Length; i++)
+                {
+                    string csvStr = this.m_XlsLoader.LoadAsset<TextAsset>("#Xls/" + xlsList[i] + ".csv").text;
+
+                    string[][] cellData = CsvParser.Parse(csvStr);
                     XLua.LuaTable cfgTable = this.m_LuaEnv.NewTable();
-					cfgTable.Set<string, string>("Name", "Cddddlaine");
-					cfgTable.Set<string, int>("Age", 30);
-					m_LuaEnv.Global.Set<string, XLua.LuaTable>(Array[1][1], cfgTable);
-                    */
+                    m_LuaEnv.Global.Set<string, XLua.LuaTable>("Cfg_" + xlsList[i], cfgTable);
+                    string[] titles = cellData[0];
+                    string[] types = cellData[1];
+                    for (int row = 2; row < cellData.Length; row++)
+                    {
+                        XLua.LuaTable rowTable = this.m_LuaEnv.NewTable();
+                        for (int col = 1; col < cellData[row].Length; col++)
+                        {
+                            rowTable.Set<string, string>(titles[col], cellData[row][col]);
+                        }
+                        cfgTable.Set<int, XLua.LuaTable>(int.Parse(cellData[row][0]), rowTable);
+                    }
                 }
             }
 
-            public class ConfigData
-            {
-                public string[] Names;
-                public string[] Types;
-                public string[][] Datas;
+            public void ReLoadConfig() {
             }
-
-			void load (ConfigData configData, string csv)  
-			{
-                Debug.LogError(csv);
-				//读取每一行的内容  
-				string [] lineArray = csv.Split ("\n"[0]);  
-
-                //创建二维数组  
-                configData.Datas = new string [lineArray.Length-2][];
-
-                configData.Names = lineArray[0].Split(',');
-                configData.Types = lineArray[1].Split(',');
-                configData.Datas = CsvParser.Parse(csv);
-                Debug.Log(configData.Datas.Length);
-                for (int i = 0; i < configData.Datas.Length; i++) {
-                    for (int j = 0; j < configData.Datas[i].Length; j++)
-                        Debug.Log(configData.Datas[i][j]);
-                }
-            }
-
-
-
-
-
-
-
-
-
 
             public void Tick()
             {

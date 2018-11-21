@@ -22,11 +22,7 @@ namespace Framework.Core
             {
                 SyncLoader loader = new SyncLoader();
                 loader.assetBundleDic = new Dictionary<string, AssetBundle>();
-                loader._basePath = ResPathConst.BaseResPath;
-#if UNITY_EDITOR
-                if (!AppConst.SimulateAssetBundleInEditor)
-                    loader._basePath += relativePath;
-#endif
+                loader._basePath = ResPathConst.BaseResPath + relativePath;
                 return loader;
             }
 

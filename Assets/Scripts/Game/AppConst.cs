@@ -13,9 +13,9 @@ namespace Framework
         {
 			public const string AppName = "xLuaFramework";
 
-			public const int ResVersion = 1111;
-			public const int LuaVersion = 2222;
-			public const int XlsVersion = 3333;
+			public const string ResVersion = "1111";
+			public const string LuaVersion = "2222";
+			public const string XlsVersion = "3333";
 			public static string AssetVersion{
 				get{ 
 					return string.Format ("{0}.{1}.{2}", ResVersion, LuaVersion, XlsVersion);

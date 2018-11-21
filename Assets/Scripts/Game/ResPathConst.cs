@@ -23,6 +23,36 @@ namespace Framework
 					return PathConst.StreamAssetPath + AppConst.GetPlatformName () + "/";
 				}
 			}
-		}
+
+            public static string XlsRelativePath
+            {
+                get {
+#if UNITY_EDITOR
+                        return "xls/" + AppConst.XlsVersion + "/";
+#endif
+                    return string.Empty;
+                }
+            }
+
+            public static string LuaRelativePath
+            {
+                get{
+#if UNITY_EDITOR
+                        return "lua/" + AppConst.LuaVersion + "/";
+#endif
+                    return string.Empty;
+                }
+            }
+
+            public static string ResRelativePath
+            {
+                get{
+#if UNITY_EDITOR
+                        return "res/" + AppConst.ResVersion + "/";
+#endif
+                    return string.Empty;
+                }
+            }
+        }
 	}
 }
