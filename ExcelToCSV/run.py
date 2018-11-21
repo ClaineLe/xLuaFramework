@@ -20,6 +20,7 @@ USE_SERVER_NUMFLAG = 2
 USE_ALL_NUMFLAG = 3
 
 def excel_to_sheet(xlsx_name):
+	csv_list = []
 	xlsx_full_path = EXCEL_DIR_PATH + "/" + xlsx_name
 	workbook = xlrd.open_workbook(xlsx_full_path)
 	for sheet in workbook.sheets():
@@ -27,11 +28,17 @@ def excel_to_sheet(xlsx_name):
 			if not sheet.name.startswith("#"):
 				df = pd.DataFrame(pd.read_excel(xlsx_full_path, sheet.name, header=1))
 				use_columns = []
-				for cName in df:
-					if(df[cName][0] == 1 or df[cName][0] ==3):
-						use_columns.append(cName)
+				for col_name in df:
+					if(df[col_name][0] == 1 or df[col_name][0] ==3):
+						use_columns.append(col_name)
 				df.drop(df.index[[0,0]],inplace=True)
 				df.to_csv(CSV_DIR_PATH + "/" + sheet.name + ".csv", columns = use_columns, index = False)
+				csv_list.append(sheet.name)
+
+	csv_list_file = open(CSV_DIR_PATH + "/xls_list.txt", "w")
+	csv_list_file.writelines(csv_list)
+
+
 
 def collect_all_excel():
 	for root, dirs, files in os.walk( EXCEL_DIR_PATH):  
@@ -61,7 +68,7 @@ def delete_all_csv(dest_path):
 def copy_csv_to_project():
 	for root, dirs, files in os.walk( CSV_DIR_PATH):  
 		for file in files:  
-			if os.path.splitext(file)[1] == ".csv":
+			if os.path.splitext(file)[1] == ".csv" or os.path.splitext(file)[1] == ".txt":
 				scr_full_path = CSV_DIR_PATH + "/" + file
 				dst_full_path = PROJECT_CSV_FULL_PATH + "/" + file
 				shutil.copy(scr_full_path,dst_full_path)
