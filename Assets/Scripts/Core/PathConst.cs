@@ -23,12 +23,20 @@ namespace Framework
 			public static string StreamAssetPath {
 				get {
 					#if UNITY_EDITOR
-					return Application.dataPath + "/../" + AssetBundlesOutputPath + "/" + AppConst.Change.ToString() + "/";
+					return ProjectPath + AssetBundlesOutputPath + "/" + AppConst.Change.ToString() + "/";
 					#else
 					return StreamAssetPathInAsset;
 					#endif
 				}
 			}
+
+#if UNITY_EDITOR
+            public static string ProjectPath {
+                get {
+                    return Application.dataPath + "/../";
+                }
+            }
+#endif
         }
     }
 }
