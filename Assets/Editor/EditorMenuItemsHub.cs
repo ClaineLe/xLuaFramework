@@ -47,10 +47,24 @@ namespace Framework.Editor
 				AssetBundleBuild.BuildAssetBundle_all ();
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/Build Player")]
-			static public void BuildPlayer ()
+            [MenuItem("FrameworkTools/AssetBundles/BuildPacker/lua")]
+            static public void BuildPacker_lua()
+            {
+                AssetBundlePacker.BuildPacker_lua("1111", "2222");
+            }
+
+            [MenuItem("FrameworkTools/AssetBundles/BuildPacker/all")]
+            static public void BuildPacker_all()
+            {
+                string fromVersion = "1111.1111.3333";
+                string toVersion = "1111.2222.3333";
+                AssetBundlePacker.BuildPacker_all(fromVersion, toVersion);
+            }
+
+            [MenuItem ("FrameworkTools/AssetBundles/Build Player")]
+			static public void BuildPlayer_Build ()
 			{
-				AssetBundlePacker.BuildPlayer ();
+                BuildPlayer.Build();
 			}
         }
     }
