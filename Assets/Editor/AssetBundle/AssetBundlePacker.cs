@@ -16,7 +16,7 @@ namespace Framework.Editor
             private const string PACKER_DIR_PATH = "OutPut/";
             private const string PACKER_INFO_LIST_FILE = PACKER_DIR_PATH + "packer_list.txt";
 
-            private const string PACKER_NAME_FORMAT = "packer_{0}_{1}-{2}_to_{3}";
+            private const string PACKER_NAME_FORMAT = "{0}_{1}-{2}_to_{3}_packer";
             private const string BUNDLE_INFO_LIST_FILE_NAME = "bundle_info.txt";
             private const string PACKER_DIR_NAME_FORMAT = "Packer/{0}_to_{1}";
 
@@ -56,6 +56,8 @@ namespace Framework.Editor
                 string jsonStr = JsonConvert.SerializeObject(asset_BundleInfos);
                 File.WriteAllText(Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME), jsonStr);
 
+                CompressionHelper.Compress(packerFullPath + "/", packerFullPath + ".gzip");
+                Directory.Delete(packerFullPath, true);
 
                 PackerInfo packerInfo = new PackerInfo();
                 packerInfo.packerName = string.Format(PACKER_NAME_FORMAT, AppConst.Change, AppConst.GetPlatformName(), fromVer, toVer);
