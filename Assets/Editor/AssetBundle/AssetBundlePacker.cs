@@ -216,8 +216,9 @@ namespace Framework.Editor
                 List<BundleInfo> addBundleInfoList = toBundleInfos.FindAll(a => addBundleList.Exists(b => a.Name.Equals(b)));
                 List<BundleInfo> delBundleInfoList = fromBundleInfos.FindAll(a => delBundleList.Exists(b => a.Name.Equals(b)));
 
-                toBundleInfos.RemoveAll(a => addBundleInfoList.Exists(b => a.MD5 == b.MD5));
-                List<BundleInfo> updBundleInfoList = toBundleInfos;
+				List<BundleInfo> updBundleInfoList = toBundleInfos;
+				updBundleInfoList.RemoveAll(a => addBundleInfoList.Exists(b => a.MD5 == b.MD5));
+				updBundleInfoList.RemoveAll(a => fromBundleInfos.Exists(b => a.MD5 == b.MD5));
 
                 SetBundleInfoState(delBundleInfoList, -1);
                 SetBundleInfoState(updBundleInfoList, 0);
