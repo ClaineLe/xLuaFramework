@@ -11,30 +11,25 @@ namespace Framework.Core
         public class SyncLoader
         {
             private Dictionary<string, AssetBundle> assetBundleDic;
-            private string _basePath;
-			public string BasePath{
-				get{ 
-					return _basePath;
-				}
-			}
+          
             private SyncLoader() { }
-            public static SyncLoader Create(string relativePath)
+            public static SyncLoader Create()
             {
                 SyncLoader loader = new SyncLoader();
                 loader.assetBundleDic = new Dictionary<string, AssetBundle>();
-#if UNITY_EDITOR
-                loader._basePath = ResPathConst.BaseResPath + relativePath;
-#else
-                loader._basePath = PathConst.StreamAssetPathInAsset;
-#endif
                 return loader;
             }
 
             public T LoadAsset<T>(string assetPath) where T:Object {
                 string assetBundleName = AssetPathController.GetAssetBundleName(assetPath);
                 string assetName = Path.GetFileNameWithoutExtension(assetPath);
+
+                if (AppConst.AssetBundleModel){
+                    AssetBundle bundle = _GetBundle(assetBundleName);
+                    return bundle.LoadAsset<T>(assetName);
+                }
 #if UNITY_EDITOR
-                if (AppConst.SimulateAssetBundleInEditor)
+                else
                 {
                     string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
                     if (assetPaths.Length == 0)
@@ -44,18 +39,15 @@ namespace Framework.Core
                     }
                     return UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]) as T;
                 }
-                else
 #endif
-                {
-                    AssetBundle bundle = _GetBundle(assetBundleName);
-                    return bundle.LoadAsset<T>(assetName);
-                }
+                return default(T);
             }
 
             private AssetBundle _GetBundle(string bundleName) {
                 if (!this.assetBundleDic.ContainsKey(bundleName))
                 {
-                    this.assetBundleDic[bundleName] = AssetBundle.LoadFromFile(_basePath + bundleName);
+                    string bundleFullPath = PathRoute.GetAssetBundleFullPath(bundleName);
+                    this.assetBundleDic[bundleName] = AssetBundle.LoadFromFile(bundleFullPath);
                 }
                 return this.assetBundleDic[bundleName];
             }

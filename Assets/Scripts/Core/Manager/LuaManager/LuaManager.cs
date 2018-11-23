@@ -29,7 +29,7 @@ namespace Framework
 			private SyncLoader m_Loader;
             public void Init()
             {
-				m_Loader = SyncLoader.Create(ResPathConst.LuaRelativePath);
+				m_Loader = SyncLoader.Create();
 				m_cSharpAddTable = new List<string> ();
                 this.m_LuaEnv = new XLua.LuaEnv();
                 this.m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
@@ -108,14 +108,14 @@ namespace Framework
 
             public byte[] CustomLoader(ref string filepath)
             {
-				string luaPath = ResPathConst.FORMAT_LUAROOT + filepath.Replace('.',Path.DirectorySeparatorChar);
+				string luaPath = PathConst.FORMAT_LUAROOT + filepath.Replace('.',Path.DirectorySeparatorChar);
 				TextAsset txtAsset = this.m_Loader.LoadAsset<TextAsset>(luaPath);
 				return txtAsset.bytes;
             }
 
             public bool StartUpLuaFramework()
             {
-				XLua.LuaTable frameworkTable = this.TblRequire (ResPathConst.LUA_FRAMEWORK);
+				XLua.LuaTable frameworkTable = this.TblRequire (PathConst.LUA_FRAMEWORK);
                 m_FrameworkStart = frameworkTable.Get<XLua.LuaFunction>("Start");
                 m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
                 m_FrameworkRelease = frameworkTable.Get<XLua.LuaFunction>("Release");

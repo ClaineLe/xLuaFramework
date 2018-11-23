@@ -73,8 +73,14 @@ namespace Framework.Editor
 			[BlackList]
 			public static List<List<string>> BlackList = new List<List<string>>()  {
 				new List<string>(){ "Framework.Game.AppConst", "GetPlatformForAssetBundles", "UnityEditor.BuildTarget"},
-                new List<string>(){ "Framework.Game.PathConst", "ProjectPath" },
-			};
+
+                new List<string>(){ "Framework.Game.PathConst", "ExportResDirPath" },
+                new List<string>(){ "Framework.Game.PathConst", "PlayerOutPutPath" },
+                new List<string>(){ "Framework.Game.PathConst", "StreamAssetPath" },
+                new List<string>(){ "Framework.Game.PathConst", "ResRelativePath" },
+                new List<string>(){ "Framework.Game.PathConst", "LuaRelativePath" },
+                new List<string>(){ "Framework.Game.PathConst", "XlsRelativePath" },
+            };
         }
     }
 }

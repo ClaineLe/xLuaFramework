@@ -21,7 +21,7 @@ namespace Framework
 			private const string CONFIG_PATH_FORMAT = "#Xls/{0}.csv";
 			private SyncLoader m_Loader;
 			public void Init(){
-				m_Loader = SyncLoader.Create(ResPathConst.XlsRelativePath);
+				m_Loader = SyncLoader.Create();
 			}
 
 			private XLua.LuaTable LoadConfig() {

@@ -5,35 +5,41 @@ namespace Framework
     namespace Game
     { 
         public class PathConst{
-			public const string ExportResDirPath = "AppAssets/";
-			public static string PlayerOutPutPath {
-				get {
-					return Application.dataPath + "/../PlayerOutPut/";
-				}
-			}
-
-			private const string AssetBundlesOutputPath = "AssetBundles";
+            public const string ViewRoot_Path = "Prefabs/#View/ViewRoot.prefab";
+            public const string ViewLayer_Path = "Prefabs/#View/Layer.prefab";
+            public const string ViewAsset_Path = "Prefabs/#View/{0}.prefab";
+            public const string FORMAT_MODEL_NAME = "model.{0}.{1}";
+            public const string FORMAT_VIEW_NAME = "view.{0}.{1}";
+            public const string FORMAT_LUAROOT = "Lua/";
+            public const string LUA_FRAMEWORK = "#core.Framework";
+            public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
 
 			public static string StreamAssetPathInAsset {
 				get {
-					return Application.streamingAssetsPath + "/" + AssetBundlesOutputPath + "/";
-				}
-			}
-
-			public static string StreamAssetPath {
-				get {
-					#if UNITY_EDITOR
-					return ProjectPath + AssetBundlesOutputPath + "/" + AppConst.Change.ToString() + "/";
-					#else
-					return StreamAssetPathInAsset;
-					#endif
+					return Application.streamingAssetsPath + "/AssetBundles/";
 				}
 			}
 
 #if UNITY_EDITOR
-            public static string ProjectPath {
-                get {
-                    return Application.dataPath + "/../";
+
+            public const string ResRelativePath = "res/" + AppConst.ResVersion + "/";
+            public const string XlsRelativePath = "xls/" + AppConst.XlsVersion + "/";
+            public const string LuaRelativePath = "lua/" + AppConst.LuaVersion + "/";
+            public const string ExportResDirPath = "AppAssets/";
+
+            public static string StreamAssetPath
+            {
+                get
+                {
+                    return Application.dataPath + "/../AssetBundles/" + AppConst.Change.ToString() + "/";
+                }
+            }
+
+            public static string PlayerOutPutPath
+            {
+                get
+                {
+                    return Application.dataPath + "/../PlayerOutPut/";
                 }
             }
 #endif

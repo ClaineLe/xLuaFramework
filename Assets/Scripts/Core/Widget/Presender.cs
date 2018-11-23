@@ -16,7 +16,7 @@ namespace Framework.Core
             {
                 get
                 {
-                    return string.Format(ResPathConst.FORMAT_PRESENDER_NAME, m_Name, m_Name);
+                    return string.Format(PathConst.FORMAT_PRESENDER_NAME, m_Name, m_Name);
                 }
             }
             public Presender SetupView(View view) {

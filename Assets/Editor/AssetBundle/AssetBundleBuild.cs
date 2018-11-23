@@ -13,7 +13,7 @@ namespace Framework.Editor
 		{
 			public static void BuildAssetBundle_res ()
 			{
-				BuildAssetBundleBase (ResPathConst.ResRelativePath, new []{
+				BuildAssetBundleBase (PathConst.ResRelativePath, new []{
 					"prefab",
 					"scene",
 				},false);
@@ -21,14 +21,14 @@ namespace Framework.Editor
 
 			public static void BuildAssetBundle_lua ()
 			{
-				BuildAssetBundleBase (ResPathConst.LuaRelativePath, new []{
+				BuildAssetBundleBase (PathConst.LuaRelativePath, new []{
 					"lua",
 				},true);
 			}
 
 			public static void BuildAssetBundle_xls ()
 			{
-				BuildAssetBundleBase (ResPathConst.XlsRelativePath, new []{
+				BuildAssetBundleBase (PathConst.XlsRelativePath, new []{
 					"#xls",
 				},true);
 			}

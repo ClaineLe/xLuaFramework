@@ -30,8 +30,8 @@ namespace Framework.Core
             {
 				this.m_ViewDic = new Dictionary<string, View>();
 				this.m_ViewLayer = new Dictionary<eViewLayer, ViewLayer> ();
-				this._prefab_ViewRoot = Framework.Game.Manager.AssetMgr.LoadAsset (ResPathConst.ViewRoot_Path,typeof(GameObject)) as GameObject;
-				this._prefab_ViewLayer = Framework.Game.Manager.AssetMgr.LoadAsset (ResPathConst.ViewLayer_Path,typeof(GameObject)) as GameObject;
+				this._prefab_ViewRoot = Framework.Game.Manager.AssetMgr.LoadAsset (PathConst.ViewRoot_Path,typeof(GameObject)) as GameObject;
+				this._prefab_ViewLayer = Framework.Game.Manager.AssetMgr.LoadAsset (PathConst.ViewLayer_Path,typeof(GameObject)) as GameObject;
 				this.CreateViewRoot ();
 				this.AddLayer (eViewLayer.Normal);
             }
@@ -90,7 +90,7 @@ namespace Framework.Core
 			}
 
 			private string _GetViewPath(string viewName){
-				return string.Format (ResPathConst.ViewAsset_Path,viewName);
+				return string.Format (PathConst.ViewAsset_Path,viewName);
 			}
 
 

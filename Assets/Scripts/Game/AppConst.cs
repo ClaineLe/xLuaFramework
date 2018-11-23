@@ -28,8 +28,6 @@ namespace Framework
             public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/";
 
 			public static bool ActiveAssetUpdater = true;
-			/** AssetBundle仿真模式 */
-			public static bool SimulateAssetBundleInEditor = false;
 
 			public static string GetPlatformName ()
 			{
@@ -39,27 +37,6 @@ namespace Framework
 				return GetPlatformForAssetBundles(Application.platform);
 				#endif
 			}
-
-			#if UNITY_EDITOR
-			public static string GetPlatformForAssetBundles (UnityEditor.BuildTarget target)
-			{
-				switch (target) {
-				case UnityEditor.BuildTarget.Android:
-					return "Android";
-				case UnityEditor.BuildTarget.iOS:
-					return "iOS";
-				case UnityEditor.BuildTarget.WebGL:
-					return "WebGL";
-				case UnityEditor.BuildTarget.StandaloneWindows:
-				case UnityEditor.BuildTarget.StandaloneWindows64:
-					return "Windows";
-				case UnityEditor.BuildTarget.StandaloneOSX:
-					return "OSX";
-				default:
-					return null;
-				}
-			}
-			#endif
 
 			public static string GetPlatformForAssetBundles (RuntimePlatform platform)
 			{
@@ -78,6 +55,33 @@ namespace Framework
 					return null;
 				}
 			}
+
+            /** AssetBundle仿真模式 */
+            public static bool AssetBundleModel = true;
+
+#if UNITY_EDITOR
+
+            public static string GetPlatformForAssetBundles(UnityEditor.BuildTarget target)
+            {
+                switch (target)
+                {
+                    case UnityEditor.BuildTarget.Android:
+                        return "Android";
+                    case UnityEditor.BuildTarget.iOS:
+                        return "iOS";
+                    case UnityEditor.BuildTarget.WebGL:
+                        return "WebGL";
+                    case UnityEditor.BuildTarget.StandaloneWindows:
+                    case UnityEditor.BuildTarget.StandaloneWindows64:
+                        return "Windows";
+                    case UnityEditor.BuildTarget.StandaloneOSX:
+                        return "OSX";
+                    default:
+                        return null;
+                }
+            }
+#endif
+
         }
     }
 }

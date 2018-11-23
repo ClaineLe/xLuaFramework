@@ -17,7 +17,7 @@ namespace Framework.Core
             {
                 get
                 {
-                    return string.Format(ResPathConst.FORMAT_MODEL_NAME, m_Name, m_Name);
+                    return string.Format(PathConst.FORMAT_MODEL_NAME, m_Name, m_Name);
                 }
             }
 

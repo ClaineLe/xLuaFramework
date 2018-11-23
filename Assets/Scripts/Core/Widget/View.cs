@@ -34,7 +34,7 @@ namespace Framework.Core
             {
                 get
                 {
-                    return string.Format(ResPathConst.FORMAT_VIEW_NAME, m_Name, m_Name);
+                    return string.Format(PathConst.FORMAT_VIEW_NAME, m_Name, m_Name);
                 }
             }
             public View SetupViewGo(GameObject viewGo){
