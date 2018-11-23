@@ -7,6 +7,7 @@ using Framework.Core.Widget;
 namespace Framework.Editor
 {
     using AssetBundle;
+    using Framework.Game;
 
     namespace Common
     {
@@ -65,7 +66,7 @@ namespace Framework.Editor
             [MenuItem ("FrameworkTools/AssetBundles/Build Player")]
 			static public void BuildPlayer_Build ()
 			{
-                BuildPlayer.Build();
+                BuildPlayer.Build(AppConst.AssetVersion);
 			}
         }
     }

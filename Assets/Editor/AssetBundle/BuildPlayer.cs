@@ -1,4 +1,5 @@
 ﻿using Framework.Game;
+using Framework.Util;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,26 +12,32 @@ namespace Framework.Editor
     {
         public class BuildPlayer
         { 
-            private static void CopyAssetBundlesTo(string outputPath)
+            private static void CopyAssetBundlesTo(string relativePath)
             {
-                FileUtil.DeleteFileOrDirectory(Application.streamingAssetsPath);
-                Directory.CreateDirectory(outputPath);
 
-                string outputFolder = AppConst.GetPlatformName();
-
-                string source = Path.Combine(PathConst.StreamAssetPath, outputFolder);
+                string source = Path.Combine(PathConst.StreamAssetPath, AppConst.GetPlatformName(), relativePath);
                 if (!Directory.Exists(source))
                     Debug.Log("No assetBundle output folder, try to build the assetBundles first.");
 
-                string destination = Path.Combine(outputPath, outputFolder);
-                if (Directory.Exists(destination))
-                    FileUtil.DeleteFileOrDirectory(destination);
-
-                FileUtil.CopyFileOrDirectory(source, destination);
+                FileUtility.DirCopy(source, PathConst.StreamAssetPathInAsset);
             }
 
+            private static void CopyAssetBundlesToByVersion(string version) {
 
-            public static void Build()
+                if (Directory.Exists(PathConst.StreamAssetPathInAsset))
+                    Directory.Delete(PathConst.StreamAssetPathInAsset, true);
+
+                string[] versions = version.Trim().Split('.');
+                CopyAssetBundlesTo("res/" + versions[0]);
+                CopyAssetBundlesTo("lua/" + versions[1]);
+                CopyAssetBundlesTo("xls/" + versions[2]);
+
+                string[] manifests = Directory.GetFiles(PathConst.StreamAssetPathInAsset, "*.manifest");
+                for (int i = 0; i < manifests.Length; i++)
+                    File.Delete(manifests[i]);
+            }
+
+            public static void Build(string assetVer)
             {
                 BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
 
@@ -88,7 +95,7 @@ namespace Framework.Editor
 
                 // Build and copy AssetBundles.
                 AssetBundleBuild.BuildAssetBundle_all();
-                CopyAssetBundlesTo(PathConst.StreamAssetPathInAsset);
+                CopyAssetBundlesToByVersion(assetVer);
                 AssetDatabase.Refresh();
 
                 BuildOptions option = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;

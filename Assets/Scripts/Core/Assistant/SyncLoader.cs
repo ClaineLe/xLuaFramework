@@ -22,14 +22,18 @@ namespace Framework.Core
             {
                 SyncLoader loader = new SyncLoader();
                 loader.assetBundleDic = new Dictionary<string, AssetBundle>();
+#if UNITY_EDITOR
                 loader._basePath = ResPathConst.BaseResPath + relativePath;
+#else
+                loader._basePath = PathConst.StreamAssetPathInAsset;
+#endif
                 return loader;
             }
 
             public T LoadAsset<T>(string assetPath) where T:Object {
                 string assetBundleName = AssetPathController.GetAssetBundleName(assetPath);
                 string assetName = Path.GetFileNameWithoutExtension(assetPath);
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                 if (AppConst.SimulateAssetBundleInEditor)
                 {
                     string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);

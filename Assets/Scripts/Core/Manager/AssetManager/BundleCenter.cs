@@ -55,10 +55,11 @@ namespace Framework
 			{
 				Debug.Log ("Simulation Mode: " + (AppConst.SimulateAssetBundleInEditor ? "Enabled" : "Disabled"));
 				if (!AppConst.SimulateAssetBundleInEditor) {
-					m_BaseDownloadingURL = ResPathConst.BaseResPath + ResPathConst.ResRelativePath;
-                    Debug.Log(m_BaseDownloadingURL);
-                    Debug.Log(ResPathConst.ResRelativePath);
-                    Debug.Log(m_BaseDownloadingURL + AppConst.ResVersion);
+#if UNITY_EDITOR
+                    m_BaseDownloadingURL = ResPathConst.BaseResPath + ResPathConst.ResRelativePath;
+#else
+                    m_BaseDownloadingURL = PathConst.StreamAssetPathInAsset;
+#endif
                     AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (m_BaseDownloadingURL + AppConst.ResVersion);
 					m_AssetBundleManifest = manifestAssetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 				}
@@ -230,7 +231,7 @@ namespace Framework
 			public UnityEngine.Object LoadAsset(string assetBundleName, string assetName, System.Type type)
 			{
 				//Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
-				#if UNITY_EDITOR
+#if UNITY_EDITOR
 				if (AppConst.SimulateAssetBundleInEditor) {
 					string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName (assetBundleName, assetName);
 					if (assetPaths.Length == 0) {
@@ -239,7 +240,7 @@ namespace Framework
 					}
 					return UnityEditor.AssetDatabase.LoadMainAssetAtPath (assetPaths [0]);
 				} else
-				#endif
+#endif
 				{
 					LoadAssetBundle (assetBundleName);
 					string error = string.Empty;
@@ -253,11 +254,11 @@ namespace Framework
 
 			public void LoadScene (string assetBundleName, string sceneName, bool isAdditive)
 			{
-				#if UNITY_EDITOR
+#if UNITY_EDITOR
 				if (AppConst.SimulateAssetBundleInEditor) {
 					SceneManager.LoadScene (sceneName, isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
 				} else
-			#endif
+#endif
 			{
 					LoadAssetBundle (assetBundleName);
 					SceneManager.LoadScene (sceneName, isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
