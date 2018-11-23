@@ -6,6 +6,7 @@ using Framework.Game;
 using Framework.Core.Assistant;
 using System.Linq;
 using Newtonsoft.Json;
+using Framework.Util;
 
 namespace Framework.Editor
 {
@@ -54,16 +55,20 @@ namespace Framework.Editor
                 }
 
                 string jsonStr = JsonConvert.SerializeObject(asset_BundleInfos);
-                File.WriteAllText(Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME), jsonStr);
+				string bundleInfoListFullPath = Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME);
+				File.WriteAllText(bundleInfoListFullPath, jsonStr);
 
-                CompressionHelper.Compress(packerFullPath + "/", packerFullPath + ".gzip");
-                Directory.Delete(packerFullPath, true);
+				string zipPackerFullPath = packerFullPath + ".gzip";
+				CompressionHelper.Compress(packerFullPath + "/", zipPackerFullPath);
+                //Directory.Delete(packerFullPath, true);
+
 
                 PackerInfo packerInfo = new PackerInfo();
                 packerInfo.packerName = string.Format(PACKER_NAME_FORMAT, AppConst.Change, AppConst.GetPlatformName(), fromVer, toVer);
                 packerInfo.fromVersion = fromVer;
                 packerInfo.toVersion = toVer;
-
+				packerInfo.packerSize = FileUtility.GetFileSize(zipPackerFullPath);
+				packerInfo.totalSize = FileUtility.GetFileSize(bundleInfoListFullPath);
                 for (int i = 0; i < asset_BundleInfos.Count; i++)
                 {
                     BundleInfo bundleInfo = asset_BundleInfos[i];
