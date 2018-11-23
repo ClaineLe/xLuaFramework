@@ -9,6 +9,13 @@ namespace Framework
     {
         public class FileUtility
         {
+			static public long GetFileSize(string scrFileFullPath){
+				FileInfo fileInfo = new FileInfo(scrFileFullPath);
+				if(fileInfo.Exists)
+					return fileInfo.Length;
+				return 0;
+			}
+			
             /// <summary>
             /// 复制文件到目标路径
             /// </summary>
