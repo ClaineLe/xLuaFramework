@@ -12,11 +12,12 @@ local PanelDefine = {
 function LoginModel:OnStart()
 	print("LoginModel:Start")
 
+
 	local luaPresender = ViewFactory:CreateView(PanelDefine.login)
-	luaPresender:SetLabel("Success")
+	luaPresender:SetLabel(C.CityStarConfig[1].count)
 
 	ViewFactory:CreateViewAsync(PanelDefine.login,function ( presender )
-        presender:SetLabel("Test_Claine")
+        presender:SetLabel(C.CityStarConfig[1].npcId)
     end)
     
 end

@@ -43,11 +43,7 @@ function Framework:Start( )
     self:GetManagers()
     self.m_ConfigMgr:SetupConfig()
 
-    print(C.CityStarConfig[1].count)
-    print(C.CityStarConfig[2].npcId)
-    print(C.CityStarConfig[1].npcId)
-
-    --self:StartUp()
+    self:StartUp()
 end
 
 function Framework:Tick()
