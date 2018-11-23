@@ -23,13 +23,14 @@ namespace Framework
 			{
 				m_BundleCenter = new BundleCenter ();
 			}
-
+#if BUNDLE_MODEL || !UNITY_EDITOR
 			public LoadedBundle GetLoadedAssetBundle (string assetBundleName, out string error)
 			{
 				return m_BundleCenter.GetLoadedAssetBundle (assetBundleName, out error);
 			}
+#endif
 
-			public void Release ()
+            public void Release ()
 			{
 				this.m_BundleCenter.Release ();
 				this.m_BundleCenter = null;
@@ -37,10 +38,12 @@ namespace Framework
 
 			public void Tick ()
 			{
+#if BUNDLE_MODEL || !UNITY_EDITOR
 				this.m_BundleCenter.Tick ();
-			}
+#endif
+            }
 
-			public void Print ()
+            public void Print ()
 			{
 				Debug.Log ("AssetManager");
 			}
@@ -58,7 +61,7 @@ namespace Framework
 				}
 			}
 
-			private IEnumerator LoadSceneAsyncBase (string assetPath, bool isAdditive, UnityAction callback)
+            private IEnumerator LoadSceneAsyncBase (string assetPath, bool isAdditive, UnityAction callback)
 			{
 				string assetbundlename = AssetPathController.GetAssetBundleName (assetPath);
 				string assetname = Path.GetFileNameWithoutExtension (assetPath);

@@ -56,11 +56,7 @@ namespace Framework
 				}
 			}
 
-            /** AssetBundle仿真模式 */
-            public static bool AssetBundleModel = true;
-
 #if UNITY_EDITOR
-
             public static string GetPlatformForAssetBundles(UnityEditor.BuildTarget target)
             {
                 switch (target)

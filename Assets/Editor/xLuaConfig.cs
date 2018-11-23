@@ -64,9 +64,12 @@ namespace Framework.Editor
 			public static List<Type> FilterTypeList{
 				get{
 					List<Type> filterTypeList = new List<Type> ();
-					filterTypeList.Add (typeof(Framework.Core.Manager.LoadSceneSimulationOperation));
+#if BUNDLE_MODEL
+#else
+                    filterTypeList.Add (typeof(Framework.Core.Manager.LoadSceneSimulationOperation));
 					filterTypeList.Add (typeof(Framework.Core.Manager.LoadAssetOperationSimulation));
-					return filterTypeList;
+#endif
+                    return filterTypeList;
 				}
 			}
 

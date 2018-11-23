@@ -21,10 +21,10 @@ namespace Framework
 			}
 
 #if UNITY_EDITOR
-
             public const string ResRelativePath = "res/" + AppConst.ResVersion + "/";
             public const string XlsRelativePath = "xls/" + AppConst.XlsVersion + "/";
             public const string LuaRelativePath = "lua/" + AppConst.LuaVersion + "/";
+
             public const string ExportResDirPath = "AppAssets/";
 
             public static string StreamAssetPath

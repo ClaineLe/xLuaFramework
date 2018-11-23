@@ -11,16 +11,21 @@ namespace Framework
 
 		public class BundleCenter
 		{
+
+            public void Release()
+            {
+
+            }
+
+#if BUNDLE_MODEL || !UNITY_EDITOR
 			private AssetBundleManifest m_AssetBundleManifest = null;
+            
 			private Dictionary<string, LoadedBundle> m_LoadedAssetBundles = new Dictionary<string, LoadedBundle> ();
 			private Dictionary<string, string> m_DownloadingErrors = new Dictionary<string, string> ();
 			private List<string> m_DownloadingBundles = new List<string> ();
 			private List<LoadOperation> m_InProgressOperations = new List<LoadOperation> ();
 			private Dictionary<string, string[]> m_Dependencies = new Dictionary<string, string[]> ();
-
-			public delegate string OverrideBaseDownloadingURLDelegate (string bundleName);
-
-			public LoadedBundle GetLoadedAssetBundle (string assetBundleName, out string error)
+            public LoadedBundle GetLoadedAssetBundle (string assetBundleName, out string error)
 			{
 				if (m_DownloadingErrors.TryGetValue (assetBundleName, out error))
 					return null;
@@ -43,78 +48,10 @@ namespace Framework
 					if (dependentBundle == null)
 						return null;
 				}
-
 				return bundle;
 			}
 
-			public BundleCenter ()
-			{
-				Debug.Log ("AssetBundleModel: " + (AppConst.AssetBundleModel ? "Enabled" : "Disabled"));
-				if (AppConst.AssetBundleModel) {
-                    string bundleFullPath = PathRoute.GetAssetBundleFullPath(AppConst.ResVersion);
-                    AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (bundleFullPath);
-					m_AssetBundleManifest = manifestAssetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
-				}
-			}
-
-			public void Release(){
-
-			}
-
-			protected void LoadAssetBundleAsync (string assetBundleName)
-			{
-				if (AppConst.AssetBundleModel) {
-					bool isAlreadyProcessed = LoadAssetBundleInternalAsync (assetBundleName);
-					if (!isAlreadyProcessed)
-						LoadDependenciesAsync (assetBundleName);
-				}
-			}
-
-			protected bool LoadAssetBundleInternalAsync (string assetBundleName)
-			{
-				LoadedBundle bundle = null;
-				m_LoadedAssetBundles.TryGetValue (assetBundleName, out bundle);
-				if (bundle != null) {
-					bundle.m_ReferencedCount++;
-					return true;
-				}
-
-				if (m_DownloadingBundles.Contains (assetBundleName))
-					return true;
-
-				AssetBundleCreateRequest createRequest = null;
-                string bundleFullPath = PathRoute.GetAssetBundleFullPath(assetBundleName);
-                createRequest = AssetBundle.LoadFromFileAsync (bundleFullPath);
-				m_InProgressOperations.Add (new BundleLoadOperation (assetBundleName, createRequest));
-				m_DownloadingBundles.Add (assetBundleName);
-				return false;
-			}
-
-			protected void LoadDependenciesAsync (string assetBundleName)
-			{
-				if (m_AssetBundleManifest == null) {
-					Debug.LogError ("Please initialize AssetBundleManifest by calling AssetBundleManager.Initialize()");
-					return;
-				}
-
-				string[] dependencies = m_AssetBundleManifest.GetAllDependencies (assetBundleName);
-				if (dependencies.Length == 0)
-					return;
-
-				m_Dependencies.Add (assetBundleName, dependencies);
-				for (int i = 0; i < dependencies.Length; i++)
-					LoadAssetBundleInternalAsync (dependencies [i]);
-			}
-
-			protected void LoadAssetBundle (string assetBundleName)
-			{
-                if (AppConst.AssetBundleModel) {
-				    bool isAlreadyProcessed = LoadAssetBundleInternal (assetBundleName);
-				    if (!isAlreadyProcessed)
-					    LoadDependencies (assetBundleName);
-                }
-            }
-
+            
             protected bool LoadAssetBundleInternal (string assetBundleName)
 			{
 				LoadedBundle bundle = null;
@@ -210,70 +147,117 @@ namespace Framework
 				m_DownloadingBundles.Remove (bundleLoader.assetBundleName);
 			}
 
-			public void UnloadAssetBundle (string assetBundleName)
-			{
-				if (AppConst.AssetBundleModel) {
-					UnloadAssetBundleInternal (assetBundleName);
-					UnloadDependencies (assetBundleName);
-				}
-			}
-
-			public UnityEngine.Object LoadAsset(string assetBundleName, string assetName, System.Type type)
-			{
-				//Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
-				if (AppConst.AssetBundleModel) {
-                    LoadAssetBundle(assetBundleName);
-                    string error = string.Empty;
-                    LoadedBundle loadedBundle = GetLoadedAssetBundle(assetBundleName, out error);
-                    if (string.IsNullOrEmpty(error))
-                    {
-                        return loadedBundle.m_AssetBundle.LoadAsset(assetName, type);
-                    }
-                }
-#if UNITY_EDITOR
-                else
+            protected void LoadDependenciesAsync(string assetBundleName)
+            {
+                if (m_AssetBundleManifest == null)
                 {
-                    string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
-                    if (assetPaths.Length == 0)
-                    {
-                        Debug.LogError("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
-                        return null;
-                    }
-                    return UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]);
+                    Debug.LogError("Please initialize AssetBundleManifest by calling AssetBundleManager.Initialize()");
+                    return;
                 }
-#endif
-                return null;
+
+                string[] dependencies = m_AssetBundleManifest.GetAllDependencies(assetBundleName);
+                if (dependencies.Length == 0)
+                    return;
+
+                m_Dependencies.Add(assetBundleName, dependencies);
+                for (int i = 0; i < dependencies.Length; i++)
+                    LoadAssetBundleInternalAsync(dependencies[i]);
+            }
+
+            protected bool LoadAssetBundleInternalAsync(string assetBundleName)
+            {
+                LoadedBundle bundle = null;
+                m_LoadedAssetBundles.TryGetValue(assetBundleName, out bundle);
+                if (bundle != null)
+                {
+                    bundle.m_ReferencedCount++;
+                    return true;
+                }
+
+                if (m_DownloadingBundles.Contains(assetBundleName))
+                    return true;
+
+                AssetBundleCreateRequest createRequest = null;
+                string bundleFullPath = PathRoute.GetAssetBundleFullPath(assetBundleName);
+                createRequest = AssetBundle.LoadFromFileAsync(bundleFullPath);
+                m_InProgressOperations.Add(new BundleLoadOperation(assetBundleName, createRequest));
+                m_DownloadingBundles.Add(assetBundleName);
+                return false;
+            }
+            public BundleCenter ()
+			{
+                string bundleFullPath = PathRoute.GetAssetBundleFullPath(AppConst.ResVersion);
+                AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (bundleFullPath);
+				m_AssetBundleManifest = manifestAssetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 			}
 
-			public void LoadScene (string assetBundleName, string sceneName, bool isAdditive)
+			protected void LoadAssetBundleAsync (string assetBundleName)
 			{
-				if (AppConst.AssetBundleModel) {
-                    LoadAssetBundle(assetBundleName);
-				}
+				bool isAlreadyProcessed = LoadAssetBundleInternalAsync (assetBundleName);
+				if (!isAlreadyProcessed)
+					LoadDependenciesAsync (assetBundleName);
+			}
+
+			protected void LoadAssetBundle (string assetBundleName)
+			{
+				bool isAlreadyProcessed = LoadAssetBundleInternal (assetBundleName);
+				if (!isAlreadyProcessed)
+					LoadDependencies (assetBundleName);
+            }
+
+            public void UnloadAssetBundle(string assetBundleName)
+            {
+                UnloadAssetBundleInternal(assetBundleName);
+                UnloadDependencies(assetBundleName);
+            }
+#endif
+
+            public void LoadScene(string assetBundleName, string sceneName, bool isAdditive)
+            {
+#if BUNDLE_MODEL || !UNITY_EDITOR
+                LoadAssetBundle(assetBundleName);
+#endif
                 SceneManager.LoadScene(sceneName, isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
             }
+
+            public UnityEngine.Object LoadAsset(string assetBundleName, string assetName, System.Type type)
+			{
+#if BUNDLE_MODEL || !UNITY_EDITOR
+                LoadAssetBundle(assetBundleName);
+                string error = string.Empty;
+                LoadedBundle loadedBundle = GetLoadedAssetBundle(assetBundleName, out error);
+                if (string.IsNullOrEmpty(error))
+                    return loadedBundle.m_AssetBundle.LoadAsset(assetName, type);
+                return null;
+#else
+                string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
+                if (assetPaths.Length == 0)
+                {
+                    Debug.LogError("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
+                    return null;
+                }
+                return UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]);
+#endif
+			}
+
 
             public BaseLoadAssetOperation LoadAssetAsync (string assetBundleName, string assetName, System.Type type)
 			{
 				//Debug.Log ("Loading " + assetName + " from " + assetBundleName + " bundle");
 				BaseLoadAssetOperation operation = null;
-				if (AppConst.AssetBundleModel) {
-                    LoadAssetBundleAsync(assetBundleName);
-                    operation = new LoadAssetOperation(assetBundleName, assetName, type);
-                    m_InProgressOperations.Add(operation);
-				}
-#if UNITY_EDITOR
-                else
+#if BUNDLE_MODEL || !UNITY_EDITOR
+                LoadAssetBundleAsync(assetBundleName);
+                operation = new LoadAssetOperation(assetBundleName, assetName, type);
+                m_InProgressOperations.Add(operation);
+#else
+                string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
+                if (assetPaths.Length == 0)
                 {
-                    string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
-                    if (assetPaths.Length == 0)
-                    {
-                        Debug.LogError("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
-                        return null;
-                    }
-                    UnityEngine.Object target = UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]);
-                    operation = new LoadAssetOperationSimulation(target);
+                    Debug.LogError("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
+                    return null;
                 }
+                UnityEngine.Object target = UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]);
+                operation = new LoadAssetOperationSimulation(target);
 #endif
                 return operation;
 			}
@@ -281,18 +265,13 @@ namespace Framework
 			public LoadOperation LoadSceneAsync (string assetBundleName, string sceneName, bool isAdditive)
 			{
 				LoadOperation operation = null;
-				if (AppConst.AssetBundleModel) {
-                    LoadAssetBundleAsync(assetBundleName);
-                    operation = new LoadSceneOperation(assetBundleName, sceneName, isAdditive);
-                    m_InProgressOperations.Add(operation);
-				}
-#if UNITY_EDITOR
-                else
-                {
-                    operation = new LoadSceneSimulationOperation(assetBundleName, sceneName, isAdditive);
-                }
+#if BUNDLE_MODEL || !UNITY_EDITOR
+                LoadAssetBundleAsync(assetBundleName);
+                operation = new LoadSceneOperation(assetBundleName, sceneName, isAdditive);
+                m_InProgressOperations.Add(operation);
+#else
+                operation = new LoadSceneSimulationOperation(assetBundleName, sceneName, isAdditive);
 #endif
-
                 return operation;
 			}
 		}

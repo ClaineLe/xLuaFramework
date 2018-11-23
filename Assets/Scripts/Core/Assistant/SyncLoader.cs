@@ -24,26 +24,21 @@ namespace Framework.Core
                 string assetBundleName = AssetPathController.GetAssetBundleName(assetPath);
                 string assetName = Path.GetFileNameWithoutExtension(assetPath);
 
-                if (AppConst.AssetBundleModel){
-                    AssetBundle bundle = _GetBundle(assetBundleName);
-                    return bundle.LoadAsset<T>(assetName);
-                }
-#if UNITY_EDITOR
-                else
+#if BUNDLE_MODEL || !UNITY_EDITOR
+                AssetBundle bundle = _GetBundle(assetBundleName);
+                return bundle.LoadAsset<T>(assetName);
+#else
+                string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
+                if (assetPaths.Length == 0)
                 {
-                    string[] assetPaths = UnityEditor.AssetDatabase.GetAssetPathsFromAssetBundleAndAssetName(assetBundleName, assetName);
-                    if (assetPaths.Length == 0)
-                    {
-                        Debug.LogError("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
-                        return null;
-                    }
-                    return UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]) as T;
+                    Debug.LogError("There is no asset with name \"" + assetName + "\" in " + assetBundleName);
+                    return null;
                 }
+                return UnityEditor.AssetDatabase.LoadMainAssetAtPath(assetPaths[0]) as T;
 #endif
-                return default(T);
             }
-
-            private AssetBundle _GetBundle(string bundleName) {
+#if BUNDLE_MODEL || !UNITY_EDITOR
+        private AssetBundle _GetBundle(string bundleName) {
                 if (!this.assetBundleDic.ContainsKey(bundleName))
                 {
                     string bundleFullPath = PathRoute.GetAssetBundleFullPath(bundleName);
@@ -51,8 +46,9 @@ namespace Framework.Core
                 }
                 return this.assetBundleDic[bundleName];
             }
+#endif
 
-			public void Dispose(){
+            public void Dispose(){
 				
 			}
         }
