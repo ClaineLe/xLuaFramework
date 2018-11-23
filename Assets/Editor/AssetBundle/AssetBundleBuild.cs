@@ -16,21 +16,21 @@ namespace Framework.Editor
 				BuildAssetBundleBase (ResPathConst.ResRelativePath, new []{
 					"prefab",
 					"scene",
-				});
+				},false);
 			}
 
 			public static void BuildAssetBundle_lua ()
 			{
 				BuildAssetBundleBase (ResPathConst.LuaRelativePath, new []{
 					"lua",
-				});
+				},true);
 			}
 
 			public static void BuildAssetBundle_xls ()
 			{
 				BuildAssetBundleBase (ResPathConst.XlsRelativePath, new []{
 					"#xls",
-				});
+				},true);
 			}
 
 			public static void BuildAssetBundle_all(){
@@ -57,7 +57,7 @@ namespace Framework.Editor
 				return buildList.ToArray ();
 			}
 
-			private static void BuildAssetBundleBase(string outRelativePath, string[] filterStrs){
+			private static void BuildAssetBundleBase(string outRelativePath, string[] filterStrs, bool isDeleteManifest){
 				if (filterStrs.Length > 0) {
 					UnityEditor.AssetBundleBuild[] builds = GetBuilds (filterStrs);
 					if (builds.Length > 0) {
@@ -66,13 +66,20 @@ namespace Framework.Editor
 						outputPath = Path.Combine (outputPath, outRelativePath);
 						if (!Directory.Exists (outputPath))
 							Directory.CreateDirectory (outputPath);
-
+                         
                         BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle;
 
 						if(builds == null)
 							BuildPipeline.BuildAssetBundles (outputPath, options,target );
 						else
 							BuildPipeline.BuildAssetBundles (outputPath, builds, options, target);
+
+                        if (isDeleteManifest)
+                        {
+                            string manifestFileName = Path.GetFileName(Path.GetDirectoryName(outputPath));
+                            File.Delete(Path.Combine(outputPath, manifestFileName));
+                            File.Delete(Path.Combine(outputPath, manifestFileName + ".manifest"));
+                        }
 					}
 				}
 			}
