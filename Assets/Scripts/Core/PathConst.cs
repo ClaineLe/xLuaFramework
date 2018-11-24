@@ -14,12 +14,9 @@ namespace Framework
             public const string LUA_FRAMEWORK = "#core.Framework";
             public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
 
-			public static string StreamAssetPathInAsset {
-				get {
-					return Application.streamingAssetsPath + "/AssetBundles/";
-				}
-			}
+			public static string StreamAssetPathInAsset => Application.streamingAssetsPath + "/AssetBundles/";
 
+            public static string LocalAssetCacheDirPath => "";
 #if UNITY_EDITOR
             public const string ResRelativePath = "res/" + AppConst.ResVersion + "/";
             public const string XlsRelativePath = "xls/" + AppConst.XlsVersion + "/";
