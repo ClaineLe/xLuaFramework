@@ -18,6 +18,20 @@ namespace Framework
                 return presender;
             }
 
+            public void SetNotice(string notice){
+
+            }
+
+            public void ShowConfirmView(string content, string title, System.Action onConfirm, System.Action onCancel)
+            {
+
+            }
+
+            public void SetProgress(float progress)
+            {
+
+            }
+
             public void Release()
             {
                 if (this.m_View != null)
