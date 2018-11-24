@@ -15,15 +15,20 @@
                 }
             }
 
-            public virtual void Init()
+            public void Init()
             {
+                this.onInit();
 
             }
 
-            public virtual void Release()
+            public void Release()
             {
-
+                this.onRelease();
             }
+
+
+            protected virtual void onInit() { }
+            protected virtual void onRelease() { }
         }
     }
 }
