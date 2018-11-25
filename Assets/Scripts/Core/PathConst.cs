@@ -14,7 +14,7 @@ namespace Framework
             public const string FORMAT_LUAROOT = "Lua/";
             public const string LUA_FRAMEWORK = "#core.Framework";
             public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
-            public const string BundleDirName = "AssetBundls";
+            public const string BundleDirName = "AssetBundles";
             public static string StreamAssetPath
             {
                 get
@@ -27,9 +27,15 @@ namespace Framework
                 }
             }
 
-
-
-            public static string LocalAssetCacheDirPath => "";
+            public static string PersistentDataPath{
+                get{
+#if UNITY_EDITOR
+                    return Application.dataPath + "/../PersistentDatas/";
+#else
+                    return Application.persistentDataPath + "/";
+#endif
+                }
+            }
 #if UNITY_EDITOR
             public static string CurChangePlatformRelativePath{
                 get{
@@ -41,9 +47,6 @@ namespace Framework
                     return Application.dataPath + "/../" + BundleDirName + "/";
                 }
             }
-            public const string ResRelativePath = "res/" + AppConst.ResVersion + "/";
-            public const string XlsRelativePath = "xls/" + AppConst.XlsVersion + "/";
-            public const string LuaRelativePath = "lua/" + AppConst.LuaVersion + "/";
 
             public const string ExportResDirPath = "AppAssets/";
 

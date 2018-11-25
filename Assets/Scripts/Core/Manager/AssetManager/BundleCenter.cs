@@ -186,7 +186,7 @@ namespace Framework
             }
             public BundleCenter ()
 			{
-                string bundleFullPath = PathRoute.GetAssetBundleFullPath(AppConst.ResVersion);
+                string bundleFullPath = PathRoute.GetAssetBundleFullPath(PathConst.BundleDirName);
                 AssetBundle manifestAssetBundle = AssetBundle.LoadFromFile (bundleFullPath);
 				m_AssetBundleManifest = manifestAssetBundle.LoadAsset<AssetBundleManifest> ("AssetBundleManifest");
 			}

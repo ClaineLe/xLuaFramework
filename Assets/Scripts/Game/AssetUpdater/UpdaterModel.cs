@@ -83,7 +83,7 @@ namespace Framework
                 _presender.SetNotice(notice);
 
                 string url = AppConst.FileServerAddress + packerInfo.packerName;
-                string saveFullPath = PathConst.LocalAssetCacheDirPath + packerInfo.packerName;
+                string saveFullPath = PathConst.PersistentDataPath + packerInfo.packerName;
 
                 UnityWebRequestAsyncOperation operation = NetWorkUtility.DownLoadZip(url, saveFullPath);
                 DownloadHandleContinue handle = operation.webRequest.downloadHandler as DownloadHandleContinue;

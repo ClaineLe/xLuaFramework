@@ -14,6 +14,7 @@ namespace Framework.Editor
     {
 		public class EditorMenuItemsHub
         {
+            private const bool releaseBuild = true;
             [MenuItem("FrameworkTools/AssetBundles/MarkAssetBundleName/all")]
             static public void BuildAssetBundleName_All()
             {
@@ -29,25 +30,25 @@ namespace Framework.Editor
 			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/res")]
 			static public void BuildAssetBundles_RES ()
 			{
-				AssetBundleBuild.BuildAssetBundle_res ();
+				AssetBundleBuild.BuildAssetBundle_res (releaseBuild);
 			}
 
 			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/lua")]
 			static public void BuildAssetBundles_LUA ()
 			{
-				AssetBundleBuild.BuildAssetBundle_lua ();
+				AssetBundleBuild.BuildAssetBundle_lua (releaseBuild);
 			}
 
 			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/xls")]
 			static public void BuildAssetBundles_XLS ()
 			{
-				AssetBundleBuild.BuildAssetBundle_xls ();
+				AssetBundleBuild.BuildAssetBundle_xls (releaseBuild);
 			}
 
 			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/all")]
 			static public void BuildAssetBundles_ALL ()
 			{
-				AssetBundleBuild.BuildAssetBundle_all ();
+				AssetBundleBuild.BuildAssetBundle_all (releaseBuild);
 			}
 
             [MenuItem("FrameworkTools/AssetBundles/BuildPacker/lua")]
@@ -67,14 +68,14 @@ namespace Framework.Editor
             [MenuItem ("FrameworkTools/AssetBundles/Build Player")]
 			static public void BuildPlayer_Build ()
 			{
-                BuildPlayer.Build(AppConst.AssetVersion);
+                BuildPlayer.Build(AssetBundleBuild.GetAssetVersion());
 			}
 
             [MenuItem("FrameworkTools/CopyBundleToRunTimeDir")]
             static public void CopyBundleToRunTimeDir(){
 
                 string dstPath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/";
-                string version = "1111.2222.3333";
+                string version = AssetBundleBuild.GetAssetVersion();
                 AssetBundleUtility.CopyBundlesToStreamAsset(dstPath, version);
             }
         }

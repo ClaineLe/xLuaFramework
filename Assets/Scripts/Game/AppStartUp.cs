@@ -1,5 +1,6 @@
 ﻿using Framework.Core.Manager;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Framework
@@ -10,8 +11,14 @@ namespace Framework
         {
             public void Start()
             {
-                UpdaterModel.Instance.Lanucher(StartUpFramework);
+
+                //UpdaterModel.Instance.Lanucher(StartUpFramework);
+
+                AppFacade.Instance.StartUp();
+                Debug.Log(AppFacade.Instance.AssetVersion);
+                StartUpFramework();
             }
+
 
             public void StartUpFramework()
             {
