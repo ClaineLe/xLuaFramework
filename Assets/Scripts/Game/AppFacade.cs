@@ -23,6 +23,14 @@ namespace Framework
             public string AssetVersion { get; private set; }
 
             public void StartUp(){
+                InitAssetVersion();
+                InitBundleCache();
+            }
+
+            private void InitBundleCache(){
+                BundleInfoCacher.Init();
+            }
+            private void InitAssetVersion(){
                 string versionFilePath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/AssetVersion.txt";
                 AssetVersion = File.ReadAllText(versionFilePath).Trim();
             }
