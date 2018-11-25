@@ -76,8 +76,8 @@ namespace Framework.Editor
                 AssetBundleUtility.CopyBundlesToStreamAsset(bundleStreamAssetPath, assetVer);
                 AssetDatabase.Refresh();
 
-                //BuildOptions option = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;
-                //BuildPipeline.BuildPlayer(levels, Path.Combine(outputPath, targetName), target, option);
+                BuildOptions option = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;
+                BuildPipeline.BuildPlayer(levels, Path.Combine(outputPath, targetName), target, option);
             }
         }
     }
