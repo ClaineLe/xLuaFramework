@@ -1,6 +1,7 @@
 ﻿using Framework.Core.Manager;
 using Framework.Core.Singleton;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Framework
 {
@@ -18,6 +19,13 @@ namespace Framework
 			private Delegate_Manager_Init m_MgrInit_Handle;
 			private Delegate_Manager_Tick m_MgrTick_Handle;
 			private Delegate_Manager_Release m_MgrRelease_Handle;
+
+            public string AssetVersion { get; private set; }
+
+            public void StartUp(){
+                string versionFilePath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/AssetVersion.txt";
+                AssetVersion = File.ReadAllText(versionFilePath).Trim();
+            }
 
             protected override void onInit()
             {
