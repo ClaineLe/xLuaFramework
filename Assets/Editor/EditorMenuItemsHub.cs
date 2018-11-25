@@ -75,7 +75,7 @@ namespace Framework.Editor
 
                 string dstPath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/";
                 string version = "1111.2222.3333";
-                AssetBundleUtility.CopyBundlesToStreamAssetByVersion(dstPath, version);
+                AssetBundleUtility.CopyBundlesToStreamAsset(dstPath, version);
             }
         }
     }

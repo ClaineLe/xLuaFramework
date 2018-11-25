@@ -13,7 +13,7 @@ namespace Framework.Editor
     {
         public class AssetBundleUtility
         {
-            public static void CopyBundlesToStreamAssetByVersion(string dstPath, string version)
+            public static void CopyBundlesToStreamAsset(string dstPath, string version)
             {
                 if (Directory.Exists(dstPath))
                     Directory.Delete(dstPath, true);
@@ -27,7 +27,7 @@ namespace Framework.Editor
                 FileUtility.DirCopy(bundleBasePath + "lua/" + versions[1], dstPath, filterExtensions);
                 FileUtility.DirCopy(bundleBasePath + "xls/" + versions[2], dstPath, filterExtensions);
 
-                File.WriteAllText(dstPath + "AssetVersion.txt", version);
+                File.WriteAllText(Path.Combine( dstPath , "AssetVersion.txt"), version);
                 
             }
         }

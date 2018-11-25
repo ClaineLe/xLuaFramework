@@ -12,30 +12,6 @@ namespace Framework.Editor
     {
         public class BuildPlayer
         { 
-            private static void CopyAssetBundlesTo(string relativePath)
-            {
-                string source = Path.Combine(PathConst.StreamAssetPath, AppConst.GetPlatformName(), relativePath);
-                if (!Directory.Exists(source))
-                    Debug.Log("No assetBundle output folder, try to build the assetBundles first.");
-
-                FileUtility.DirCopy(source, PathConst.StreamAssetPath);
-            }
-
-            private static void CopyAssetBundlesToByVersion(string version) {
-
-                if (Directory.Exists(PathConst.StreamAssetPath))
-                    Directory.Delete(PathConst.StreamAssetPath, true);
-
-                string[] versions = version.Trim().Split('.');
-                CopyAssetBundlesTo("res/" + versions[0]);
-                CopyAssetBundlesTo("lua/" + versions[1]);
-                CopyAssetBundlesTo("xls/" + versions[2]);
-
-                string[] manifests = Directory.GetFiles(PathConst.StreamAssetPath, "*.manifest");
-                for (int i = 0; i < manifests.Length; i++)
-                    File.Delete(manifests[i]);
-            }
-
             public static void Build(string assetVer)
             {
                 BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
@@ -94,11 +70,14 @@ namespace Framework.Editor
 
                 // Build and copy AssetBundles.
                 AssetBundleBuild.BuildAssetBundle_all();
-                CopyAssetBundlesToByVersion(assetVer);
+
+
+                string bundleStreamAssetPath = Application.streamingAssetsPath + "/" + PathConst.BundleDirName;
+                AssetBundleUtility.CopyBundlesToStreamAsset(bundleStreamAssetPath, assetVer);
                 AssetDatabase.Refresh();
 
-                BuildOptions option = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;
-                BuildPipeline.BuildPlayer(levels, Path.Combine(outputPath, targetName), target, option);
+                //BuildOptions option = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;
+                //BuildPipeline.BuildPlayer(levels, Path.Combine(outputPath, targetName), target, option);
             }
         }
     }
