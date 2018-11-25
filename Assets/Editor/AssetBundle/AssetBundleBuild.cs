@@ -61,15 +61,14 @@ namespace Framework.Editor
 				if (filterStrs.Length > 0) {
 					UnityEditor.AssetBundleBuild[] builds = GetBuilds (filterStrs);
 					if (builds.Length > 0) {
-						BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-						string outputPath = Path.Combine (PathConst.StreamAssetPath, AppConst.GetPlatformForAssetBundles (target));
-						outputPath = Path.Combine (outputPath, outRelativePath);
+                        string outputPath = Path.Combine (PathConst.BuildBundleRootPath , PathConst.CurChangePlatformRelativePath, outRelativePath);
 						if (!Directory.Exists (outputPath))
 							Directory.CreateDirectory (outputPath);
                          
                         BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle;
 
-						if(builds == null)
+                        BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
+                        if (builds == null)
 							BuildPipeline.BuildAssetBundles (outputPath, options,target );
 						else
 							BuildPipeline.BuildAssetBundles (outputPath, builds, options, target);

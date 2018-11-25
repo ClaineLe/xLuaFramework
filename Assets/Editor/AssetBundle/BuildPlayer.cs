@@ -14,25 +14,24 @@ namespace Framework.Editor
         { 
             private static void CopyAssetBundlesTo(string relativePath)
             {
-
                 string source = Path.Combine(PathConst.StreamAssetPath, AppConst.GetPlatformName(), relativePath);
                 if (!Directory.Exists(source))
                     Debug.Log("No assetBundle output folder, try to build the assetBundles first.");
 
-                FileUtility.DirCopy(source, PathConst.StreamAssetPathInAsset);
+                FileUtility.DirCopy(source, PathConst.StreamAssetPath);
             }
 
             private static void CopyAssetBundlesToByVersion(string version) {
 
-                if (Directory.Exists(PathConst.StreamAssetPathInAsset))
-                    Directory.Delete(PathConst.StreamAssetPathInAsset, true);
+                if (Directory.Exists(PathConst.StreamAssetPath))
+                    Directory.Delete(PathConst.StreamAssetPath, true);
 
                 string[] versions = version.Trim().Split('.');
                 CopyAssetBundlesTo("res/" + versions[0]);
                 CopyAssetBundlesTo("lua/" + versions[1]);
                 CopyAssetBundlesTo("xls/" + versions[2]);
 
-                string[] manifests = Directory.GetFiles(PathConst.StreamAssetPathInAsset, "*.manifest");
+                string[] manifests = Directory.GetFiles(PathConst.StreamAssetPath, "*.manifest");
                 for (int i = 0; i < manifests.Length; i++)
                     File.Delete(manifests[i]);
             }

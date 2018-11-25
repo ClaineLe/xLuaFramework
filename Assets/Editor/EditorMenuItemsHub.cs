@@ -6,6 +6,7 @@ using Framework.Core.Widget;
 
 namespace Framework.Editor
 {
+    using System.IO;
     using AssetBundle;
     using Framework.Game;
 
@@ -68,6 +69,14 @@ namespace Framework.Editor
 			{
                 BuildPlayer.Build(AppConst.AssetVersion);
 			}
+
+            [MenuItem("FrameworkTools/CopyBundleToRunTimeDir")]
+            static public void CopyBundleToRunTimeDir(){
+
+                string dstPath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/";
+                string version = "1111.2222.3333";
+                AssetBundleUtility.CopyBundlesToStreamAssetByVersion(dstPath, version);
+            }
         }
     }
 }
