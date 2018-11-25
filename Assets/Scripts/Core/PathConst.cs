@@ -20,7 +20,7 @@ namespace Framework
                 get
                 {
 #if UNITY_EDITOR
-                    return Application.dataPath + "/../StreamAsset/";
+                    return Application.dataPath + "/../StreamingAssets/";
 #else
                     return Application.streamingAssetsPath + "/";
 #endif
