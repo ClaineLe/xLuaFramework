@@ -35,8 +35,12 @@ namespace Framework
                 scrFileInfo.CopyTo(dstFileInfo.FullName);
             }
 
-            static public void DirCopy(string scrPath, string dstPath)
+            static public void DirCopy(string scrPath, string dstPath, string[] filterExtensions = null)
             {
+                List<string> filters = new List<string>();
+                if(filterExtensions != null && filterExtensions.Length>0)
+                    filters = new List<string>(filterExtensions);
+
                 DirectoryInfo scrDirInfo = new DirectoryInfo(scrPath);
                 if(!scrDirInfo.Exists)
                 {
@@ -51,6 +55,8 @@ namespace Framework
                 FileInfo[] scrFileInfos = scrDirInfo.GetFiles();
                 for (int i = 0; i < scrFileInfos.Length; i++)
                 {
+                    if (filters.Exists(a => a.Equals(scrFileInfos[i].Extension)))
+                        continue;
                     FileCopy(scrFileInfos[i].FullName, Path.Combine(dstPath, scrFileInfos[i].Name));
                 }
             }
