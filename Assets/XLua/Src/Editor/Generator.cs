@@ -1007,12 +1007,13 @@ namespace CSObjectWrapEditor
         }
 
 #if !XLUA_GENERAL
-        static void clear(string path)
+        static void clear(string path, bool refresh = true)
         {
             if (Directory.Exists(path))
             {
                 Directory.Delete(path, true);
-                AssetDatabase.Refresh();
+                if(refresh)
+                    AssetDatabase.Refresh();
             }
         }
 #endif
@@ -1579,7 +1580,7 @@ namespace CSObjectWrapEditor
         [MenuItem("XLua/ReGenerateCode", false, 3)]
         public static void ReGenerateCode()
         {
-            clear(GeneratorConfig.common_path);
+            clear(GeneratorConfig.common_path,false);
             GenAll();
         }
 
