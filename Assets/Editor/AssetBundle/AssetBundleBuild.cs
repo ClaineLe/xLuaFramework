@@ -76,14 +76,14 @@ namespace Framework.Editor
 
 			public static void BuildAssetBundle_lua (bool release)
 			{
-				BuildAssetBundleBase (release, "xls", new []{
+				BuildAssetBundleBase (release, "lua", new []{
 					"lua",
 				});
 			}
 
 			public static void BuildAssetBundle_xls (bool release)
 			{
-				BuildAssetBundleBase (release, "lua", new []{
+				BuildAssetBundleBase (release, "xls", new []{
 					"#xls",
 				});
 			}
