@@ -21,7 +21,10 @@ namespace Framework
                 get
                 {
 #if UNITY_EDITOR
-                    return Application.dataPath + "/../StreamingAssets/";
+                    string path = Application.dataPath + "/../StreamingAssets/";
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+                    return path;
 #else
                     return Application.streamingAssetsPath + "/";
 #endif
@@ -31,7 +34,10 @@ namespace Framework
             public static string PersistentDataPath{
                 get{
 #if UNITY_EDITOR
-                    return Application.dataPath + "/../PersistentDatas/";
+                    string path = Application.dataPath + "/../PersistentDatas/";
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+                    return path;
 #else
                     return Application.persistentDataPath + "/";
 #endif
