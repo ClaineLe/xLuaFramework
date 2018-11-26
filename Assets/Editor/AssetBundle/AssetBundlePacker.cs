@@ -21,8 +21,8 @@ namespace Framework.Editor
             private const string BUNDLE_INFO_LIST_FILE_NAME = "bundle_info.txt";
             private const string PACKER_DIR_NAME_FORMAT = "Packer/{0}_to_{1}";
 
-            private static string BasePathFormat = PathConst.StreamAssetPath + "/" + AppConst.GetPlatformName() + "/{0}/{1}/";
-
+            private static  string BasePathFormat = PathConst.BuildBundleRootPath + PathConst.CurChangePlatformRelativePath + "{0}/{1}/";
+                   
             public static void BuildPacker_all(string fromVer, string toVer)
             {
                 string[] assetPath = {
@@ -208,6 +208,8 @@ namespace Framework.Editor
 
             private static List<BundleInfo> GetDiffBase(string fromFullPath, string toFullPath)
             {
+                Debug.Log(fromFullPath);
+                Debug.Log(toFullPath);
 
                 List<BundleInfo> fromBundleInfos = CollectBundleInfo(fromFullPath);
                 List<BundleInfo> toBundleInfos = CollectBundleInfo(toFullPath);

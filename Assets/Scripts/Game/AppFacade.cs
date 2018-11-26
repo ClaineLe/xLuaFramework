@@ -2,6 +2,7 @@
 using Framework.Core.Singleton;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 namespace Framework
 {
@@ -22,23 +23,42 @@ namespace Framework
 
             public string AssetVersion { get; private set; }
 
+            private int errorCode = 0;
+            public string[] errorStrs = new[] {
+                "成功",
+                "没有找到对应版本资源。",
+            };
             public void StartUp(){
-                InitAssetVersion();
+                errorCode = InitAssetVersion();
+
+                if (errorCode != 0) {
+                    Debug.Log(errorStrs[errorCode]);
+                    return;
+                }
+
                 InitBundleCache();
+            }
+
+            private int InitAssetVersion()
+            {
+                string versionFilePath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/" + PathConst.AssetVersionFileName;
+                if (File.Exists(versionFilePath))
+                {
+                    AssetVersion = File.ReadAllText(versionFilePath).Trim();
+                    return 0;
+                }
+                return 1;
             }
 
             private void InitBundleCache(){
                 BundleInfoCacher.Init();
-            }
-            private void InitAssetVersion(){
-                string versionFilePath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/AssetVersion.txt";
-                AssetVersion = File.ReadAllText(versionFilePath).Trim();
             }
 
             protected override void onInit()
             {
                 m_IsDone = false;
             }
+
             public void InitManager ()
 			{
 				if (m_MgrInit_Handle != null)

@@ -27,7 +27,7 @@ namespace Framework.Editor
                 FileUtility.DirCopy(bundleBasePath + "lua/" + versions[1], dstPath, filterExtensions);
                 FileUtility.DirCopy(bundleBasePath + "xls/" + versions[2], dstPath, filterExtensions);
 
-                File.WriteAllText(Path.Combine( dstPath , "AssetVersion.txt"), version);
+                File.WriteAllText(Path.Combine( dstPath , PathConst.AssetVersionFileName), version);
                 
             }
         }

@@ -15,6 +15,7 @@ namespace Framework
             public const string LUA_FRAMEWORK = "#core.Framework";
             public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
             public const string BundleDirName = "AssetBundles";
+            public const string AssetVersionFileName = "AssetVersion.txt";
             public static string StreamAssetPath
             {
                 get

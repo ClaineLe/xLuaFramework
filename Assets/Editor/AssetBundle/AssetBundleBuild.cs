@@ -12,7 +12,7 @@ namespace Framework.Editor
 	{
 		public class AssetBundleBuild
 		{
-            private static string versionFilePath = Application.dataPath + "/" + PathConst.ExportResDirPath + "AssetVersion.txt";
+            private static string versionFilePath = Application.dataPath + "/" + PathConst.ExportResDirPath + PathConst.AssetVersionFileName;
 
             public static bool IsExistAssetVersion(string version){
                 string[] versions = version.Trim().Split('.');
