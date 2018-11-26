@@ -46,21 +46,41 @@ namespace Framework
                 _presender.SetNotice(NOTICES[updateState]);
                 yield return NetWorkUtility.GetHttpContent(APP_INFO_FILENAME, (isError, content) =>
                 {
-                    Debug.Log(isError + ":" + content);
                     if (!isError)
                     {
-                        List<PackerInfo> allPackerInfoList = JsonConvert.DeserializeObject<List<PackerInfo>>(content);
-                        _waitDownLoadPackerInfoList = CollectNeedUpdatePacker(allPackerInfoList);
+                        _waitDownLoadPackerInfoList = new List<PackerInfo>();
+
+                        string[] jsonObj = content.Trim().Split('\n');
+                        for (int i = 0; i < jsonObj.Length; i++)
+                            _waitDownLoadPackerInfoList.Add(PackerInfo.ValueOf(jsonObj[i].Trim()));
                     }
                 });
                 yield return new WaitUntil(() => _waitDownLoadPackerInfoList != null);
                 updateState = 1;
+
+                string curVersion = AppFacade.Instance.AssetVersion;
+                string dstVersion = "1.1.3";
+                foreach (PackerInfo packerInfo in CollectNeedUpdatePacker(curVersion, dstVersion, _waitDownLoadPackerInfoList)) {
+                    Debug.Log(packerInfo.ToString());
+                }
             }
 
-            private List<PackerInfo> CollectNeedUpdatePacker(List<PackerInfo> allPackerList)
+            private List<PackerInfo> CollectNeedUpdatePacker(string scrVersion, string dstVersion, List<PackerInfo> allPackerList)
             {
-                return null;
+                string curVersion = scrVersion;
+                PackerInfo tmpPacker;
+                List<PackerInfo> needDownLoadPackerList = new List<PackerInfo>();
+                List<PackerInfo> tmpPackerInfoList;
+                while (!curVersion.Equals(dstVersion))
+                {
+                    tmpPackerInfoList = allPackerList.FindAll(a => a.fromVersion.Equals(curVersion));
+                    tmpPacker = tmpPackerInfoList[tmpPackerInfoList.Count - 1];
+                    curVersion = tmpPacker.toVersion;
+                    needDownLoadPackerList.Add(tmpPacker);
+                }
+                return needDownLoadPackerList;
             }
+
 
             private IEnumerator DownLoadPackerList()
             {
