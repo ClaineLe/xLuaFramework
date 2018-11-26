@@ -54,14 +54,14 @@ namespace Framework.Editor
             [MenuItem("FrameworkTools/AssetBundles/BuildPacker/lua")]
             static public void BuildPacker_lua()
             {
-                AssetBundlePacker.BuildPacker_lua("1111", "2222");
+                //AssetBundlePacker.BuildPacker_lua("1111", "2222");
             }
 
             [MenuItem("FrameworkTools/AssetBundles/BuildPacker/all")]
             static public void BuildPacker_all()
             {
-                string fromVersion = "1111.1111.3333";
-                string toVersion = "1111.2222.3333";
+                string fromVersion = "1.1.1";
+                string toVersion = "1.1.2";
                 AssetBundlePacker.BuildPacker_all(fromVersion, toVersion);
             }
 

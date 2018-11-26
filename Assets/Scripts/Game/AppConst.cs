@@ -15,8 +15,8 @@ namespace Framework
 
 			public const eChange Change = eChange.Official;
 
-            public const string AppInfoFileName = "AASS.txt";
-            public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/";
+            public const string AppInfoFileName = "packer_list.txt";
+            public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/AssetUpdateTest/";
 
 			public static bool ActiveAssetUpdater = true;
 

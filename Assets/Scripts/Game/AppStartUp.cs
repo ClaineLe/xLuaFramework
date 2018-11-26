@@ -12,11 +12,9 @@ namespace Framework
             public void Start()
             {
 
-                //UpdaterModel.Instance.Lanucher(StartUpFramework);
-
                 AppFacade.Instance.StartUp();
-                Debug.Log(AppFacade.Instance.AssetVersion);
-                StartUpFramework();
+                UpdaterModel.Instance.Lanucher(StartUpFramework);
+                //StartUpFramework();
             }
 
 

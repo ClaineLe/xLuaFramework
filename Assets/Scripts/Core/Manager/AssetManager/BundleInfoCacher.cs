@@ -13,7 +13,7 @@ namespace Framework
             public static List<BundleInfo> m_BundleInfoList;
             public static void Init(){
                 m_BundleInfoList = new List<BundleInfo>();
-                m_BundleInfoList.Add(new BundleInfo() { Name = "prefabs_#view_viewroot" });
+                //m_BundleInfoList.Add(new BundleInfo() { Name = "prefabs_#view_viewroot" });
             }
 
             public static bool InCahce(string bundleName){
