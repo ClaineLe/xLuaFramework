@@ -29,7 +29,7 @@ namespace Framework
                 "没有找到对应版本资源。",
             };
             public void StartUp(){
-                errorCode = InitAssetVersion();
+                InitAssetVersion();
 
                 if (errorCode != 0) {
                     Debug.Log(errorStrs[errorCode]);
@@ -39,15 +39,23 @@ namespace Framework
                 InitBundleCache();
             }
 
-            private int InitAssetVersion()
+            private void InitAssetVersion()
             {
-                string versionFilePath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/" + PathConst.AssetVersionFileName;
-                if (File.Exists(versionFilePath))
+                string relativePath = Path.Combine(PathConst.BundleDirName, PathConst.AssetVersionFileName);
+                string versionFilePath = PathConst.PersistentDataPath + relativePath;
+                FileInfo fileInfo = new FileInfo(versionFilePath);
+                if (!fileInfo.Directory.Exists)
                 {
-                    AssetVersion = File.ReadAllText(versionFilePath).Trim();
-                    return 0;
+                    fileInfo.Directory.Create();
                 }
-                return 1;
+
+                if (!File.Exists(versionFilePath))
+                {
+                    File.Copy(PathConst.StreamAssetPath + relativePath, versionFilePath);
+                }
+
+                AssetVersion = File.ReadAllText(versionFilePath).Trim();
+                Debug.Log(versionFilePath);
             }
 
             private void InitBundleCache(){
