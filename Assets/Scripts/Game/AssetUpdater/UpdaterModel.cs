@@ -59,10 +59,8 @@ namespace Framework
                 updateState = 1;
 
                 string curVersion = AppFacade.Instance.AssetVersion;
-                string dstVersion = "1.1.3";
-                foreach (PackerInfo packerInfo in CollectNeedUpdatePacker(curVersion, dstVersion, _waitDownLoadPackerInfoList)) {
-                    Debug.Log(packerInfo.ToString());
-                }
+                string dstVersion = "1.1.5";
+                yield return DownLoadPackerList(CollectNeedUpdatePacker(curVersion, dstVersion, _waitDownLoadPackerInfoList));
             }
 
             private List<PackerInfo> CollectNeedUpdatePacker(string scrVersion, string dstVersion, List<PackerInfo> allPackerList)
@@ -71,6 +69,7 @@ namespace Framework
                 PackerInfo tmpPacker;
                 List<PackerInfo> needDownLoadPackerList = new List<PackerInfo>();
                 List<PackerInfo> tmpPackerInfoList;
+
                 while (!curVersion.Equals(dstVersion))
                 {
                     tmpPackerInfoList = allPackerList.FindAll(a => a.fromVersion.Equals(curVersion));
@@ -82,7 +81,7 @@ namespace Framework
             }
 
 
-            private IEnumerator DownLoadPackerList()
+            private IEnumerator DownLoadPackerList(List<PackerInfo> needDownLoadList)
             {
                 while (_waitDownLoadPackerInfoList.Count > 0)
                 {
@@ -114,11 +113,11 @@ namespace Framework
                 }
                 yield return new WaitUntil(() => operation.isDone);
                 CompressionHelper.DeCompress(saveFullPath, "");
-                UpdateLocalAssetVersion(packerInfo.toVersion);
+                UpdateLocalAssetVersion(packerInfo);
                 yield return new WaitForSeconds(0.2f);
             }
 
-            private void UpdateLocalAssetVersion(string dstVersion)
+            private void UpdateLocalAssetVersion(PackerInfo packerInfo)
             {
                 updateState = 2;
                 _presender.SetNotice(NOTICES[updateState]);
