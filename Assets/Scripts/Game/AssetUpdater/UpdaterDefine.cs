@@ -13,6 +13,16 @@ namespace Framework
             public int fileCnt;
             public long packerSize;
             public long totalSize;
+
+            public override string ToString()
+            {
+                return JsonUtility.ToJson(this);
+            }
+
+            public static PackerInfo ValueOf(string json)
+            {
+                return JsonUtility.FromJson<PackerInfo>(json);
+            }
         }
 
         public class BundleInfo

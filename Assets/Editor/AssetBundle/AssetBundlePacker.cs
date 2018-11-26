@@ -5,7 +5,6 @@ using System.IO;
 using Framework.Game;
 using Framework.Core.Assistant;
 using System.Linq;
-using Newtonsoft.Json;
 using Framework.Util;
 
 namespace Framework.Editor
@@ -54,7 +53,7 @@ namespace Framework.Editor
                     asset_FileInfos[i].CopyTo(dstPath);
                 }
 
-                string jsonStr = JsonConvert.SerializeObject(asset_BundleInfos);
+                string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(asset_BundleInfos);
 				string bundleInfoListFullPath = Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME);
 				File.WriteAllText(bundleInfoListFullPath, jsonStr);
 
@@ -109,10 +108,13 @@ namespace Framework.Editor
 
             private static List<PackerInfo> LoadPackerInfoList()
             {
-                if (!File.Exists(PACKER_INFO_LIST_FILE))
-                    return new List<PackerInfo>();
-                string jsonStr = File.ReadAllText(PACKER_INFO_LIST_FILE);
-                List<PackerInfo> packerInfoList = JsonConvert.DeserializeObject<List<PackerInfo>>(jsonStr);
+                List<PackerInfo> packerInfoList = new List<PackerInfo>();
+                if (File.Exists(PACKER_INFO_LIST_FILE))
+                {
+                    string[] jsonObj = File.ReadAllText(PACKER_INFO_LIST_FILE).Trim().Split('\n');
+                    for (int i = 0; i < jsonObj.Length; i++)
+                        packerInfoList.Add(PackerInfo.ValueOf(jsonObj[i].Trim()));
+                }
                 return packerInfoList;
             }
 
@@ -121,12 +123,16 @@ namespace Framework.Editor
                 if (!Directory.Exists(PACKER_DIR_PATH))
                     Directory.CreateDirectory(PACKER_DIR_PATH);
 
-                string jsonStr = JsonConvert.SerializeObject(packerInfoList);
-                File.WriteAllText(PACKER_INFO_LIST_FILE, jsonStr);
+                string jsonStr = string.Empty;
+                for (int i = 0; i < packerInfoList.Count; i++) {
+                    jsonStr += packerInfoList[i].ToString() + "\n";
+                }
+                File.WriteAllText(PACKER_INFO_LIST_FILE, jsonStr.Trim());
             }
 
             private static List<BundleInfo> ExtractPacker(string relativePath, string fromVer, string toVer, ref List<FileInfo> bundleFileInfos)
             {
+                Debug.Log("relativePath:" + relativePath + ", fromVer:" + fromVer + ", toVer:" + toVer);
                 if (fromVer.Equals(toVer))
                     return new List<BundleInfo>();
 
@@ -140,7 +146,7 @@ namespace Framework.Editor
                 bundleFileInfos.AddRange(dirInfo.GetFiles());
                 int idx = bundleFileInfos.FindIndex(a => a.Name.Equals(BUNDLE_INFO_LIST_FILE_NAME));
                 string jsonStr = File.ReadAllText(bundleFileInfos[idx].FullName);
-                List<BundleInfo> bundleInfoList = JsonConvert.DeserializeObject<List<BundleInfo>>(jsonStr);
+                List<BundleInfo> bundleInfoList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BundleInfo>>(jsonStr);
                 bundleFileInfos.RemoveAt(idx);
                 return bundleInfoList;
             }
@@ -168,7 +174,7 @@ namespace Framework.Editor
                     File.Copy(scrFileFullPath, dstFileFullPath, true);
                 }
 
-                string jsonStr = JsonConvert.SerializeObject(diffBundleInfoList);
+                string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(diffBundleInfoList);
                 File.WriteAllText(Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME), jsonStr);
             }
 
