@@ -14,10 +14,9 @@ namespace Framework.Editor
         public class AssetBundlePacker
         {
             private const string PACKER_DIR_PATH = "OutPut/";
-            private const string PACKER_INFO_LIST_FILE = PACKER_DIR_PATH + "packer_list.txt";
+            private const string PACKER_INFO_LIST_FILE = PACKER_DIR_PATH + PathConst.AppInfoFileName;
 
             private const string PACKER_NAME_FORMAT = "{0}_{1}-{2}_to_{3}_packer";
-            private const string BUNDLE_INFO_LIST_FILE_NAME = "bundle_info.txt";
             private const string PACKER_DIR_NAME_FORMAT = "Packer/{0}_to_{1}";
 
             private static  string BasePathFormat = PathConst.BuildBundleRootPath + PathConst.CurChangePlatformRelativePath + "{0}/{1}/";
@@ -54,7 +53,7 @@ namespace Framework.Editor
                 }
 
                 string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(asset_BundleInfos);
-				string bundleInfoListFullPath = Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME);
+				string bundleInfoListFullPath = Path.Combine(packerFullPath, PathConst.BUNDLE_INFO_LIST_FILE_NAME);
 				File.WriteAllText(bundleInfoListFullPath, jsonStr);
 
 				string zipPackerFullPath = packerFullPath + ".gzip";
@@ -63,7 +62,7 @@ namespace Framework.Editor
 
 
                 PackerInfo packerInfo = new PackerInfo();
-                packerInfo.packerName = string.Format(PACKER_NAME_FORMAT, AppConst.Change, AppConst.GetPlatformName(), fromVer, toVer);
+                packerInfo.packerName = string.Format(PACKER_NAME_FORMAT, AppConst.Change, AppConst.GetPlatformName(), fromVer, toVer).ToLower().ToString();
                 packerInfo.fromVersion = fromVer;
                 packerInfo.toVersion = toVer;
 				packerInfo.packerSize = FileUtility.GetFileSize(zipPackerFullPath);
@@ -144,7 +143,7 @@ namespace Framework.Editor
                 }
                 Debug.Log(dirInfo.GetFiles());
                 bundleFileInfos.AddRange(dirInfo.GetFiles());
-                int idx = bundleFileInfos.FindIndex(a => a.Name.Equals(BUNDLE_INFO_LIST_FILE_NAME));
+                int idx = bundleFileInfos.FindIndex(a => a.Name.Equals(PathConst.BUNDLE_INFO_LIST_FILE_NAME));
                 string jsonStr = File.ReadAllText(bundleFileInfos[idx].FullName);
                 List<BundleInfo> bundleInfoList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<BundleInfo>>(jsonStr);
                 bundleFileInfos.RemoveAt(idx);
@@ -175,7 +174,7 @@ namespace Framework.Editor
                 }
 
                 string jsonStr = Newtonsoft.Json.JsonConvert.SerializeObject(diffBundleInfoList);
-                File.WriteAllText(Path.Combine(packerFullPath, BUNDLE_INFO_LIST_FILE_NAME), jsonStr);
+                File.WriteAllText(Path.Combine(packerFullPath, PathConst.BUNDLE_INFO_LIST_FILE_NAME), jsonStr);
             }
 
             private static List<BundleInfo> CollectBundleInfo(string fullPath)
