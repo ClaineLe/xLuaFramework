@@ -21,7 +21,7 @@ namespace Framework
             /// </summary>
             /// <param name="scrPath">源文件路径</param>
             /// <param name="dstPath">目标文件路径</param>
-            static public void FileCopy(string scrPath, string dstPath) {
+            static public void FileCopy(string scrPath, string dstPath, bool overwrite = true) {
                 FileInfo scrFileInfo = new FileInfo(scrPath);
                 if (!scrFileInfo.Exists)
                 {
@@ -32,7 +32,7 @@ namespace Framework
                 FileInfo dstFileInfo = new FileInfo(dstPath);
                 if (!dstFileInfo.Directory.Exists)
                     dstFileInfo.Directory.Create();
-                scrFileInfo.CopyTo(dstFileInfo.FullName);
+                scrFileInfo.CopyTo(dstFileInfo.FullName, overwrite);
             }
 
             static public void DirCopy(string scrPath, string dstPath, string[] filterExtensions = null)
