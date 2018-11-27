@@ -38,6 +38,9 @@ public class CompressionHelper
     /// <param name="dirPath">解压缩目录</param>
     public static void DeCompress(string fileName, string dirPath)
     {
+        if (!Directory.Exists(dirPath))
+            Directory.CreateDirectory(dirPath);
+
         using (Stream source = File.OpenRead(fileName))
         {
             using (Stream destination = new MemoryStream())
