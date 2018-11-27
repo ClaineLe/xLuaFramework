@@ -16,6 +16,11 @@ namespace Framework
             public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
             public const string BundleDirName = "AssetBundles";
             public const string AssetVersionFileName = "AssetVersion.txt";
+            public const string BUNDLE_INFO_LIST_FILE_NAME = "bundle_info.txt";
+
+            public const string AppInfoFileName = "packer_list.txt";
+            public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/AssetUpdateTest/";
+
             public static string StreamAssetPath
             {
                 get
