@@ -128,9 +128,7 @@ namespace Framework
                 }
                 else
                 {
-                    Debug.Log("==================================================");
                     string tmpDir = PathConst.PersistentDataPath + "/tmp" + packerInfo.packerName + "/";
-                    Debug.Log(tmpDir);
                     CompressionHelper.DeCompress(saveFullPath, tmpDir);
                     string baseAssetBundlePath = PathConst.PersistentDataPath + PathConst.BundleDirName + "/";
                     List<BundleInfo> oldBundleList = LoadBundleList(baseAssetBundlePath + PathConst.BUNDLE_INFO_LIST_FILE_NAME);
@@ -140,19 +138,24 @@ namespace Framework
                     {
                         BundleInfo curBundleInfo = curBundleList[i];
                         string dstPath = baseAssetBundlePath + curBundleList[i].Name;
+                        int idx = oldBundleList.FindIndex(a => a.Name.Equals(curBundleInfo.Name));
 
                         if (curBundleInfo.state < 0)
                         {
                             if (File.Exists(dstPath))
                             {
                                 File.Delete(dstPath);
-                                oldBundleList.RemoveAll(a=>a.Name.Equals(curBundleInfo.Name));
+                                if(idx >= 0)
+                                    oldBundleList.RemoveAt(idx);
                             }
                         }
                         else
                         {
                             FileUtility.FileCopy(tmpDir + curBundleList[i].Name, dstPath);
-                            oldBundleList.Add(curBundleInfo);
+                            if (idx >= 0)
+                                oldBundleList[idx] = curBundleInfo;
+                            else
+                                oldBundleList.Add(curBundleInfo);
                         }
                     }
 
