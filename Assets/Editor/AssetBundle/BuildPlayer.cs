@@ -14,12 +14,6 @@ namespace Framework.Editor
         { 
             public static void Build(string assetVer)
             {
-                if (AssetBundleBuild.IsExistAssetVersion(assetVer))
-                {
-                    Debug.LogErrorFormat("Found Version:{0} Assets!!!", assetVer);
-                    return;
-                }
-
                 BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
 
                 var outputPath = PathConst.PlayerOutPutPath + AppConst.GetPlatformForAssetBundles(target);
@@ -75,7 +69,7 @@ namespace Framework.Editor
 
 
                 string bundleStreamAssetPath = Application.streamingAssetsPath + "/" + PathConst.BundleDirName;
-                AssetBundleUtility.CopyBundlesToStreamAsset(bundleStreamAssetPath, assetVer);
+                //AssetBundleUtility.CopyBundlesToStreamAsset(bundleStreamAssetPath, assetVer);
                 AssetDatabase.Refresh();
 
                 BuildOptions option = EditorUserBuildSettings.development ? BuildOptions.Development : BuildOptions.None;

@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Framework.Game;
+
 
 namespace Framework
 {
@@ -239,10 +241,19 @@ namespace Framework
                     Debug.LogError("There is no scene with name \"" + levelName + "\" in " + assetBundleName);
                     return;
                 }
-
+		#if UNITY_2017
+				if(isAdditive)
+				{
+					m_Operation = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsync(levelPaths[0],LoadSceneMode.Additive);	
+				}
+				else{
+					m_Operation = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsync(levelPaths[0],LoadSceneMode.Single);	
+				}
+		#elif UNITY_2018
                 LoadSceneParameters loadSceneParams = new LoadSceneParameters();
                 loadSceneParams.loadSceneMode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
                 m_Operation = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(levelPaths[0], loadSceneParams);
+		#endif
             }
 
             public override bool Update()

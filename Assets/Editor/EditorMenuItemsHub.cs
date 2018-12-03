@@ -2,82 +2,42 @@
 using UnityEditor;
 using System.Collections.Generic;
 using Framework.Core.Widget;
+using Framework.Util;
 
 
 namespace Framework.Editor
 {
-    using System.IO;
     using AssetBundle;
-    using Framework.Game;
-
     namespace Common
     {
 		public class EditorMenuItemsHub
         {
-            private const bool releaseBuild = true;
-            [MenuItem("FrameworkTools/AssetBundles/MarkAssetBundleName/all")]
-            static public void BuildAssetBundleName_All()
+			[MenuItem("FrameworkTools/MarkAssetBundleName")]
+            static public void BuildAssetBundleNam()
             {
-                AssetBundleMark.MarkAllAssetBundle();
+				AssetBundleEditor.CleanAssetBundleName ();
+                AssetBundleEditor.MarkAllAssetBundle();
             }
 
-            [MenuItem ("FrameworkTools/AssetBundles/MarkAssetBundleName/clear")]
-			static public void BuildAssetBundleName_Clear ()
+			[MenuItem ("FrameworkTools/BuildAssetBundles/Debug")]
+			static public void BuildAssetBundles_Debug ()
 			{
-				AssetBundleMark.CleanAssetBundleName ();
+                int resVersion = AssetBundleEditor.BuildResVersion();
+				AssetBundleEditor.BuildAssetBundle (false, resVersion);
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/res")]
-			static public void BuildAssetBundles_RES ()
+			[MenuItem ("FrameworkTools/BuildAssetBundles/Release")]
+			static public void BuildAssetBundles_Release ()
 			{
-				AssetBundleBuild.BuildAssetBundle_res (releaseBuild);
+                int resVersion = AssetBundleEditor.BuildResVersion();
+                AssetBundleEditor.BuildAssetBundle (true, resVersion);
 			}
 
-			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/lua")]
-			static public void BuildAssetBundles_LUA ()
-			{
-				AssetBundleBuild.BuildAssetBundle_lua (releaseBuild);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/xls")]
-			static public void BuildAssetBundles_XLS ()
-			{
-				AssetBundleBuild.BuildAssetBundle_xls (releaseBuild);
-			}
-
-			[MenuItem ("FrameworkTools/AssetBundles/BuildAssetBundles/all")]
-			static public void BuildAssetBundles_ALL ()
-			{
-				AssetBundleBuild.BuildAssetBundle_all (releaseBuild);
-			}
-
-            [MenuItem("FrameworkTools/AssetBundles/BuildPacker/lua")]
-            static public void BuildPacker_lua()
-            {
-                //AssetBundlePacker.BuildPacker_lua("1111", "2222");
-            }
-
-            [MenuItem("FrameworkTools/AssetBundles/BuildPacker/all")]
-            static public void BuildPacker_all()
-            {
-                string fromVersion = "1.1.1";
-                string toVersion = "1.1.2";
-                AssetBundlePacker.BuildPacker_all(fromVersion, toVersion);
-            }
-
-            [MenuItem ("FrameworkTools/AssetBundles/Build Player")]
+            [MenuItem ("FrameworkTools/BuildPlayer")]
 			static public void BuildPlayer_Build ()
 			{
-                BuildPlayer.Build(AssetBundleBuild.GetAssetVersion());
+                //BuildPlayer.Build("");
 			}
-
-            [MenuItem("FrameworkTools/CopyBundleToRunTimeDir")]
-            static public void CopyBundleToRunTimeDir(){
-
-                string dstPath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/";
-                string version = AssetBundleBuild.GetAssetVersion();
-                AssetBundleUtility.CopyBundlesToStreamAsset(dstPath, version);
-            }
         }
     }
 }

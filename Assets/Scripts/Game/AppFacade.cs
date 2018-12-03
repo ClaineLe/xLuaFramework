@@ -1,8 +1,8 @@
 ﻿using Framework.Core.Manager;
 using Framework.Core.Singleton;
+using Framework.Util;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace Framework
 {
@@ -21,7 +21,21 @@ namespace Framework
 			private Delegate_Manager_Tick m_MgrTick_Handle;
 			private Delegate_Manager_Release m_MgrRelease_Handle;
 
-            public string AssetVersion { get; private set; }
+#if !UNITY_EDITOR || BUNDLE_MODEL
+            private ClientBundleInfo clientBundleInfo;
+            public ClientBundleInfo m_ClientBundleInfo {
+                get {
+                    return clientBundleInfo;
+                }
+            }
+#endif
+
+            private int resVersion = -1;
+            public int ResVeraion {
+                get {
+                    return resVersion;
+                }
+            }
 
             private int errorCode = 0;
             public string[] errorStrs = new[] {
@@ -29,43 +43,27 @@ namespace Framework
                 "没有找到对应版本资源。",
             };
             public void StartUp(){
-                InitAssetVersion();
-
-                if (errorCode != 0) {
-                    Debug.Log(errorStrs[errorCode]);
-                    return;
-                }
-
-                InitBundleCache();
-            }
-
-            private void InitAssetVersion()
-            {
-                string relativePath = Path.Combine(PathConst.BundleDirName, PathConst.AssetVersionFileName);
-                string versionFilePath = PathConst.PersistentDataPath + relativePath;
-                FileInfo fileInfo = new FileInfo(versionFilePath);
-                if (!fileInfo.Directory.Exists)
-                {
-                    fileInfo.Directory.Create();
-                }
-
-                if (!File.Exists(versionFilePath))
-                {
-                    File.Copy(PathConst.StreamAssetPath + relativePath, versionFilePath);
-                }
-
-                AssetVersion = File.ReadAllText(versionFilePath).Trim();
-                Debug.Log(versionFilePath);
-            }
-
-            private void InitBundleCache(){
-                BundleInfoCacher.Init();
+#if !UNITY_EDITOR || BUNDLE_MODEL
+                InitClientBundleInfo();
+#endif
             }
 
             protected override void onInit()
             {
                 m_IsDone = false;
             }
+
+#if !UNITY_EDITOR || BUNDLE_MODEL
+            private void InitClientBundleInfo() {
+                string relativePath = "AssetBundles/" + PathConst.BUNDLE_INFO_LIST_FILE_NAME;
+                string dstPath = PathConst.PersistentDataPath + relativePath;
+                if (!File.Exists(dstPath))
+                {
+                    FileUtility.FileCopy(PathConst.StreamAssetPath + relativePath, dstPath);
+                }
+                clientBundleInfo = ClientBundleInfo.ValuleOf(File.ReadAllText(dstPath));
+            }
+#endif
 
             public void InitManager ()
 			{

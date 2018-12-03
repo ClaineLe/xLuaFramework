@@ -1,7 +1,11 @@
-﻿using Framework.Core.Manager;
-using System;
+﻿using UnityEngine;
+using Framework.Core.Manager;
+using Framework.Util;
 using System.Collections.Generic;
-using UnityEngine;
+using Newtonsoft.Json;
+using System.IO;
+using Framework.Core.Assistant;
+using Newtonsoft.Json.Linq;
 
 namespace Framework
 {
@@ -11,15 +15,16 @@ namespace Framework
         {
             public void Start()
             {
-
                 AppFacade.Instance.StartUp();
                 UpdaterModel.Instance.Lanucher(StartUpFramework);
-                //StartUpFramework();
             }
 
 
             public void StartUpFramework()
             {
+#if !UNITY_EDITOR || BUNDLE_MODEL
+                BundleInfoCacher.Init();
+#endif
                 AppFacade.Instance.AddManager<AssetManager>(ManagerName.Asset);
                 AppFacade.Instance.AddManager<EventManager>(ManagerName.Event);
                 AppFacade.Instance.AddManager<LevelManager>(ManagerName.Level);

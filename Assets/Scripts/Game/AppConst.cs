@@ -9,6 +9,14 @@ namespace Framework
 			Official = 1,
 		}
 
+		public enum ePlatform{
+			Null,
+			Android,
+			iOS,
+			Windows,
+			OSX,
+		}
+
         public class AppConst
         {
 			public const string AppName = "xLuaFramework";
@@ -19,6 +27,10 @@ namespace Framework
 
 			public static string GetPlatformName ()
 			{
+				return GetPlatform ().ToString ();
+			}
+
+			public static ePlatform GetPlatform(){
 				#if UNITY_EDITOR
 				return GetPlatformForAssetBundles (UnityEditor.EditorUserBuildSettings.activeBuildTarget);
 				#else
@@ -26,42 +38,38 @@ namespace Framework
 				#endif
 			}
 
-			public static string GetPlatformForAssetBundles (RuntimePlatform platform)
+			public static ePlatform GetPlatformForAssetBundles (RuntimePlatform platform)
 			{
 				switch (platform) {
-				case RuntimePlatform.Android:
-					return "Android";
-				case RuntimePlatform.IPhonePlayer:
-					return "iOS";
-				case RuntimePlatform.WebGLPlayer:
-					return "WebGL";
-				case RuntimePlatform.WindowsPlayer:
-					return "Windows";
-				case RuntimePlatform.OSXPlayer:
-					return "OSX";
-				default:
-					return null;
+					case RuntimePlatform.Android:
+					return ePlatform.Android;
+					case RuntimePlatform.IPhonePlayer:
+					return ePlatform.iOS;
+					case RuntimePlatform.WindowsPlayer:
+					return ePlatform.Windows;
+					case RuntimePlatform.OSXPlayer:
+					return ePlatform.OSX;
+					default:
+					return ePlatform.Null;
 				}
 			}
 
 #if UNITY_EDITOR
-            public static string GetPlatformForAssetBundles(UnityEditor.BuildTarget target)
+			public static ePlatform GetPlatformForAssetBundles(UnityEditor.BuildTarget target)
             {
                 switch (target)
                 {
                     case UnityEditor.BuildTarget.Android:
-                        return "Android";
+						return ePlatform.Android;
                     case UnityEditor.BuildTarget.iOS:
-                        return "iOS";
-                    case UnityEditor.BuildTarget.WebGL:
-                        return "WebGL";
+						return ePlatform.iOS;
                     case UnityEditor.BuildTarget.StandaloneWindows:
                     case UnityEditor.BuildTarget.StandaloneWindows64:
-                        return "Windows";
+						return ePlatform.Windows;
                     case UnityEditor.BuildTarget.StandaloneOSX:
-                        return "OSX";
+						return ePlatform.OSX;
                     default:
-                        return null;
+						return ePlatform.Null;
                 }
             }
 #endif

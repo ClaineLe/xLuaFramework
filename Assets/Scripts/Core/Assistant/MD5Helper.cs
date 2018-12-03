@@ -12,6 +12,8 @@ namespace Framework.Core
         {
             public static string GetMD5HashFromFile(string fileName)
             {
+				if (!File.Exists (fileName))
+					return string.Empty;
                 FileStream file = new FileStream(fileName, System.IO.FileMode.Open);
                 MD5 md5 = new MD5CryptoServiceProvider();
                 byte[] retVal = md5.ComputeHash(file);
@@ -19,13 +21,15 @@ namespace Framework.Core
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < retVal.Length; i++)
                 {
-                    sb.Append(retVal[i].ToString("x2"));
+                    sb.Append(retVal[i].ToString("X2"));
                 }
                 return sb.ToString();
             }
 
             public static string CreateMD5Hash(string input)
             {
+				if (string.IsNullOrEmpty (input))
+					return string.Empty;
                 // Use input string to calculate MD5 hash
                 MD5 md5 = System.Security.Cryptography.MD5.Create();
                 byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);

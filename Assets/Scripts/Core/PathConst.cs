@@ -15,11 +15,10 @@ namespace Framework
             public const string LUA_FRAMEWORK = "#core.Framework";
             public const string FORMAT_PRESENDER_NAME = "view.{0}.{1}Presender";
             public const string BundleDirName = "AssetBundles";
-            public const string AssetVersionFileName = "AssetVersion.txt";
             public const string BUNDLE_INFO_LIST_FILE_NAME = "bundle_info.txt";
 
-            public const string AppInfoFileName = "packer_list.txt";
-            public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/AssetUpdateTest/";
+            //public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/AssetUpdateTest/";
+            public const string FileServerAddress = "http://192.168.0.110:81/";
 
             public static string StreamAssetPath
             {
@@ -36,8 +35,8 @@ namespace Framework
                 }
             }
 
-            public static string PersistentDataPath{
-                get{
+            public static string PersistentDataPath {
+                get {
 #if UNITY_EDITOR
                     string path = Application.dataPath + "/../PersistentDatas/";
                     if (!System.IO.Directory.Exists(path))
@@ -48,20 +47,34 @@ namespace Framework
 #endif
                 }
             }
-#if UNITY_EDITOR
-            public static string CurChangePlatformRelativePath{
-                get{
-                    return string.Format("{0}_{1}/", AppConst.Change, AppConst.GetPlatformName());
+            public static string CurChangePlatformRelativePath {
+                get {
+                    return string.Format("{0}_{1}", AppConst.Change, AppConst.GetPlatformName());
                 }
             }
-            public static string BuildBundleRootPath{
-                get{
+#if UNITY_EDITOR
+
+            public static string BuildBundleRootPath {
+                get {
                     return Application.dataPath + "/../" + BundleDirName + "/";
                 }
             }
 
-            public const string ExportResDirPath = "AppAssets/";
+            public static string ClientResourceDirPath {
+                get {
+                    string path = Application.dataPath + "/../client_resource/";
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+                    return path;
+                }
+            }
 
+            public const string ExportResDirPath = "AppAssets/";
+            public static string ResVersionPath{
+                get{
+                    return Application.dataPath + "/" + PathConst.ExportResDirPath + "ResVersion.txt";
+                }
+            }
 
             public static string PlayerOutPutPath
             {

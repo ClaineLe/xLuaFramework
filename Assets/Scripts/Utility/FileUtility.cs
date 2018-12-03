@@ -60,6 +60,49 @@ namespace Framework
                     FileCopy(scrFileInfos[i].FullName, Path.Combine(dstPath, scrFileInfos[i].Name));
                 }
             }
-        }
+        
+			/*
+				long res_list_len
+				list res_list_data
+					<
+						string name
+						long startPos
+						long len
+					>
+				list res_list
+					<
+						string fileBytes
+					>
+		
+		
+
+			static public void MergeFiles(string scrDirPath, string dstFilePath,string searchPattern = string.Empty, SearchOption searchOption = SearchOption.AllDirectories)
+			{
+				string tmpScrDirPath = scrDirPath + (!scrDirPath.EndsWith (@"/") && !scrDirPath.EndsWith (@"\"))?"/":string.Empty;
+				if (!Directory.Exists (tmpScrDirPath)) {
+					Debug.LogError ("Found out Directory. Path:" + tmpScrDirPath);
+					return;
+				}
+				string[] scrfiles = Directory.GetFiles (tmpScrDirPath, searchPattern, searchOption);
+				long curFilePosition = 0;
+				for (int i = 0; i < scrfiles.Length; i++) {
+					FileInfo fileInfo = new FileInfo (scrfiles[i]);
+					if (!fileInfo.Exists) {
+						Debug.LogError ("Found out File. Path:" + fileInfo.FullName);
+						continue;
+					}
+
+					string pathName = fileInfo.FullName.Replace(scrDirPath,string.Empty);
+					st
+				}
+			}
+
+			static public void SplitFile(string scrFile, string dstDirPath, int buffSize = 1024)
+			{
+				
+			}
+
+			*/
+		}
     }
 }
