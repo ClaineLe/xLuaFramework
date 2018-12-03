@@ -3,14 +3,17 @@ ViewFactory={
 	
 }
 
-
-function ViewFactory:CreateView(viewName )
-	local luaPresender = Framework.m_ViewMgr:LoadViewNode(viewName)
+function ViewFactory:CreateView(viewName, layerName, isCache)
+	layerName = layerName or LAYER_NAME.NORMAL
+	isCache = isCache or true
+	local luaPresender = Framework.m_ViewMgr:LoadViewNode(viewName, layerName, isCache)
 	return luaPresender
 end
 
-function ViewFactory:CreateViewAsync(viewName, callback )
-	Framework.m_ViewMgr:LoadViewNodeAsync(viewName,function (presender)
+function ViewFactory:CreateViewAsync(viewName, layerName, isCache, callback )
+	layerName = layerName or LAYER_NAME.NORMAL
+	isCache = isCache or true
+	Framework.m_ViewMgr:LoadViewNodeAsync(viewName, layerName, isCache, function (presender)
 		callback(presender)
 	end)
 end

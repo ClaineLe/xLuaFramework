@@ -1,0 +1,23 @@
+local CSViewLayerOption = CS.Framework.Core.Manager.ViewLayer.Option
+
+
+local VIEW_LAYER_OPTIONS={
+    {Name = LAYER_NAME.NORMAL, Depth = 1000, Near = 0,  Far = 1000, FOV = 60},
+    {Name = LAYER_NAME.TOP,    Depth = 500,  Near = 10, Far = 500,  FOV = 60},
+}
+
+local function ViewLayer_Option()
+    for i,v in ipairs(VIEW_LAYER_OPTIONS) do
+        local option = CSViewLayerOption()
+        option.Name     = v.Name
+        option.Depth    = v.Depth
+        option.Near     = v.Near
+        option.Far      = v.Far
+        option.FOV      = v.FOV
+        Framework.m_ViewMgr:AddLayer(option)
+    end
+end
+
+function Framework:ViewManagerOption()
+    ViewLayer_Option()
+end

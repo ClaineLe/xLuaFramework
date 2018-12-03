@@ -3,7 +3,6 @@ BaseView = {
 	m_csView,
 }
 
-
 function BaseView:Create( params  )
 	self.m_csView = params[0]
 	local obj = {}

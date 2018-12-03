@@ -16,8 +16,11 @@ Framework = {
 function Framework:LoadLuaScript()
     require 'util.ProtBufUtility'
     require 'util.FrameworkUtility'
+    
+    require '#core.FrameworkDefine'
     require '#core.#model.BaseModel'
     require '#core.#model.ModelFactory'
+    require '#core.options.ViewManagerOption'
 
     require '#core.view.BaseView'
     require '#core.view.BasePresender'
@@ -37,10 +40,15 @@ function Framework:GetManagers()
     self.m_ModelMgr     = CSManager.ModelMgr
 end
 
-function Framework:Start( )
+function Framework:Start()
     self:LoadLuaScript()
     self:GetManagers()
+    self:Option()
     self:StartUp()
+end
+
+function Framework:Option()
+   self:ViewManagerOption()
 end
 
 function Framework:Tick()

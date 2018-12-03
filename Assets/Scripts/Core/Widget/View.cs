@@ -63,7 +63,7 @@ namespace Framework.Core
                 return this;
             }
 
-            public View SetupViewGo(Widget.EmptyNode subView){
+			public View SetupViewGo(Widget.SubView subView){
                 this.m_RefName = subView.RefName;
                 return this.SetupViewGo(subView.gameObject);
             }
@@ -93,6 +93,14 @@ namespace Framework.Core
 
             public void SetParent(Transform parent){
 				this._transform.SetParent(parent);
+			}
+
+			public void SetDefaultAnchor(){
+				RectTransform rectView = this._transform as RectTransform;
+				rectView.anchorMin = Vector2.zero;
+				rectView.anchorMax = Vector2.one;
+				rectView.anchoredPosition3D = Vector3.zero;
+				rectView.localScale = Vector3.one;
 			}
 
             protected override void onRelease()

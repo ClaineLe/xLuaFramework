@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Framework.Core.Widget;
+using Framework.Core.Assistant;
 
 namespace Framework
 {
@@ -9,6 +10,15 @@ namespace Framework
 	{
 		public class ViewLayer
 		{
+			public struct Option
+			{
+				public string Name;
+				public int Depth;
+				public int Near;
+				public int Far;
+				public int FOV;
+			}
+			
 			public GameObject gameObject{ get; private set; }
 
 			public Transform transform{ get; private set; }
@@ -19,9 +29,14 @@ namespace Framework
 
 			private Camera m_Camera;
 
+			private List<View> m_CacheViewList;
+			private Stack<View> m_CacheViewStack;
+
 			static public ViewLayer Create (GameObject layerGo)
 			{
 				ViewLayer layer = new ViewLayer ();
+				layer.m_CacheViewList = new List<View> ();
+				layer.m_CacheViewStack = new Stack<View> ();
 				layer.gameObject = layerGo;
 				layer.transform = layerGo.transform;
 				layer.rectTransform = layerGo.transform as RectTransform;
@@ -35,10 +50,27 @@ namespace Framework
 				gameObject.name = name;
 			}
 
-			public void SetSortNum (int sortNum)
-			{
+			public void Push(View view, bool isCache = true){
+				view.SetParent (ViewRoot);
+				view.SetDefaultAnchor ();
+				if (isCache)
+					m_CacheViewStack.Push (view);
+				else
+					m_CacheViewList.Add (view);
 			}
 
+			public View Pop(){
+				return m_CacheViewStack.Pop ();
+			}
+
+			public void ClearCacheList(){
+				if (m_CacheViewList != null && m_CacheViewList.Count >= 0) {
+					for (int i = 0; i < m_CacheViewList.Count; i++) {
+						m_CacheViewList [i].Release ();
+					}
+					m_CacheViewList.Clear ();
+				}
+			}
 		}
 	}
 }

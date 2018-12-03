@@ -13,29 +13,21 @@ namespace Framework.Core
         }
         public class ViewManager : BaseManager<ViewManager>, IManager
         {
-			
-			public enum eViewLayer
-			{
-				Normal = 1000,
-				Tip = 2000,
-			}
 
 			private GameObject _prefab_ViewRoot;
 			private GameObject _prefab_ViewLayer;
 
 			private Dictionary<string, View> m_ViewDic;
-			private Dictionary<eViewLayer, ViewLayer> m_ViewLayer;
+			private Dictionary<string, ViewLayer> m_ViewLayer;
 			private GameObject m_ViewRoot;
 
 			public void Init()
             {
 				this.m_ViewDic = new Dictionary<string, View>();
-				this.m_ViewLayer = new Dictionary<eViewLayer, ViewLayer> ();
+				this.m_ViewLayer = new Dictionary<string, ViewLayer> ();
 				this._prefab_ViewRoot = Framework.Game.Manager.AssetMgr.LoadAsset (PathConst.ViewRoot_Path,typeof(GameObject)) as GameObject;
 				this._prefab_ViewLayer = Framework.Game.Manager.AssetMgr.LoadAsset (PathConst.ViewLayer_Path,typeof(GameObject)) as GameObject;
 				this.CreateViewRoot ();
-				this.AddLayer (eViewLayer.Normal);
-				this.AddLayer (eViewLayer.Tip);
             }
 
 			private void CreateViewRoot(){
@@ -44,58 +36,60 @@ namespace Framework.Core
 				this.m_ViewRoot.transform.SetParent (Framework.Game.AppFacade.Instance.transform);
 			}
 
-			public void AddLayer(eViewLayer viewLayer){
+			public void AddLayer(ViewLayer.Option option){
+				Debug.Log(option);
 				GameObject layerGo = GameObject.Instantiate (this._prefab_ViewLayer);
 				layerGo.transform.SetParent (this.m_ViewRoot.transform);
 				ViewLayer layer = ViewLayer.Create (layerGo);
-				layer.SetName (string.Format ("Layer_{0}", viewLayer));
-				layer.SetSortNum ((int)viewLayer);
-				this.m_ViewLayer [viewLayer] = layer;
+				layer.SetName (string.Format ("Layer_{0}", option.Name));
+				this.m_ViewLayer [option.Name] = layer;
 			}
-
 
 			public void Tick()
 			{
 			}
 
-			public XLua.LuaTable LoadViewNode(string viewName){
+			public XLua.LuaTable LoadViewNode(string viewName, string layerName, bool isCache = true){
 				GameObject viewAsset = Framework.Game.Manager.AssetMgr.LoadAsset (_GetViewPath (viewName), typeof(GameObject)) as GameObject;
 				GameObject viewGo = GameObject.Instantiate (viewAsset);
 				viewGo.name = viewName;
-				ConfigView(viewGo);
                 View view = View.Create(viewName).SetupViewGo(viewGo);
+				this.m_ViewLayer[layerName].Push(view, isCache);
                 Presender presender = Presender.Create(viewName).SetupView(view);
                 return presender.m_LuaTable;
 			}
 
-			public void LoadViewNodeAsync(string viewName, System.Action<XLua.LuaTable> callback){
+			public void LoadViewNodeAsync(string viewName, System.Action<XLua.LuaTable> callback, string layerName, bool isCache = true){
 				Framework.Game.Manager.AssetMgr.LoadAssetAsync (_GetViewPath (viewName),viewAsset=>{
 					if(callback != null){
 						GameObject viewGo = GameObject.Instantiate (viewAsset) as GameObject;
 						viewGo.name = viewName;
-						ConfigView(viewGo);
-
                         View view = View.Create(viewName).SetupViewGo(viewGo);
+						this.m_ViewLayer[layerName].Push(view, isCache);
                         Presender presender = Presender.Create(viewName).SetupView(view);
                         callback(presender.m_LuaTable);
 					}
 				},typeof(GameObject));
 			}
 
-			private void ConfigView(GameObject viewGo){
-				viewGo.transform.SetParent(m_ViewLayer [eViewLayer.Normal].ViewRoot);
-				RectTransform rectView = viewGo.transform as RectTransform;
-				rectView.anchorMin = Vector2.zero;
-				rectView.anchorMax = Vector2.one;
-				rectView.anchoredPosition3D = Vector3.zero;
-				rectView.localScale = Vector3.one;
-			}
-
 			private string _GetViewPath(string viewName){
 				return string.Format (PathConst.ViewAsset_Path,viewName);
 			}
 
-
+			public void ClearViewLayer(string layerName = null){
+				if (string.IsNullOrEmpty (layerName)) {
+					Dictionary<string, ViewLayer>.Enumerator iter = this.m_ViewLayer.GetEnumerator ();
+					while (iter.MoveNext () != null) {
+						iter.Current.Value.ClearCacheList ();
+					}
+				} else {
+					if (this.m_ViewLayer.ContainsKey (layerName)) {
+						this.m_ViewLayer [layerName].ClearCacheList ();
+					} else {
+						Debug.LogError ("Found out Layer. layerName:" + layerName);
+					}
+				}
+			}
 
             public void Release()
             {
