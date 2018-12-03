@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Framework.Game;
-using System.Linq;
 
 namespace Framework.Core
 {
@@ -18,7 +17,24 @@ namespace Framework.Core
                         m_RefName = value;
                 }
             }
-            
+			private View m_ParentView;
+			public View ParentView {
+				get {
+					return m_ParentView;
+				}
+				set {
+
+					if (m_ParentView != value)
+						m_ParentView = value;
+				}
+			}
+
+			public bool IsSubView{
+				get{
+					return m_ParentView != null;
+				}
+			}
+
 			private GameObject _gameObject;
 			private Transform _transform;
 			//private RectTransform _rectTransform;
@@ -41,7 +57,7 @@ namespace Framework.Core
                 this._gameObject = viewGo;
                 this._transform = this._gameObject.transform;
                 //this._rectTransform = this._transform as RectTransform;
-                this.initSubPresender();
+				this.initSubViews();
                 this.initWidgets();
                 base.InitLuaTable(this);
                 return this;
@@ -52,31 +68,28 @@ namespace Framework.Core
                 return this.SetupViewGo(subView.gameObject);
             }
 
-            private void initSubPresender() {
-                Widget.EmptyNode[] subViews = _transform.GetComponentsInChildren<Widget.EmptyNode>();
+			private void initSubViews() {
+				Widget.SubView[] subViews = _transform.GetComponentsInChildren<Widget.SubView>();
                 for (int i = 0; i < subViews.Length; i++){
-                    Widget.EmptyNode subView = subViews[i];
+					Widget.SubView subView = subViews[i];
                     if (string.IsNullOrEmpty(subView.RefName.Trim()))
                         continue;
                     if (subView.gameObject.Equals(this._gameObject))
                         continue;
-                    View view = View.Create(subView.ViewName).SetupViewGo(subView);
+					View view = View.Create(subView.ViewScript).SetupViewGo(subView);
+					view.m_ParentView = this;
                     this._subPresenders.Add(Presender.Create(view.m_Name).SetupView(view));
                 }
             }
 
             private void initWidgets() {
-                List<Widget.IWidget> widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
-                for (int i = 0; i < _subPresenders.Count; i++) {
-                    widgets = this._subPresenders[i].m_View.clearRepeatWidget(widgets);
-                }
-                this._widgets = widgets;
+				_widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
+				_widgets.RemoveAll (a => a.ParentView != null);
+				_widgets.RemoveAll (a => a is Widget.SubView);
+				for (int i = 0; i < _widgets.Count; i++) {
+					_widgets [i].ParentView = this;
+				}
             }
-
-            public List<Widget.IWidget> clearRepeatWidget(List<Widget.IWidget> scrWidgetList) {
-                return scrWidgetList.Except(this._widgets).ToList();
-            }
-
 
             public void SetParent(Transform parent){
 				this._transform.SetParent(parent);

@@ -1,8 +1,22 @@
-﻿namespace Framework
+﻿using Framework.Core.Assistant;
+
+namespace Framework
 {
     namespace Core.Widget
     {
-        public class ButtonEx : UnityEngine.UI.Button, IWidget{
+		public class ButtonEx : UnityEngine.UI.Button, IWidget{
+			private View m_ParentView;
+			public View ParentView {
+				get {
+					return m_ParentView;
+				}
+				set {
+
+					if (m_ParentView != value)
+						m_ParentView = value;
+				}
+			}
+
             public string m_RefName;
             public string RefName
             {
@@ -14,6 +28,7 @@
                         m_RefName = value;
                 }
             }
+
             public ImageEx v_Image;
             public TextEx v_label;
 

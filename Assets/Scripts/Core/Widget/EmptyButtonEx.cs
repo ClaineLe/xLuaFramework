@@ -1,12 +1,25 @@
 ﻿using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using Framework.Core.Assistant;
+
+
 namespace Framework
 {
     namespace Core.Widget
     {
         public class EmptyButtonEx : MaskableGraphic, IPointerClickHandler, IWidget
-        {
+		{	private View m_ParentView;
+			public View ParentView {
+				get {
+					return m_ParentView;
+				}
+				set {
+
+					if (m_ParentView != value)
+						m_ParentView = value;
+				}
+			}
             public string m_RefName;
             public string RefName
             {

@@ -16,9 +16,10 @@ function LoginModel:OnStart()
 	local luaPresender = ViewFactory:CreateView(PanelDefine.login)
 	luaPresender:SetLabel(C.CityStarConfig[1].count)
 
-	ViewFactory:CreateViewAsync(PanelDefine.login,function ( presender )
-        presender:SetLabel(C.CityStarConfig[1].npcId)
-    end)
+
+--	ViewFactory:CreateViewAsync(PanelDefine.login,function ( presender )
+--        presender:SetLabel(C.CityStarConfig[1].npcId)
+--    end)
     
 end
 

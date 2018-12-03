@@ -1,22 +1,31 @@
 BaseView = {
 	m_EventHandle = {},
+	m_csView,
 }
 
 
 function BaseView:Create( params  )
-	local csView = params[0]
+	self.m_csView = params[0]
 	local obj = {}
 	setmetatable( obj, { __index = self })
-	for k,v in pairs(csView._widgets) do
+	for k,v in pairs(self.m_csView._widgets) do
 		obj[v.RefName] = v
 	end
 
-	for k,v in pairs(csView._subPresenders) do
+	for k,v in pairs(self.m_csView._subPresenders) do
 		obj[v.m_View.RefName] = v.m_LuaTable
 	end
 
 	obj:init()
 	return obj
+end
+
+function BaseView:IsSubView( )
+	return self.m_csView.IsSubView
+end
+
+function BaseView:ParentView( )
+	return self.m_csView.ParentView
 end
 
 --虚方法，子类重写

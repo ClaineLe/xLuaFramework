@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Framework.Core.Assistant;
 
 namespace Framework
 {
@@ -8,6 +9,12 @@ namespace Framework
     {
         public interface IWidget
         {
+			View ParentView
+			{
+				get;
+				set;
+			}
+			
             string RefName
             {
                 get;
