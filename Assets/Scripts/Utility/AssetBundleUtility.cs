@@ -15,6 +15,9 @@ namespace Framework
         {
 			public static int Merge(List<BundleBaseInfo> bundleBaseList,string scrDirPath, string dstFilePath, int buffSize = 1024 * 2){
 
+				if (File.Exists (dstFilePath))
+					File.Delete (dstFilePath);
+
 				FileStream FileOut = new FileStream(dstFilePath, FileMode.Create);
 
                 string bundleListStr = string.Empty;
