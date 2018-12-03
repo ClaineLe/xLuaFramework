@@ -17,6 +17,8 @@ namespace Framework
 
 			public Transform ViewRoot;
 
+			private Camera m_Camera;
+
 			static public ViewLayer Create (GameObject layerGo)
 			{
 				ViewLayer layer = new ViewLayer ();
@@ -24,6 +26,7 @@ namespace Framework
 				layer.transform = layerGo.transform;
 				layer.rectTransform = layerGo.transform as RectTransform;
 				layer.ViewRoot = layer.transform.Find ("Root");
+				layer.m_Camera = layer.transform.Find ("Camera").GetComponent<Camera>();
 				return layer;
 			}
 

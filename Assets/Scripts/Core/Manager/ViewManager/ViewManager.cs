@@ -17,6 +17,7 @@ namespace Framework.Core
 			public enum eViewLayer
 			{
 				Normal = 1000,
+				Tip = 2000,
 			}
 
 			private GameObject _prefab_ViewRoot;
@@ -34,6 +35,7 @@ namespace Framework.Core
 				this._prefab_ViewLayer = Framework.Game.Manager.AssetMgr.LoadAsset (PathConst.ViewLayer_Path,typeof(GameObject)) as GameObject;
 				this.CreateViewRoot ();
 				this.AddLayer (eViewLayer.Normal);
+				this.AddLayer (eViewLayer.Tip);
             }
 
 			private void CreateViewRoot(){
