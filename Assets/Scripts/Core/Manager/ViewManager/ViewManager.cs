@@ -37,7 +37,6 @@ namespace Framework.Core
 			}
 
 			public void AddLayer(ViewLayer.Option option){
-				Debug.Log(option);
 				GameObject layerGo = GameObject.Instantiate (this._prefab_ViewLayer);
 				layerGo.transform.SetParent (this.m_ViewRoot.transform);
 				ViewLayer layer = ViewLayer.Create (layerGo);
