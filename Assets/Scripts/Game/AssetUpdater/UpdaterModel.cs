@@ -26,13 +26,13 @@ namespace Framework
 
             private static string APP_INFO_FILENAME {
 				get { 
-					return PathConst.FileServerAddress + PathConst.CurChangePlatformRelativePath.ToLower() + "_bundle_info.txt";
+					return PathConst.FileServerAddress + (PathConst.CurChangePlatformRelativePath + "_" + PathConst.BUNDLE_INFO_LIST_FILE_NAME).ToLower ();
                 }
 			}
 
 			private static string APP_List_FILENAME {
 				get { 
-					return PathConst.FileServerAddress + PathConst.CurChangePlatformRelativePath.ToLower() + "_assetbundles";
+					return PathConst.FileServerAddress + (PathConst.CurChangePlatformRelativePath + "_" + PathConst.BundleDirName).ToLower();
                 }
 			}
 
@@ -134,7 +134,7 @@ namespace Framework
 			}
 
 			private void RefreshBundleInfoList(){
-				string path = PathConst.PersistentDataPath + "AssetBundles/" + PathConst.BUNDLE_INFO_LIST_FILE_NAME;
+				string path = PathConst.PersistentDataPath + PathConst.BundleDirName + "/" + PathConst.BUNDLE_INFO_LIST_FILE_NAME;
 				File.WriteAllText (path, clientBundleInfo.ToString());
 			}
 
@@ -148,7 +148,7 @@ namespace Framework
 				long startPos = bundleInfo.position;
 				long endPos = startPos + bundleInfo.len - 1;
 				string rangge = string.Format ("{0}-{1}", startPos, endPos);
-				string savePath = PathConst.PersistentDataPath + "AssetBundles/" + bundleInfo.name;
+				string savePath = PathConst.PersistentDataPath + PathConst.BundleDirName + "/" + bundleInfo.name;
 				yield return NetWorkUtility.GetHttpBundle (APP_List_FILENAME + ".txt", rangge, savePath);
 			}
 

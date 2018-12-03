@@ -55,7 +55,7 @@ namespace Framework
 
 #if !UNITY_EDITOR || BUNDLE_MODEL
             private void InitClientBundleInfo() {
-                string relativePath = "AssetBundles/" + PathConst.BUNDLE_INFO_LIST_FILE_NAME;
+				string relativePath = PathConst.BundleDirName + "/" + PathConst.BUNDLE_INFO_LIST_FILE_NAME;
                 string dstPath = PathConst.PersistentDataPath + relativePath;
                 if (!File.Exists(dstPath))
                 {

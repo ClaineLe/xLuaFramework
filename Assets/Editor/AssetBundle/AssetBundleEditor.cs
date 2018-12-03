@@ -108,12 +108,17 @@ namespace Framework.Editor
 				if (builds.Length > 0) {
 					string outputPath = Path.Combine (PathConst.BuildBundleRootPath, PathConst.CurChangePlatformRelativePath, PathConst.BundleDirName);
 					if (builds.Length > 0) {
+						if (release) {
+							if (Directory.Exists (outputPath)) {
+								Directory.Delete (outputPath,true);
+							}
+						}
+
 						if (!Directory.Exists (outputPath))
 							Directory.CreateDirectory (outputPath);
                          
                         BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression | BuildAssetBundleOptions.DeterministicAssetBundle;
-						if (release)
-							options |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
+
 
                         BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
                         if (builds == null)
@@ -121,14 +126,18 @@ namespace Framework.Editor
 						else
 							BuildPipeline.BuildAssetBundles (outputPath, builds, options, target);
 					}
-                    ClientBundleInfo clientBundleInfo = CreateClientBundleInf(resVersion, outputPath);
-                    MergeAssetBundle (resVersion, clientBundleInfo.bundleList, outputPath);
-					if(release)
-						FileUtility.DirCopy(outputPath,PathConst.StreamAssetPath + "AssetBundles/",new []{".manifest"});
+                    ClientBundleInfo clientBundleInfo = CreateClientBundleInfo(resVersion, outputPath);
+					MergeAssetBundle (resVersion, clientBundleInfo.bundleList, outputPath);
+
+					string dstPath = PathConst.StreamAssetPath + PathConst.BundleDirName + "/";
+					if (Directory.Exists (dstPath))
+						Directory.Delete (dstPath, true);
+					Directory.CreateDirectory (dstPath);
+					FileUtility.DirCopy(outputPath,dstPath,new []{".manifest"});
 				}
 			}
 
-            private static ClientBundleInfo CreateClientBundleInf(int resVersion, string dirPath)
+            private static ClientBundleInfo CreateClientBundleInfo(int resVersion, string dirPath)
             {
                 string[] bundleFiles = Directory.GetFiles(dirPath, "*.*", SearchOption.AllDirectories);
                 bundleFiles = bundleFiles.Where(s => (!s.EndsWith(".manifest") && !s.EndsWith(".txt"))).ToArray();
@@ -147,7 +156,11 @@ namespace Framework.Editor
                     baseInfo.md5 = MD5Helper.GetMD5HashFromFile(scrFileInfo.FullName);
                     clientBundleInfo.bundleList.Add(baseInfo);
                 }
-                File.WriteAllText(Path.Combine(dirPath, PathConst.BUNDLE_INFO_LIST_FILE_NAME), clientBundleInfo.ToString());
+
+				string ClientBundleInfoPath = Path.Combine (dirPath, PathConst.BUNDLE_INFO_LIST_FILE_NAME);
+				if (File.Exists (ClientBundleInfoPath))
+					File.Delete (ClientBundleInfoPath);
+				File.WriteAllText(ClientBundleInfoPath, clientBundleInfo.ToString());
                 return clientBundleInfo;
             }
 

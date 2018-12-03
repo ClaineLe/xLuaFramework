@@ -22,7 +22,7 @@ namespace Framework.Editor
 			[MenuItem ("FrameworkTools/BuildAssetBundles/Debug")]
 			static public void BuildAssetBundles_Debug ()
 			{
-                int resVersion = AssetBundleEditor.BuildResVersion();
+				int resVersion = AssetBundleEditor.GetResVersion();
 				AssetBundleEditor.BuildAssetBundle (false, resVersion);
 			}
 
