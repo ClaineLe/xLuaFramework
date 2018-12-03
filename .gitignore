@@ -11,3 +11,9 @@ Logs/Packages-Update.log
 UIElementsSchema/
 AssetBundles/
 OutPut/
+PlayerOutPut/
+.gradle/
+Assets/XLua/
+Assets/StreamingAssets/
+PersistentDatas/
+client_resource/
