@@ -16,7 +16,11 @@ namespace Framework
 			[RuntimeInitializeOnLoadMethod]
 			public static void StartUp(){
                 AppFacade.Instance.StartUp();
+#if BUNDLE_MODEL
                 UpdaterModel.Instance.Lanucher(StartUpFramework);
+#else
+				StartUpFramework();
+#endif
             }
 
 			public static void StartUpFramework()

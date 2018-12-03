@@ -36,15 +36,13 @@ namespace Framework
                 }
 			}
 
-#if BUNDLE_MODEL || !UNITY_EDITOR
             private ClientBundleInfo clientBundleInfo{
                 get{
                     return AppFacade.Instance.m_ClientBundleInfo;
                 }
             }
-#endif
 
-            protected override void onInit ()
+			protected override void onInit ()
 			{
 				this._presender = UpdaterPresender.Create ();
 			}

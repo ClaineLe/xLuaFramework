@@ -21,14 +21,12 @@ namespace Framework
 			private Delegate_Manager_Tick m_MgrTick_Handle;
 			private Delegate_Manager_Release m_MgrRelease_Handle;
 
-#if !UNITY_EDITOR || BUNDLE_MODEL
             private ClientBundleInfo clientBundleInfo;
             public ClientBundleInfo m_ClientBundleInfo {
                 get {
                     return clientBundleInfo;
                 }
             }
-#endif
 
             private int resVersion = -1;
             public int ResVeraion {
