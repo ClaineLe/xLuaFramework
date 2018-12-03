@@ -11,16 +11,15 @@ namespace Framework
 {
     namespace Game
     {
-        public class AppStartUp : MonoBehaviour
+        public class AppStartUp
         {
-            public void Start()
-            {
+			[RuntimeInitializeOnLoadMethod]
+			public static void StartUp(){
                 AppFacade.Instance.StartUp();
                 UpdaterModel.Instance.Lanucher(StartUpFramework);
             }
 
-
-            public void StartUpFramework()
+			public static void StartUpFramework()
             {
 #if !UNITY_EDITOR || BUNDLE_MODEL
                 BundleInfoCacher.Init();
