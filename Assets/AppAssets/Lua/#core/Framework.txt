@@ -35,14 +35,11 @@ function Framework:GetManagers()
 	self.m_EventMgr		= CSManager.EventMgr
     self.m_ViewMgr      = CSManager.ViewMgr
     self.m_ModelMgr     = CSManager.ModelMgr
-    self.m_ConfigMgr    = CSManager.ConfigMgr
 end
 
 function Framework:Start( )
     self:LoadLuaScript()
     self:GetManagers()
-    self.m_ConfigMgr:SetupConfig()
-
     self:StartUp()
 end
 
