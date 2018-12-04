@@ -17,26 +17,14 @@ namespace Framework.Editor
 				}
 			}
 
-			private TextAsset luaScript;
-			private string luaPath{
-				get{
-					return "Assets/" + PathConst.ExportResDirPath + PathConst.FORMAT_LUAROOT + string.Format (PathConst.FORMAT_VIEW_NAME.Replace(".","/") + ".txt", m_Target.name, m_Target.name);
-				}
-			}
-
 			public override void OnInspectorGUI()
 			{
-				if (luaScript == null) {
-					luaScript = AssetDatabase.LoadAssetAtPath<TextAsset> (luaPath);
-					m_Target.ViewScript = m_Target.name;
-				}
-
 				WidgetEditor.WidgetCommondInspector<SubView>(target);
-				if (luaScript == null) {
-					EditorGUILayout.HelpBox ("没有找到对应Lua脚本. Path:" + luaPath, MessageType.Error);
+				if (m_Target.m_LuaScript == null) {
+					EditorGUILayout.HelpBox ("没有找到对应Lua脚本. Path:" + m_Target.m_LuaScript, MessageType.Error);
 				} else {
 					EditorGUI.BeginDisabledGroup (true);
-					luaScript = EditorGUILayout.ObjectField("luaScript",luaScript,typeof(TextAsset),true) as TextAsset;
+					EditorGUILayout.ObjectField ("s", m_Target.m_LuaScript, typeof(TextAsset));
 					EditorGUI.EndDisabledGroup ();
 				}
 			}

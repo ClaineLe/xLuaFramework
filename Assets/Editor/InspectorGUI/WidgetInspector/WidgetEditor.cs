@@ -12,6 +12,7 @@ namespace Framework.Editor
             {
                 IWidget widget = target as IWidget;
                 widget.RefName = EditorGUILayout.DelayedTextField("引用标签", widget.RefName);
+				EditorApplication.RepaintHierarchyWindow ();
             }
         }
     }
