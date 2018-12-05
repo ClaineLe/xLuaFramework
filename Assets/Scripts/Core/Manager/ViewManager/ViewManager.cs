@@ -13,7 +13,6 @@ namespace Framework.Core
         }
         public class ViewManager : BaseManager<ViewManager>, IManager
         {
-
 			private GameObject _prefab_ViewRoot;
 			private GameObject _prefab_ViewLayer;
 
@@ -21,7 +20,9 @@ namespace Framework.Core
 			private Dictionary<string, ViewLayer> m_ViewLayer;
 			private GameObject m_ViewRoot;
 
-			public void Init()
+         
+
+            public void Init()
             {
 				this.m_ViewDic = new Dictionary<string, View>();
 				this.m_ViewLayer = new Dictionary<string, ViewLayer> ();
@@ -52,9 +53,8 @@ namespace Framework.Core
 				GameObject viewAsset = Framework.Game.Manager.AssetMgr.LoadAsset (_GetViewPath (viewName), typeof(GameObject)) as GameObject;
 				GameObject viewGo = GameObject.Instantiate (viewAsset);
 				viewGo.name = viewName;
-                View view = View.Create(viewName).SetupViewGo(viewGo);
-				this.m_ViewLayer[layerName].Push(view, isCache);
-                Presender presender = Presender.Create(viewName).SetupView(view);
+                Presender presender = ViewUtility.CreatePresender(viewGo);
+				this.m_ViewLayer[layerName].Push(presender.m_View, isCache);
                 return presender.m_LuaTable;
 			}
 
@@ -63,9 +63,8 @@ namespace Framework.Core
 					if(callback != null){
 						GameObject viewGo = GameObject.Instantiate (viewAsset) as GameObject;
 						viewGo.name = viewName;
-                        View view = View.Create(viewName).SetupViewGo(viewGo);
-						this.m_ViewLayer[layerName].Push(view, isCache);
-                        Presender presender = Presender.Create(viewName).SetupView(view);
+                        Presender presender = ViewUtility.CreatePresender(viewGo);
+                        this.m_ViewLayer[layerName].Push(presender.m_View, isCache);
                         callback(presender.m_LuaTable);
 					}
 				},typeof(GameObject));

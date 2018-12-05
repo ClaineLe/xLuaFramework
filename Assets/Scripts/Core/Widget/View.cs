@@ -1,51 +1,35 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Framework.Game;
+using Framework.Core.Manager;
 
 namespace Framework.Core
 {
     namespace Assistant
     {
-        public class View : LuaCompatible<View>, Widget.IWidget, ILuaCompatible
+        public class View : LuaCompatible<View>, ILuaCompatible
         {
-            public string m_RefName;
-            public string RefName
-            {
-                get { return m_RefName; }
-                set {
-                    if (m_RefName != value)
-                        m_RefName = value;
-                }
-            }
-			private View m_ParentView;
-			public View ParentView {
-				get {
-					return m_ParentView;
-				}
-				set {
-
-					if (m_ParentView != value)
-						m_ParentView = value;
-				}
-			}
-
 			public bool IsSubView{
 				get{
-					return m_ParentView != null;
+					return this.m_MonoView.ParentView != null;
 				}
 			}
 
-			private GameObject _gameObject;
-			private Transform _transform;
-			//private RectTransform _rectTransform;
+			private MonoView m_MonoView;
 
-            public List<Presender> _subPresenders{ get; private set;}
-            public List<Widget.IWidget> _widgets{ get; private set;}
+			public string RefName{
+				get{
+					return m_MonoView.RefName;
+				}
+			}
+
+			public List<Presender> _subPresenders{ get; private set;}
+			public List<Widget.IWidget> _widgets{ get; private set;}
+
             protected override void onCreate()
             {
-                this._subPresenders = new List<Presender>();
-                this._widgets = new List<Widget.IWidget>();
             }
+
             protected override string _luaPath
             {
                 get
@@ -53,54 +37,33 @@ namespace Framework.Core
                     return string.Format(PathConst.FORMAT_VIEW_NAME, m_Name, m_Name);
                 }
             }
-            public View SetupViewGo(GameObject viewGo){
-                this._gameObject = viewGo;
-                this._transform = this._gameObject.transform;
-                //this._rectTransform = this._transform as RectTransform;
-				this.initSubViews();
-                this.initWidgets();
+
+			public View SetupViewGo(MonoView viewGo){
+				this.m_MonoView = viewGo.Init();
+				this.initSubViews ();
+				this.initWidgets ();
                 base.InitLuaTable(this);
                 return this;
             }
 
-			public View SetupViewGo(Widget.SubView subView){
-                this.m_RefName = subView.RefName;
-                return this.SetupViewGo(subView.gameObject);
-            }
-
 			private void initSubViews() {
-				Widget.SubView[] subViews = _transform.GetComponentsInChildren<Widget.SubView>();
-                for (int i = 0; i < subViews.Length; i++){
-					Widget.SubView subView = subViews[i];
-                    if (string.IsNullOrEmpty(subView.RefName.Trim()))
-                        continue;
-                    if (subView.gameObject.Equals(this._gameObject))
-                        continue;
-					View view = View.Create(subView.ViewScript).SetupViewGo(subView);
-					view.m_ParentView = this;
-                    this._subPresenders.Add(Presender.Create(view.m_Name).SetupView(view));
-                }
-            }
-
-            private void initWidgets() {
-				_widgets = new List<Widget.IWidget>( _transform.GetComponentsInChildren<Widget.IWidget>());
-				_widgets.RemoveAll (a => a.ParentView != null);
-				_widgets.RemoveAll (a => a is Widget.SubView);
-				for (int i = 0; i < _widgets.Count; i++) {
-					_widgets [i].ParentView = this;
+				_subPresenders = new List<Presender> ();
+				for (int i = 0; i < this.m_MonoView._subMonoView.Count; i++) {
+					MonoView monoView = this.m_MonoView._subMonoView [i];
+                    Presender presender = ViewUtility.CreatePresender(monoView);
+                    _subPresenders.Add (presender);
 				}
-            }
-
-            public void SetParent(Transform parent){
-				this._transform.SetParent(parent);
 			}
 
-			public void SetDefaultAnchor(){
-				RectTransform rectView = this._transform as RectTransform;
-				rectView.anchorMin = Vector2.zero;
-				rectView.anchorMax = Vector2.one;
-				rectView.anchoredPosition3D = Vector3.zero;
-				rectView.localScale = Vector3.one;
+			private void initWidgets() {
+				_widgets = new List<Widget.IWidget> ();
+				for (int i = 0; i < m_MonoView._widgets.Count; i++) {
+					_widgets.Add (m_MonoView._widgets[i] as Widget.IWidget);
+				}
+			}
+
+            public void SetLayer(ViewLayer viewLayer){
+				viewLayer.AddChild (this.m_MonoView);
 			}
 
             protected override void onRelease()

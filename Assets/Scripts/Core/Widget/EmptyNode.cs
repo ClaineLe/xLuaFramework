@@ -5,10 +5,11 @@ namespace Framework
     namespace Core.Widget
     {
         using UnityEngine;
+        using UnityEngine.EventSystems;
 
-        public class EmptyNode : MonoBehaviour, IWidget
-		{	private View m_ParentView;
-			public View ParentView {
+        public class EmptyNode : UIBehaviour, IWidget
+		{	private MonoView m_ParentView;
+			public MonoView ParentView {
 				get {
 					return m_ParentView;
 				}

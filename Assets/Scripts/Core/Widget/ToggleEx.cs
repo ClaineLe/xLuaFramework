@@ -6,8 +6,8 @@ namespace Framework
     namespace Core.Widget
     {
         public class ToggleEx : UnityEngine.UI.Toggle, IWidget
-		{	private View m_ParentView;
-			public View ParentView {
+		{	private MonoView m_ParentView;
+			public MonoView ParentView {
 				get {
 					return m_ParentView;
 				}

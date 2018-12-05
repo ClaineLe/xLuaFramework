@@ -51,12 +51,16 @@ namespace Framework
 			}
 
 			public void Push(View view, bool isCache = true){
-				view.SetParent (ViewRoot);
-				view.SetDefaultAnchor ();
+				view.SetLayer (this);
 				if (isCache)
 					m_CacheViewStack.Push (view);
 				else
 					m_CacheViewList.Add (view);
+			}
+
+			public void AddChild(MonoView monoView){
+				monoView.transform.SetParent (transform);
+				monoView.SetDefaultAnchor ();
 			}
 
 			public View Pop(){

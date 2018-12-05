@@ -3,6 +3,9 @@ using UnityEngine.Networking;
 using UnityEditor;
 using System.Linq;
 using System;
+using Framework.Core.Assistant;
+
+
 [InitializeOnLoad]
 public class HierachyIconEditor
 {
@@ -16,10 +19,11 @@ public class HierachyIconEditor
 		guiStyle_SubView.normal.textColor = Color.blue;
 		EditorApplication.hierarchyWindowItemOnGUI = null;
 		EditorApplication.hierarchyWindowItemOnGUI += HierarchWindowOnGui;
-	}
+    }
 
-	// 绘制Hiercrch
-	static void HierarchWindowOnGui(int instanceId, Rect selectionRect)
+
+    // 绘制Hiercrch
+    static void HierarchWindowOnGui(int instanceId, Rect selectionRect)
 	{
 		// 通过ID获得Obj
 		GameObject obj = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
@@ -28,31 +32,18 @@ public class HierachyIconEditor
 			rectCheck.x += rectCheck.width - 20;
 			rectCheck.width = 18;
 			obj.SetActive(GUI.Toggle(rectCheck, obj.activeSelf, string.Empty));
+			MonoView monoView = obj.GetComponent<MonoView> ();
 
-			if (obj.IsView ()) {
-				Rect rect = new Rect(selectionRect);
+			if (monoView != null) {
+                Rect rect = new Rect(selectionRect);
 				rect.x += rect.width - 34;
 				rect.width = 16;
-				if (obj.IsSubView ()) {
-					if (obj.transform.parent.gameObject.IsSubView ()) {
-						GameObject.DestroyImmediate (obj);
-						return;
-					}
-					GUI.Label (rect,"S",guiStyle_SubView);
+				if (monoView.ParentView != null) {
 					obj.LockChild ();
-					if (obj.IsSubViewed ()) {
-						Framework.Core.Widget.SubView subView = obj.GetComponent<Framework.Core.Widget.SubView> ();
-						subView.InitSubView ();
-					} else {
-						Framework.Core.Widget.SubView subView = obj.AddComponent<Framework.Core.Widget.SubView> ();
-					}
+					GUI.Label (rect,"S",guiStyle_SubView);
 				} else {
 					obj.UnLockChild ();
-					Framework.Core.Widget.SubView subView = obj.GetComponent<Framework.Core.Widget.SubView> ();
-					if (subView != null) {
-						GameObject.DestroyImmediate (subView);
-					}
-					GUI.Label (rect,"V",guiStyle_View);
+                    GUI.Label (rect,"V",guiStyle_View);
 				}
 			}
 
@@ -80,27 +71,6 @@ public static class ExtensionMethods
 		}
 	}
 
-	public static bool IsView(this GameObject go){
-		return go.CompareTag ("View");
-	}
-
-	public static bool IsSubViewed(this GameObject go){
-		return go.GetComponent<Framework.Core.Widget.SubView>();
-	}
-
-	public static bool IsSubView(this GameObject go){
-		if (!IsView (go))
-			return false;
-		
-		Transform parent = go.transform.parent;
-		while (!parent.gameObject.IsView ()) {
-			if (parent.parent == null)
-				return false;
-			else
-				parent = parent.parent;
-		}
-		return true;
-	}
 
 	#if UNITY_EDITOR
 	public static void LockChild(this GameObject go){

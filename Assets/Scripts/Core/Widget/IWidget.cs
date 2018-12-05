@@ -9,7 +9,7 @@ namespace Framework
     {
         public interface IWidget
         {
-			View ParentView
+			MonoView ParentView
 			{
 				get;
 				set;
