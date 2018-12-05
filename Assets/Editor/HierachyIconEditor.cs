@@ -27,22 +27,35 @@ public class HierachyIconEditor
 	{
 		// 通过ID获得Obj
 		GameObject obj = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
-		if (obj != null) {
-			Rect rectCheck = new Rect(selectionRect);
+        if (obj != null && obj.transform.root.name == "ViewRoot")
+        {
+            if (obj.name == "Root" && Event.current.type == EventType.MouseUp)
+            {
+
+                for (int i = 0; i < obj.transform.childCount;i++)
+                {
+                    MonoView tmpMonoView = obj.transform.GetChild(i).GetComponent<MonoView>();
+                    if (tmpMonoView != null)
+                    {
+                        Debug.Log(tmpMonoView);
+                        tmpMonoView.Refresh();
+                    }
+                }
+                Debug.LogError(Event.current);
+
+            }
+            Rect rectCheck = new Rect(selectionRect);
 			rectCheck.x += rectCheck.width - 20;
 			rectCheck.width = 18;
 			obj.SetActive(GUI.Toggle(rectCheck, obj.activeSelf, string.Empty));
 			MonoView monoView = obj.GetComponent<MonoView> ();
-
 			if (monoView != null) {
                 Rect rect = new Rect(selectionRect);
 				rect.x += rect.width - 34;
 				rect.width = 16;
 				if (monoView.ParentView != null) {
-					obj.LockChild ();
 					GUI.Label (rect,"S",guiStyle_SubView);
 				} else {
-					obj.UnLockChild ();
                     GUI.Label (rect,"V",guiStyle_View);
 				}
 			}
@@ -56,39 +69,5 @@ public class HierachyIconEditor
 			}
 		}
 	}
-}
-public static class ExtensionMethods
-{
-	public static bool HasComponent<T>(this GameObject go, bool checkChildren) where T : Component
-	{
-		if (!checkChildren)
-		{
-			return go.GetComponent<T>();
-		}
-		else
-		{
-			return go.GetComponentsInChildren<T>().FirstOrDefault() != null;
-		}
-	}
-
-
-	#if UNITY_EDITOR
-	public static void LockChild(this GameObject go){
-		foreach (Transform child in go.GetComponentsInChildren<Transform>()) {
-			if (!child.Equals (go.transform)) {
-				child.gameObject.hideFlags = HideFlags.HideInHierarchy;
-			}
-		}
-	}
-
-	public static void UnLockChild(this GameObject go){
-		foreach (Transform child in go.GetComponentsInChildren<Transform>()) {
-			if (!child.Equals (go.transform)) {
-				child.gameObject.hideFlags = HideFlags.None;
-			}
-		}
-	}
-	#endif
-
 }
 // EndScript //

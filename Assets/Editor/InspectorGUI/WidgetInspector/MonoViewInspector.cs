@@ -22,11 +22,6 @@ namespace Framework.Editor
             private bool showWidgetList = true;
             private TextAsset LuaScript;
 
-            private void OnEnable()
-            {
-                m_Target.Refresh();
-            }
-
             public override void OnInspectorGUI()
 			{
                 WidgetEditor.WidgetCommondInspector<MonoView>(target);

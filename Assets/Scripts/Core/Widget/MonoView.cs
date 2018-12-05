@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Framework.Game;
 using UnityEngine.EventSystems;
 using Framework.Core.Widget;
 
@@ -51,12 +50,15 @@ namespace Framework.Core
 
             public void Refresh()
             {
-                if (transform.parent.name == "Root")
+                RefreshBase(true);
+            }
+
+            private void RefreshBase(bool self){
+                if(self)
                 {
                     ParentView = null;
                     refName = string.Empty;
                 }
-
                 _subMonoView = new List<MonoView>();
                 _widgets = new List<UIBehaviour>();
 
@@ -67,18 +69,36 @@ namespace Framework.Core
                     if (widgets[i] is MonoView)
                     {
                         MonoView subMonoView = widgets[i] as MonoView;
-                        subMonoView.Refresh();
-
+                        subMonoView.RefreshBase(false);
                         if (string.IsNullOrEmpty(widgets[i].RefName))
                             continue;
                         _subMonoView.Add(subMonoView);
                     }
-                    else {
+                    else
+                    {
                         if (string.IsNullOrEmpty(widgets[i].RefName))
                             continue;
                         _widgets.Add(widgets[i] as UIBehaviour);
                     }
                 }
+            }
+
+            private MonoView GetRootMonoView(){
+                Transform parent = transform;
+                MonoView monoView = null;
+                while(parent != null)
+                {
+                    MonoView tmpMonoView = parent.GetComponent<MonoView>();
+                    if (tmpMonoView != null)
+                        monoView = tmpMonoView;
+                    parent = parent.parent;
+                }
+                return monoView;
+            }
+
+            private bool IsParentHasView(){
+                MonoView[] parentMonoViews = transform.GetComponentsInParent<MonoView>();
+                return parentMonoViews.Length > 1;
             }
 
             private List<IWidget> GetCom(Transform monoView)
@@ -105,6 +125,8 @@ namespace Framework.Core
                 }
                 return widgetList;
             }
+
+
 #endif
         }
     }

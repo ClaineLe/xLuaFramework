@@ -13,7 +13,6 @@ public class PrefabEditorDelegate
             MonoView monoView = instance.GetComponent<MonoView>();
             if (instance != null && monoView != null)
             {
-                monoView.Refresh();
                 EditorUtility.SetDirty(monoView);
             }
         };
