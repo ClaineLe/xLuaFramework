@@ -20,22 +20,16 @@ namespace Framework.Editor
 
             private bool showSubViewList = true;
             private bool showWidgetList = true;
-            private TextAsset LuaScript;
+
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
 
             public override void OnInspectorGUI()
 			{
-                WidgetEditor.WidgetCommondInspector<MonoView>(target);
+                base.DrawHeader();
 
-                string luaFileName = string.Format(PathConst.FORMAT_VIEW_NAME, m_Target.name, m_Target.name).Replace('.', '/') + ".txt";
-                string luaPath = "Assets/AppAssets/Lua/" + luaFileName;
-                LuaScript = AssetDatabase.LoadAssetAtPath<TextAsset>(luaPath);
-
-                EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.ObjectField("Lua脚本", LuaScript, typeof(TextAsset));
-                EditorGUI.EndDisabledGroup();
-                if (LuaScript == null)
-                    EditorGUILayout.HelpBox("没有找到对应Lua脚本. Path:" + luaPath, MessageType.Error);
-                 
                 EditorGUI.BeginDisabledGroup(true);
                 if (m_Target._subMonoView != null && m_Target._subMonoView.Count > 0)
                 {

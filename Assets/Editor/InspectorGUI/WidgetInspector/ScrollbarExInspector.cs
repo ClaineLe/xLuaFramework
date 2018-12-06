@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(ScrollbarEx))]
         public class ScrollbarExInspector : ScrollbarEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<ScrollbarEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

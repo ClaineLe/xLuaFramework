@@ -29,26 +29,33 @@ public class HierachyIconEditor
 		GameObject obj = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
         if (obj != null && obj.transform.root.name == "ViewRoot")
         {
-            if (obj.name == "Root" && Event.current.type == EventType.MouseUp)
+            if (obj.name == "Root" && Event.current.type == EventType.DragExited)
             {
-
                 for (int i = 0; i < obj.transform.childCount;i++)
                 {
                     MonoView tmpMonoView = obj.transform.GetChild(i).GetComponent<MonoView>();
-                    if (tmpMonoView != null)
+                    if (tmpMonoView != null && tmpMonoView.IsChangeInHierarchy())
                     {
-                        Debug.Log(tmpMonoView);
                         tmpMonoView.Refresh();
                     }
                 }
-                Debug.LogError(Event.current);
-
             }
             Rect rectCheck = new Rect(selectionRect);
 			rectCheck.x += rectCheck.width - 20;
 			rectCheck.width = 18;
 			obj.SetActive(GUI.Toggle(rectCheck, obj.activeSelf, string.Empty));
-			MonoView monoView = obj.GetComponent<MonoView> ();
+
+            Framework.Core.Widget.IWidget widget = obj.GetComponent<Framework.Core.Widget.IWidget>();
+            if (widget != null)
+            {
+                Rect rectRefName = new Rect(selectionRect);
+                rectRefName.x += rectRefName.width - 130;
+                rectRefName.width = 100;
+                GUI.Label(rectRefName, widget.RefName);
+            }
+
+
+            MonoView monoView = widget as MonoView;
 			if (monoView != null) {
                 Rect rect = new Rect(selectionRect);
 				rect.x += rect.width - 34;
@@ -60,13 +67,6 @@ public class HierachyIconEditor
 				}
 			}
 
-			Framework.Core.Widget.IWidget widget = obj.GetComponent<Framework.Core.Widget.IWidget>();
-			if(widget != null){
-				Rect rectRefName = new Rect(selectionRect);
-				rectRefName.x += rectRefName.width - 130;
-				rectRefName.width = 100;
-				GUI.Label (rectRefName,widget.RefName);
-			}
 		}
 	}
 }

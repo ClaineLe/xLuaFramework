@@ -8,7 +8,7 @@ namespace Framework
 {
     namespace Core.Widget
     {
-        public class EmptyButtonEx : MaskableGraphic, IPointerClickHandler, IWidget
+        public class EmptyButtonEx : Graphic, IPointerClickHandler, IWidget
 		{	private MonoView m_ParentView;
 			public MonoView ParentView {
 				get {

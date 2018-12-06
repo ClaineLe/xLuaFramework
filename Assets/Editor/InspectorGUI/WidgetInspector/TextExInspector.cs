@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(TextEx))]
         public class TextExInspector : TextEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<TextEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

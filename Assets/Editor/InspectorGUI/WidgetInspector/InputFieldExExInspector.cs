@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(InputFieldEx))]
         public class InputFieldExInspector : InputFieldEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<InputFieldEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

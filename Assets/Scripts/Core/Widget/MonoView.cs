@@ -7,7 +7,7 @@ namespace Framework.Core
 {
 	namespace Assistant
 	{
-        public class MonoView : MonoBehaviour, IWidget
+        public class MonoView : UIBehaviour, IWidget
         {
             private MonoView _parentView;
             public MonoView ParentView {
@@ -46,6 +46,7 @@ namespace Framework.Core
                 rectView.localScale = Vector3.one;
             }
 
+            
 #if UNITY_EDITOR
 
             public void Refresh()
@@ -54,15 +55,18 @@ namespace Framework.Core
             }
 
             private void RefreshBase(bool self){
-                if(self)
+
+                if (self)
                 {
                     ParentView = null;
                     refName = string.Empty;
+                    SetChildsInHierarchy(transform, true);
                 }
+
                 _subMonoView = new List<MonoView>();
                 _widgets = new List<UIBehaviour>();
 
-                List<IWidget> widgets = GetCom(transform);
+                List<IWidget> widgets = GetChildWidget(transform);
                 for (int i = 0; i < widgets.Count; i++)
                 {
                     widgets[i].ParentView = this;
@@ -83,17 +87,16 @@ namespace Framework.Core
                 }
             }
 
-            private MonoView GetRootMonoView(){
-                Transform parent = transform;
-                MonoView monoView = null;
-                while(parent != null)
+            private void SetChildsInHierarchy(Transform dst, bool show)
+            { 
+                Transform[] childGos = dst.GetComponentsInChildren<Transform>();
+                for (int i = 0; i < childGos.Length;i++)
                 {
-                    MonoView tmpMonoView = parent.GetComponent<MonoView>();
-                    if (tmpMonoView != null)
-                        monoView = tmpMonoView;
-                    parent = parent.parent;
+                    if (childGos[i] != dst)
+                    {
+                        childGos[i].hideFlags = show ? HideFlags.None : HideFlags.HideInHierarchy;
+                    }
                 }
-                return monoView;
             }
 
             private bool IsParentHasView(){
@@ -101,7 +104,7 @@ namespace Framework.Core
                 return parentMonoViews.Length > 1;
             }
 
-            private List<IWidget> GetCom(Transform monoView)
+            private List<IWidget> GetChildWidget(Transform monoView)
             {
                 List<IWidget> widgetList = new List<IWidget>();
                 int cnt = monoView.childCount;
@@ -116,10 +119,11 @@ namespace Framework.Core
                         {
                             widgetList.Add(subWidget);
                         }
-                        widgetList.AddRange(GetCom(child));
+                        widgetList.AddRange(GetChildWidget(child));
                     }
                     else
                     {
+                        SetChildsInHierarchy(subMonoView.transform,false);
                         widgetList.Add(subMonoView);
                     }
                 }
@@ -127,6 +131,34 @@ namespace Framework.Core
             }
 
 
+            private string _siblingPath = string.Empty;
+            private int childCnt;
+            public bool IsChangeInHierarchy()
+            {
+                string curSiblingPath = GetSiblingPathInHierarchy();
+                int curChildCnt = GetAllChildCount();
+                if (_siblingPath != curSiblingPath || childCnt != curChildCnt)
+                    return true;
+
+                _siblingPath = curSiblingPath;
+                childCnt = curChildCnt;
+                return false;
+            }
+
+            public int GetAllChildCount()
+            {
+                return transform.GetComponentsInChildren<Transform>().Length - 1;
+            }
+            private string GetSiblingPathInHierarchy() {
+                string path = string.Empty;
+                Transform parent = transform;
+                while (parent != null)
+                {
+                    path += parent.GetSiblingIndex();
+                    parent = parent.parent;
+                }
+                return path;
+            }
 #endif
         }
     }

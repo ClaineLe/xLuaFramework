@@ -9,9 +9,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(SliderEx))]
         public class SliderExInspector : SliderEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<SliderEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

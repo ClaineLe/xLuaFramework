@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(ToggleEx))]
         public class ToggleExInspector : ToggleEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<ToggleEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

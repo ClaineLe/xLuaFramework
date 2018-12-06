@@ -8,12 +8,16 @@ namespace Framework.Editor
     namespace Widget
     {
         [CustomEditor(typeof(EmptyButtonEx))]
-        public class EmptyButtonExInspector : ButtonEditor
+        public class EmptyButtonExInspector:UnityEditor.Editor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<EmptyButtonEx>(target);
-                base.OnInspectorGUI();
+                base.DrawHeader();
             }
         }
     }

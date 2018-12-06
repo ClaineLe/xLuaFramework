@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(DropdownEx))]
         public class DropdownExInspector : DropdownEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<DropdownEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(ScrollRectEx))]
         public class ScrollRectExInspector : ScrollRectEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<ScrollRectEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

@@ -9,10 +9,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(EmptyNode))]
         public class EmptyNodeInspector : UnityEditor.Editor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<EmptyNode>(target);
-                //base.OnInspectorGUI();
+                base.DrawHeader();
             }
         }
     }

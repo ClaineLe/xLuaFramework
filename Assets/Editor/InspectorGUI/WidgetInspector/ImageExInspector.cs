@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(ImageEx))]
         public class ImageExInspector : ImageEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<ImageEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }

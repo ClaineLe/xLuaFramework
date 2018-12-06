@@ -10,9 +10,14 @@ namespace Framework.Editor
         [CustomEditor(typeof(ButtonEx))]
         public class ButtonExInspector : ButtonEditor
         {
+            protected override void OnHeaderGUI()
+            {
+                WidgetEditor.WidgetCommondInspector(target);
+            }
+
             public override void OnInspectorGUI()
             {
-                WidgetEditor.WidgetCommondInspector<ButtonEx>(target);
+                base.DrawHeader();
                 base.OnInspectorGUI();
             }
         }
