@@ -38,6 +38,8 @@ namespace Framework.Core
             public List<MonoView> _subMonoView;
             public List<UIBehaviour> _widgets;
         
+
+
             public void SetDefaultAnchor() {
                 RectTransform rectView = transform as RectTransform;
                 rectView.anchorMin = Vector2.zero;
@@ -49,14 +51,9 @@ namespace Framework.Core
             
 #if UNITY_EDITOR
 
-            public void Refresh()
-            {
-                RefreshBase(true);
-            }
 
-            private void RefreshBase(bool self){
-
-                if (self)
+            public void Refresh(bool rootMonoView = true){
+                if (rootMonoView)
                 {
                     ParentView = null;
                     refName = string.Empty;
@@ -73,7 +70,7 @@ namespace Framework.Core
                     if (widgets[i] is MonoView)
                     {
                         MonoView subMonoView = widgets[i] as MonoView;
-                        subMonoView.RefreshBase(false);
+                        subMonoView.Refresh(false);
                         if (string.IsNullOrEmpty(widgets[i].RefName))
                             continue;
                         _subMonoView.Add(subMonoView);
@@ -97,11 +94,6 @@ namespace Framework.Core
                         childGos[i].hideFlags = show ? HideFlags.None : HideFlags.HideInHierarchy;
                     }
                 }
-            }
-
-            private bool IsParentHasView(){
-                MonoView[] parentMonoViews = transform.GetComponentsInParent<MonoView>();
-                return parentMonoViews.Length > 1;
             }
 
             private List<IWidget> GetChildWidget(Transform monoView)

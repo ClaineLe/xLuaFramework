@@ -22,7 +22,7 @@ namespace Framework.Editor
                 EditorGUI.BeginChangeCheck();
                 using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                 {
-                    GUILayout.Label("【引用标签】", GUILayout.MaxWidth(120));
+                    GUILayout.Label("【引用标签】", GUILayout.Width(100));
                     widget.RefName = EditorGUILayout.TextField(widget.RefName);
                 }
 
@@ -46,8 +46,8 @@ namespace Framework.Editor
                 {
                     using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("【父面板】", GUILayout.MaxWidth(120));
-                        if (GUILayout.Button(Path.GetFileName(widget.ParentView.name + " (MonoView)"), GUI.skin.FindStyle("LargeTextField")))
+                        GUILayout.Label("【父面板】", GUILayout.Width(100));
+                        if (GUILayout.Button(Path.GetFileName(widget.ParentView.name + " (MonoView)"), GUI.skin.FindStyle("LargeTextField"),GUILayout.MinWidth(140)))
                         {
                             EditorGUIUtility.PingObject(widget.ParentView);
                         }
@@ -94,7 +94,7 @@ namespace Framework.Editor
                 {
                     using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("【面板预置物路径】", GUILayout.MaxWidth(120));
+                        GUILayout.Label("【面板预置物路径】", GUILayout.Width(100));
                         if (GUILayout.Button(prefabAsset.name + ".prefab", GUI.skin.FindStyle("LargeTextField")))
                         {
                             EditorGUIUtility.PingObject((prefabAsset as MonoView).gameObject.GetInstanceID());
@@ -112,7 +112,7 @@ namespace Framework.Editor
                 {
                     using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("【Lua脚本路径】", GUILayout.MaxWidth(120));
+                        GUILayout.Label("【Lua脚本路径】", GUILayout.Width(100));
                         if (GUILayout.Button(Path.GetFileName(luaFileInfo.FullName), GUI.skin.FindStyle("LargeTextField")))
                         {
                             EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath<TextAsset>(viewLuaFileFullPath));
