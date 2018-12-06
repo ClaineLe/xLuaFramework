@@ -35,10 +35,7 @@ namespace Framework.Core
                 return this;
             }
 
-            public List<MonoView> _subMonoView;
             public List<UIBehaviour> _widgets;
-        
-
 
             public void SetDefaultAnchor() {
                 RectTransform rectView = transform as RectTransform;
@@ -60,8 +57,10 @@ namespace Framework.Core
                     SetChildsInHierarchy(transform, true);
                 }
 
-                _subMonoView = new List<MonoView>();
-                _widgets = new List<UIBehaviour>();
+                if (_widgets == null)
+                    _widgets = new List<UIBehaviour>();
+                else
+                    _widgets.Clear();
 
                 List<IWidget> widgets = GetChildWidget(transform);
                 for (int i = 0; i < widgets.Count; i++)
@@ -71,16 +70,9 @@ namespace Framework.Core
                     {
                         MonoView subMonoView = widgets[i] as MonoView;
                         subMonoView.Refresh(false);
-                        if (string.IsNullOrEmpty(widgets[i].RefName))
-                            continue;
-                        _subMonoView.Add(subMonoView);
                     }
-                    else
-                    {
-                        if (string.IsNullOrEmpty(widgets[i].RefName))
-                            continue;
+                    if(!string.IsNullOrEmpty(widgets[i].RefName))
                         _widgets.Add(widgets[i] as UIBehaviour);
-                    }
                 }
             }
 
@@ -103,20 +95,19 @@ namespace Framework.Core
                 for (int i = 0; i < cnt; i++)
                 {
                     Transform child = monoView.GetChild(i);
-                    MonoView subMonoView = child.GetComponent<MonoView>();
-                    if (subMonoView == null)
+                    UIBehaviour subMonoView = child.GetComponent<UIBehaviour>();
+                    if (subMonoView is MonoView)
                     {
-                        IWidget subWidget = child.GetComponent<IWidget>();
-                        if (subWidget != null)
-                        {
-                            widgetList.Add(subWidget);
-                        }
-                        widgetList.AddRange(GetChildWidget(child));
+                        SetChildsInHierarchy(subMonoView.transform, false);
+                        widgetList.Add(subMonoView as IWidget);
                     }
                     else
                     {
-                        SetChildsInHierarchy(subMonoView.transform,false);
-                        widgetList.Add(subMonoView);
+                        if (subMonoView is IWidget)
+                        {
+                            widgetList.Add(subMonoView.GetComponent<IWidget>());
+                        }
+                        widgetList.AddRange(GetChildWidget(child));
                     }
                 }
                 return widgetList;

@@ -40,27 +40,29 @@ namespace Framework.Core
 
 			public View SetupViewGo(MonoView viewGo){
 				this.m_MonoView = viewGo.Init();
-				this.initSubViews ();
 				this.initWidgets ();
                 base.InitLuaTable(this);
                 return this;
             }
 
-			private void initSubViews() {
-				_subPresenders = new List<Presender> ();
-				for (int i = 0; i < this.m_MonoView._subMonoView.Count; i++) {
-					MonoView monoView = this.m_MonoView._subMonoView [i];
-                    Presender presender = ViewUtility.CreatePresender(monoView);
-                    _subPresenders.Add (presender);
-				}
-			}
+            private void initWidgets(){
+                _subPresenders = new List<Presender>();
+                _widgets = new List<Widget.IWidget>();
+                for (int i = 0; i < this.m_MonoView._widgets.Count;i++)
+                {
+                    if(this.m_MonoView._widgets[i] is MonoView)
+                    {
+                        MonoView monoView = this.m_MonoView._widgets[i] as MonoView;
+                        Presender presender = ViewUtility.CreatePresender(monoView);
+                        _subPresenders.Add(presender);
+                    }
 
-			private void initWidgets() {
-				_widgets = new List<Widget.IWidget> ();
-				for (int i = 0; i < m_MonoView._widgets.Count; i++) {
-					_widgets.Add (m_MonoView._widgets[i] as Widget.IWidget);
-				}
-			}
+                    else{
+                        _widgets.Add(m_MonoView._widgets[i] as Widget.IWidget);
+
+                    }
+                }
+            }
 
             public void SetLayer(ViewLayer viewLayer){
 				viewLayer.AddChild (this.m_MonoView);

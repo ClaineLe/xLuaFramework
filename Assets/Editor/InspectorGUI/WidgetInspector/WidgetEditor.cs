@@ -10,7 +10,7 @@ namespace Framework.Editor
 {
     namespace Widget
     {
-        public class WidgetEditor:UnityEditor.Editor
+        public class WidgetEditor : UnityEditor.Editor
         {
             public const string basePrefabPath = "Assets/" + PathConst.ExportResDirPath + PathConst.ViewRoot_BasePath;
             public const string baseLuaFilePath = "Assets/" + PathConst.ExportResDirPath + PathConst.FORMAT_LUAROOT;
@@ -18,55 +18,55 @@ namespace Framework.Editor
             public static void WidgetCommondInspector(Object target)
             {
                 IWidget widget = target as IWidget;
-                EditorGUILayout.BeginVertical(GUI.skin.FindStyle("IN GameObjectHeader"));
-                EditorGUI.BeginChangeCheck();
-                using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                using (GUILayout.VerticalScope vs = new GUILayout.VerticalScope(GUI.skin.FindStyle("IN GameObjectHeader")))
                 {
-                    GUILayout.Label("【引用标签】", GUILayout.Width(100));
-                    widget.RefName = EditorGUILayout.TextField(widget.RefName);
-                }
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                    EditorUtility.SetDirty(target);
-
-                    Transform parent = (target as UIBehaviour).transform;
-                    MonoView monoView = null;
-                    while (parent != null)
+                    if (widget is MonoView)
                     {
-                        MonoView tmpMonoView = parent.GetComponent<MonoView>();
-                        if (tmpMonoView != null)
-                            monoView = tmpMonoView;
-                        parent = parent.parent;
+                        Object prefabAsset = PrefabUtility.GetPrefabParent(target);
+                        DrawPrefabInfo(target, prefabAsset);
+                        DrawLuaFileInfo(target, prefabAsset);
                     }
-                    monoView.Refresh();
-                }
-
-                if (widget.ParentView != null)
-                {
-                    using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                    if (widget.ParentView != null)
                     {
-                        GUILayout.Label("【父面板】", GUILayout.Width(100));
-                        if (GUILayout.Button(Path.GetFileName(widget.ParentView.name + " (MonoView)"), GUI.skin.FindStyle("LargeTextField"),GUILayout.MinWidth(140)))
+                        using (EditorGUI.ChangeCheckScope ccs = new EditorGUI.ChangeCheckScope())
                         {
-                            EditorGUIUtility.PingObject(widget.ParentView);
+                            using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                            {
+                                GUILayout.Label("【引用标签】", GUILayout.Width(100));
+                                widget.RefName = EditorGUILayout.TextField(widget.RefName);
+                            }
+
+                            if (ccs.changed)
+                            {
+                                EditorUtility.SetDirty(target);
+
+                                Transform parent = (target as UIBehaviour).transform;
+                                MonoView monoView = null;
+                                while (parent != null)
+                                {
+                                    MonoView tmpMonoView = parent.GetComponent<MonoView>();
+                                    if (tmpMonoView != null)
+                                        monoView = tmpMonoView;
+                                    parent = parent.parent;
+                                }
+                                monoView.Refresh();
+                            }
+                        }
+                        using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("【父面板】", GUILayout.Width(100));
+                            if (GUILayout.Button(Path.GetFileName(widget.ParentView.name + " (MonoView)"), GUI.skin.FindStyle("LargeTextField"), GUILayout.MinWidth(140)))
+                            {
+                                EditorGUIUtility.PingObject(widget.ParentView);
+                            }
                         }
                     }
                 }
-
-                if (widget is MonoView)
-                {
-                    Object prefabAsset = PrefabUtility.GetPrefabParent(target);
-                    DrawPrefabInfo(target, prefabAsset);
-                    DrawLuaFileInfo(target, prefabAsset);
-                }
-
-                EditorGUILayout.EndVertical();
-
                 EditorApplication.RepaintHierarchyWindow();
             }
 
-            public static void DrawPrefabInfo(Object target, Object prefabAsset)
+            private static void DrawPrefabInfo(Object target, Object prefabAsset)
             {
                 if (prefabAsset == null)
                 {
@@ -103,7 +103,7 @@ namespace Framework.Editor
                 }
             }
 
-            public static void DrawLuaFileInfoBase(string viewLuaFileName,string title)
+            private static void DrawLuaFileInfoBase(string viewLuaFileName, string title)
             {
                 string viewLuaFileFullPath = baseLuaFilePath + viewLuaFileName;
 
@@ -143,7 +143,7 @@ namespace Framework.Editor
                 }
             }
 
-            public static void DrawLuaFileInfo(Object target, Object prefabAsset)
+            private static void DrawLuaFileInfo(Object target, Object prefabAsset)
             {
                 if (prefabAsset == null)
                 {

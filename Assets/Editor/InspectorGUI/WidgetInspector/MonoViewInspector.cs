@@ -29,42 +29,33 @@ namespace Framework.Editor
             public override void OnInspectorGUI()
 			{
                 base.DrawHeader();
-
-                EditorGUI.BeginDisabledGroup(true);
-                if (m_Target._subMonoView != null && m_Target._subMonoView.Count > 0)
-                {
-                    if (showSubViewList = EditorGUILayout.Foldout(showSubViewList, "子面板"))
-                    {
-                        EditorGUILayout.BeginVertical(GUI.skin.box);
-                        for (int i = 0; i < m_Target._subMonoView.Count; i++)
-                        {
-                            IWidget widget = (IWidget)m_Target._subMonoView[i];
-                            if (widget != null)
-                            {
-                                EditorGUILayout.ObjectField(widget.RefName, m_Target._subMonoView[i], typeof(MonoView));
-                            }
-                        }
-                        EditorGUILayout.EndVertical();
-                    }
-                }
-
                 if (m_Target._widgets != null && m_Target._widgets.Count > 0)
                 {
-                    if (showWidgetList = EditorGUILayout.Foldout(showWidgetList, "UI部件"))
+                    EditorGUILayout.Space();
+                    showWidgetList = EditorGUILayout.Foldout(showWidgetList, "部件");
+                    if(showWidgetList)
                     {
-                        EditorGUILayout.BeginVertical(GUI.skin.box);
-                        for (int i = 0; i < m_Target._widgets.Count; i++)
+                        using (GUILayout.VerticalScope vs_0 = new GUILayout.VerticalScope())
                         {
-                            IWidget widget = (IWidget)m_Target._widgets[i];
-                            if (widget != null)
+                            for (int i = 0; i < m_Target._widgets.Count; i++)
                             {
-                                EditorGUILayout.ObjectField(widget.RefName, m_Target._widgets[i], typeof(UIBehaviour));
+                                IWidget widget = m_Target._widgets[i].GetComponent<IWidget>();
+                                if (widget != null)
+                                {
+                                    using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                                    {
+                                        GUILayout.Label(widget.RefName, GUILayout.Width(100));
+                                        if (GUILayout.Button((widget as UIBehaviour).name + string.Format(" ({0})", widget.GetType().Name), GUI.skin.FindStyle("LargeTextField")))
+                                        {
+                                            EditorGUIUtility.PingObject(m_Target._widgets[i].GetInstanceID());
+                                        }
+                                    }
+                                }
                             }
                         }
-                        EditorGUILayout.EndVertical();
                     }
+                    EditorGUILayout.Space();
                 }
-                EditorGUI.EndDisabledGroup();
             }
         }
 	}

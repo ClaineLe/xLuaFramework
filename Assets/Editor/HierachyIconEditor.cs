@@ -22,6 +22,7 @@ public class HierachyIconEditor
     }
 
 
+    private static long prevRefreshTick;
     // 绘制Hiercrch
     static void HierarchWindowOnGui(int instanceId, Rect selectionRect)
 	{
@@ -29,8 +30,9 @@ public class HierachyIconEditor
 		GameObject obj = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
         if (obj != null && obj.transform.root.name == "ViewRoot")
         {
-            if (obj.name == "Root" && Event.current.type == EventType.DragExited)
+            if (obj.name == "Root" && Event.current.type == EventType.DragExited && (Time.frameCount - prevRefreshTick) > 3)
             {
+                prevRefreshTick = Time.frameCount;
                 for (int i = 0; i < obj.transform.childCount;i++)
                 {
                     MonoView tmpMonoView = obj.transform.GetChild(i).GetComponent<MonoView>();
