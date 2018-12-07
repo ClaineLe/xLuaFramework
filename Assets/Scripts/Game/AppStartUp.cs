@@ -38,8 +38,12 @@ namespace Framework
                 AppFacade.Instance.AddManager<TimerManager>(ManagerName.Timer);
                 AppFacade.Instance.AddManager<ModelManager>(ManagerName.Model);
 				AppFacade.Instance.AddManager<ViewManager>(ManagerName.View);
+				AppFacade.Instance.AddManager<SceneManager>(ManagerName.Scene);
                 AppFacade.Instance.InitManager();
-                Manager.LuaMgr.StartUpLuaFramework();
+
+                bool isAdditive = false;
+                Manager.SceneMgr.LoadScene("Main",isAdditive);
+
             }
 		}
     }

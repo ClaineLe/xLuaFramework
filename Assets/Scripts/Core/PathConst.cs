@@ -18,6 +18,8 @@ namespace Framework
             public const string BundleDirName = "AssetBundles";
             public const string BUNDLE_INFO_LIST_FILE_NAME = "bundle_info.txt";
 
+            public const string SCENE_ROOTPATH = "#Scenes/";
+
             //public const string FileServerAddress = "https://source-1257834619.cos.ap-chengdu.myqcloud.com/HangUpGame/AssetUpdateTest/";
             public const string FileServerAddress = "http://192.168.0.110:81/";
 

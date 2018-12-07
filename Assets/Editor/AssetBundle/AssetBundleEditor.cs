@@ -18,7 +18,7 @@ namespace Framework.Editor
                 "#Xls",
                 "Lua",
                 "Prefabs",
-                "Scenes"
+                "#Scenes"
             };
 
             public static int GetResVersion()

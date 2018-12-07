@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 namespace Framework
 {
@@ -217,7 +216,7 @@ namespace Framework
 #if BUNDLE_MODEL || !UNITY_EDITOR
                 LoadAssetBundle(assetBundleName);
 #endif
-                SceneManager.LoadScene(sceneName, isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+                UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, isAdditive ? UnityEngine.SceneManagement.LoadSceneMode.Additive : UnityEngine.SceneManagement.LoadSceneMode.Single);
             }
 
             public UnityEngine.Object LoadAsset(string assetBundleName, string assetName, System.Type type)

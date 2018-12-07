@@ -148,7 +148,7 @@ namespace Framework
                 LoadedBundle bundle = Framework.Game.Manager.AssetMgr.GetLoadedAssetBundle(m_AssetBundleName, out m_DownloadingError);
                 if (bundle != null)
                 {
-                    m_Request = SceneManager.LoadSceneAsync(m_LevelName, m_IsAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+                    m_Request = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(m_LevelName, m_IsAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
                     return false;
                 }
                 else

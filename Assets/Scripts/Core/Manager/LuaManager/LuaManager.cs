@@ -118,6 +118,10 @@ namespace Framework
             {
 				string luaPath = PathConst.FORMAT_LUAROOT + filepath.Replace('.',Path.DirectorySeparatorChar);
 				TextAsset txtAsset = this.m_LuaLoader.LoadAsset<TextAsset>(luaPath);
+                if (txtAsset == null)
+                {
+                    Debug.LogError("Load luaFile Fail. path:" + luaPath);
+                }
 				return txtAsset.bytes;
             }
 
