@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using Framework.Core.Assistant;
 using Framework.Core.Widget;
+using Framework.Editor.Widget;
 
 [InitializeOnLoad]
 public class HierachyIconEditor
@@ -39,8 +40,8 @@ public class HierachyIconEditor
                         if (tmpMonoView is MonoView)
                         {
                             MonoView view = tmpMonoView as MonoView;
-                            if(view.IsChangeInHierarchy())
-                                view.Refresh();
+                            if(MonoViewInspector.EditorIsChangeInHierarchy(view))
+                                MonoViewInspector.EditorRefreshWidgets(view);
                         }
                         else
                         {
