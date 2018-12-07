@@ -11,7 +11,7 @@ namespace Framework.Editor
         {
             protected override void OnHeaderGUI()
             {
-                WidgetEditor.WidgetCommondInspector(target);
+                WidgetInspector.DrawHeaderGUI(target);
             }
 
             public override void OnInspectorGUI()

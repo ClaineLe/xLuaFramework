@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Linq;
 using System;
 using Framework.Core.Assistant;
-
+using Framework.Core.Widget;
 
 [InitializeOnLoad]
 public class HierachyIconEditor
@@ -22,7 +22,6 @@ public class HierachyIconEditor
     }
 
 
-    private static long prevRefreshTick;
     // 绘制Hiercrch
     static void HierarchWindowOnGui(int instanceId, Rect selectionRect)
 	{
@@ -30,15 +29,24 @@ public class HierachyIconEditor
 		GameObject obj = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
         if (obj != null && obj.transform.root.name == "ViewRoot")
         {
-            if (obj.name == "Root" && Event.current.type == EventType.DragExited && (Time.frameCount - prevRefreshTick) > 3)
+            if (obj.name == "Root" && Event.current.type == EventType.DragExited )
             {
-                prevRefreshTick = Time.frameCount;
-                for (int i = 0; i < obj.transform.childCount;i++)
+                for (int i = 0; i < obj.transform.childCount; i++)
                 {
-                    MonoView tmpMonoView = obj.transform.GetChild(i).GetComponent<MonoView>();
-                    if (tmpMonoView != null && tmpMonoView.IsChangeInHierarchy())
+                    IWidget tmpMonoView = obj.transform.GetChild(i).GetComponent<IWidget>();
+                    if (tmpMonoView != null)
                     {
-                        tmpMonoView.Refresh();
+                        if (tmpMonoView is MonoView)
+                        {
+                            MonoView view = tmpMonoView as MonoView;
+                            if(view.IsChangeInHierarchy())
+                                view.Refresh();
+                        }
+                        else
+                        {
+                            tmpMonoView.ParentView = null;
+                            tmpMonoView.RefName = string.Empty;
+                        }
                     }
                 }
             }
@@ -47,7 +55,7 @@ public class HierachyIconEditor
 			rectCheck.width = 18;
 			obj.SetActive(GUI.Toggle(rectCheck, obj.activeSelf, string.Empty));
 
-            Framework.Core.Widget.IWidget widget = obj.GetComponent<Framework.Core.Widget.IWidget>();
+            IWidget widget = obj.GetComponent<IWidget>();
             if (widget != null)
             {
                 Rect rectRefName = new Rect(selectionRect);

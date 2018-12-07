@@ -10,55 +10,68 @@ namespace Framework.Editor
 {
     namespace Widget
     {
-        public class WidgetEditor : UnityEditor.Editor
+        public class WidgetInspector : UnityEditor.Editor
         {
             public const string basePrefabPath = "Assets/" + PathConst.ExportResDirPath + PathConst.ViewRoot_BasePath;
             public const string baseLuaFilePath = "Assets/" + PathConst.ExportResDirPath + PathConst.FORMAT_LUAROOT;
 
-            public static void WidgetCommondInspector(Object target)
+            public static void DrawHeaderGUI(Object target)
             {
                 IWidget widget = target as IWidget;
-                using (GUILayout.VerticalScope vs = new GUILayout.VerticalScope(GUI.skin.FindStyle("IN GameObjectHeader")))
+                using (GUILayout.VerticalScope vs = new GUILayout.VerticalScope("IN GameObjectHeader"))
                 {
-
                     if (widget is MonoView)
                     {
                         Object prefabAsset = PrefabUtility.GetPrefabParent(target);
                         DrawPrefabInfo(target, prefabAsset);
                         DrawLuaFileInfo(target, prefabAsset);
                     }
-                    if (widget.ParentView != null)
+
+                    if (widget.ParentView != null || !(widget is MonoView))
                     {
-                        using (EditorGUI.ChangeCheckScope ccs = new EditorGUI.ChangeCheckScope())
+                        GUILayout.Space(5);
+                        using (GUILayout.VerticalScope v1s = new GUILayout.VerticalScope("HelpBox"))
                         {
+                            using (EditorGUI.ChangeCheckScope ccs = new EditorGUI.ChangeCheckScope())
+                            {
+                                using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                                {
+                                    GUILayout.Label("【引用标签】", GUILayout.Width(100));
+                                    widget.RefName = EditorGUILayout.TextField(widget.RefName);
+                                }
+
+                                if (ccs.changed)
+                                {
+                                    EditorUtility.SetDirty(target);
+
+                                    Transform parent = (target as UIBehaviour).transform;
+                                    MonoView monoView = null;
+                                    while (parent != null)
+                                    {
+                                        MonoView tmpMonoView = parent.GetComponent<MonoView>();
+                                        if (tmpMonoView != null)
+                                            monoView = tmpMonoView;
+                                        parent = parent.parent;
+                                    }
+                                    monoView.Refresh();
+                                }
+                            }
                             using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                             {
-                                GUILayout.Label("【引用标签】", GUILayout.Width(100));
-                                widget.RefName = EditorGUILayout.TextField(widget.RefName);
-                            }
+                                GUILayout.Label("【父面板】", GUILayout.Width(100));
 
-                            if (ccs.changed)
-                            {
-                                EditorUtility.SetDirty(target);
-
-                                Transform parent = (target as UIBehaviour).transform;
-                                MonoView monoView = null;
-                                while (parent != null)
+                                if (widget.ParentView)
                                 {
-                                    MonoView tmpMonoView = parent.GetComponent<MonoView>();
-                                    if (tmpMonoView != null)
-                                        monoView = tmpMonoView;
-                                    parent = parent.parent;
+                                    if (GUILayout.Button(widget.ParentView.name + " (MonoView)", "LargeTextField", GUILayout.MinWidth(140)))
+                                    {
+                                        EditorGUIUtility.PingObject(widget.ParentView);
+                                    }
                                 }
-                                monoView.Refresh();
-                            }
-                        }
-                        using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label("【父面板】", GUILayout.Width(100));
-                            if (GUILayout.Button(Path.GetFileName(widget.ParentView.name + " (MonoView)"), GUI.skin.FindStyle("LargeTextField"), GUILayout.MinWidth(140)))
-                            {
-                                EditorGUIUtility.PingObject(widget.ParentView);
+                                else
+                                {
+                                    GUILayout.Label("无父物体", "LargeTextField", GUILayout.MinWidth(140));
+
+                                }
                             }
                         }
                     }
@@ -70,14 +83,14 @@ namespace Framework.Editor
             {
                 if (prefabAsset == null)
                 {
-                    using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope(GUI.skin.FindStyle("HelpBox")))
+                    using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope("HelpBox"))
                     {
-                        GUILayout.Label(string.Empty, GUI.skin.FindStyle("CN EntryErrorIcon"));
-                        using (GUILayout.VerticalScope vs_1 = new GUILayout.VerticalScope(GUI.skin.FindStyle("HelpBox")))
+                        GUILayout.Label(string.Empty, "CN EntryErrorIcon");
+                        using (GUILayout.VerticalScope vs_1 = new GUILayout.VerticalScope("HelpBox"))
                         {
                             string prefabName = target.name + ".prefab";
                             string fullPath = basePrefabPath + prefabName;
-                            GUILayout.Label("【面板预制名字】" + prefabName, GUI.skin.FindStyle("HeaderLabel"));
+                            GUILayout.Label("【面板预制名字】" + prefabName, "HeaderLabel");
                             GUILayout.Label("【目标路径预览】" + fullPath);
                             if (GUILayout.Button("创建面板Prefab"))
                             {
@@ -94,8 +107,8 @@ namespace Framework.Editor
                 {
                     using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("【面板预置物路径】", GUILayout.Width(100));
-                        if (GUILayout.Button(prefabAsset.name + ".prefab", GUI.skin.FindStyle("LargeTextField")))
+                        GUILayout.Label("【预置物路径】", GUILayout.Width(100));
+                        if (GUILayout.Button(prefabAsset.name + ".prefab", "LargeTextField"))
                         {
                             EditorGUIUtility.PingObject((prefabAsset as MonoView).gameObject.GetInstanceID());
                         }
@@ -113,7 +126,7 @@ namespace Framework.Editor
                     using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                     {
                         GUILayout.Label("【Lua脚本路径】", GUILayout.Width(100));
-                        if (GUILayout.Button(Path.GetFileName(luaFileInfo.FullName), GUI.skin.FindStyle("LargeTextField")))
+                        if (GUILayout.Button(Path.GetFileName(luaFileInfo.FullName), "LargeTextField"))
                         {
                             EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath<TextAsset>(viewLuaFileFullPath));
                         }
@@ -121,10 +134,10 @@ namespace Framework.Editor
                 }
                 else
                 {
-                    using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope(GUI.skin.FindStyle("HelpBox")))
+                    using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope("HelpBox"))
                     {
-                        GUILayout.Label("", GUI.skin.FindStyle("CN EntryErrorIcon"));
-                        using (GUILayout.VerticalScope vs_1 = new GUILayout.VerticalScope(GUI.skin.FindStyle("HelpBox")))
+                        GUILayout.Label("", "CN EntryErrorIcon");
+                        using (GUILayout.VerticalScope vs_1 = new GUILayout.VerticalScope("HelpBox"))
                         {
                             GUILayout.Label(string.Format("【{0}目录】", title) + baseLuaFilePath);
                             GUILayout.Label(string.Format("【{0}名字】", title) + Path.GetFileName(viewLuaFileName));
