@@ -26,6 +26,17 @@ namespace Framework.Editor
             public const string basePrefabPath = "Assets/" + PathConst.ExportResDirPath + PathConst.ViewRoot_BasePath;
             public const string baseLuaFilePath = "Assets/" + PathConst.ExportResDirPath + PathConst.FORMAT_LUAROOT;
 
+            private const string defaultLuaContent = @"local #TABLE_NAME# = {
+	
+} 
+
+setmetatable( #TABLE_NAME#, { __index = #BASE_TABLE_NAME#})
+
+function #TABLE_NAME#:init()
+end
+
+return #TABLE_NAME#";
+
             private List<UIBehaviour> _WidgetList {
                 get {
                     return m_Target._widgets.FindAll(a => !(a is MonoView));
@@ -83,12 +94,40 @@ namespace Framework.Editor
             public override void OnInspectorGUI()
 			{
                 base.DrawHeader();
+                if (m_Target.ParentView == null)
+                {
+                    if (GUILayout.Button("提取面板所有Widgets"))
+                    {
+                        TextEditor textEditor = new TextEditor();
+                        textEditor.text = CopyWidgetRefNames();
+                        textEditor.OnFocus();
+                        textEditor.Copy();
+                    }
+                }
                 if (m_Target._widgets != null && m_Target._widgets.Count > 0)
                 {
                     EditorGUILayout.Space();
                     FoldOutPageList("【子面板】", _SubViewList, m_Target.ParentView, ref showSubViewList);
                     FoldOutPageList("【控件】", _WidgetList, m_Target.ParentView, ref showWidgetList);
                 }
+            }
+
+            private string CopyWidgetRefNames()
+            {
+                string refNames = string.Empty;
+
+                for (int i = 0; i < m_Target._widgets.Count; i++)
+                {
+                    IWidget widget = m_Target._widgets[i].GetComponent<IWidget>();
+                    if (widget != null)
+                        refNames += "\t" + widget.RefName + "\n";
+                    else {
+                        Debug.LogError("Fount out IWidget. Target:" + m_Target._widgets[i].gameObject);
+                        continue;
+                    }
+                }
+
+                return "\t" + refNames.Trim();
             }
 
             private static void DrawPrefabInfo(Object target, Object prefabAsset)
@@ -128,7 +167,7 @@ namespace Framework.Editor
                 }
             }
 
-            private static void DrawLuaFileInfoBase(string viewLuaFileName, string title)
+            private static void DrawLuaFileInfoBase(string viewLuaFileName, string title, string defaultLuaContent)
             {
                 string viewLuaFileFullPath = baseLuaFilePath + viewLuaFileName;
 
@@ -160,7 +199,7 @@ namespace Framework.Editor
                                 if (!luaFileInfo.Directory.Exists)
                                     luaFileInfo.Directory.Create();
 
-                                File.WriteAllText(viewLuaFileFullPath, viewLuaFileFullPath);
+                                File.WriteAllText(viewLuaFileFullPath, defaultLuaContent);
                                 AssetDatabase.Refresh();
                             }
                         }
@@ -179,8 +218,16 @@ namespace Framework.Editor
                 string viewLuaFileName = string.Format(PathConst.FORMAT_VIEW_NAME, viewLuaName, viewLuaName).Replace('.', '/') + ".txt";
                 string pLuaFileName = string.Format(PathConst.FORMAT_PRESENDER_NAME, viewLuaName, viewLuaName).Replace('.', '/') + ".txt";
 
-                DrawLuaFileInfoBase(viewLuaFileName, "View ");
-                DrawLuaFileInfoBase(pLuaFileName, "Presender ");
+
+
+                string luaText_V = defaultLuaContent.Replace("#TABLE_NAME#", Path.GetFileNameWithoutExtension(viewLuaFileName));
+                luaText_V = luaText_V.Replace("#BASE_TABLE_NAME#", "BaseView");
+                DrawLuaFileInfoBase(viewLuaFileName, "View ", luaText_V);
+
+
+                string luaText_P = defaultLuaContent.Replace("#TABLE_NAME#", Path.GetFileNameWithoutExtension(pLuaFileName));
+                luaText_P = luaText_P.Replace("#BASE_TABLE_NAME#", "BasePresender");
+                DrawLuaFileInfoBase(pLuaFileName, "Presender ", luaText_P);
             }
 
 
