@@ -69,7 +69,13 @@ namespace Framework.Editor
                 WidgetInspector.DrawHeaderGUI(target);
                 using (GUILayout.VerticalScope vs = new GUILayout.VerticalScope("IN GameObjectHeader"))
                 {
-                    Object prefabAsset = PrefabUtility.GetPrefabParent(target);
+                    Object prefabAsset = null;
+                    if (PrefabUtility.GetPrefabType(target) == PrefabType.Prefab) {
+                        prefabAsset = target;
+                    }
+                    else {
+                        prefabAsset = PrefabUtility.GetPrefabParent(target);
+                    }
                     DrawPrefabInfo(target, prefabAsset);
                     DrawLuaFileInfo(target, prefabAsset);
                 }
@@ -260,6 +266,7 @@ namespace Framework.Editor
             {
                 return transform.GetComponentsInChildren<Transform>().Length - 1;
             }
+
             private static string EditorGetSiblingPathInHierarchy(Transform transform)
             {
                 string path = string.Empty;
