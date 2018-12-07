@@ -37,7 +37,7 @@ namespace Framework.Editor
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<XLua.LuaTable>));
                     cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.Object>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.GameObject>));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Assistant.View>));
+					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Assistant.MonoView>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<Framework.Core.Assistant.Presender>));
                     return cs_call_lua_list_tmp;
                 }
@@ -76,13 +76,15 @@ namespace Framework.Editor
 			[BlackList]
 			public static List<List<string>> BlackList = new List<List<string>>()  {
 				new List<string>(){ "Framework.Game.AppConst", "GetPlatformForAssetBundles", "UnityEditor.BuildTarget"},
+				new List<string>(){ "Framework.Core.Assistant.MonoView", "EditorSiblingPath"},
+				new List<string>(){ "Framework.Core.Assistant.MonoView", "EditorChildCnt"},
 
-                new List<string>(){ "Framework.Game.PathConst", "ExportResDirPath" },
-                new List<string>(){ "Framework.Game.PathConst", "PlayerOutPutPath" },
-                new List<string>(){ "Framework.Game.PathConst", "StreamAssetPath" },
-                new List<string>(){ "Framework.Game.PathConst", "ResRelativePath" },
-                new List<string>(){ "Framework.Game.PathConst", "LuaRelativePath" },
-                new List<string>(){ "Framework.Game.PathConst", "XlsRelativePath" },
+				new List<string>(){ "Framework.Game.PathConst", "ExportResDirPath"},
+				new List<string>(){ "Framework.Game.PathConst", "BuildBundleRootPath"},
+				new List<string>(){ "Framework.Game.PathConst", "ClientResourceDirPath"},
+				new List<string>(){ "Framework.Game.PathConst", "ResVersionPath"},
+				new List<string>(){ "Framework.Game.PathConst", "PlayerOutPutPath"},
+
             };
         }
     }
