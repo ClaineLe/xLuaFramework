@@ -50,6 +50,8 @@ return #TABLE_NAME#";
             }
 
             
+            private string viewPrefabFullPath;
+            private static Object _viewPrefab;
 
             private void FoldOutPageList(string title, List<UIBehaviour> list, bool canSelect,ref bool foldoutState)
             {
@@ -80,17 +82,23 @@ return #TABLE_NAME#";
                 WidgetInspector.DrawHeaderGUI(target);
                 using (GUILayout.VerticalScope vs = new GUILayout.VerticalScope("IN GameObjectHeader"))
                 {
-                    Object prefabAsset = null;
-                    if (PrefabUtility.GetPrefabType(target) == PrefabType.Prefab) {
-                        prefabAsset = target;
-                    }
-                    else {
-                        prefabAsset = PrefabUtility.GetPrefabParent(target);
-                    }
-                    DrawPrefabInfo(target, prefabAsset);
-                    DrawLuaFileInfo(target, prefabAsset);
+                    CheckViewPrefab();
+
+                    DrawPrefabInfo(target, _viewPrefab);
+                    if(_viewPrefab)
+                        DrawLuaFileInfo(target, _viewPrefab.name);
                 }
             }
+
+            private void CheckViewPrefab() {
+                string tmpViewPrefabFullPath = basePrefabPath + target.name + ".prefab";
+                if (viewPrefabFullPath != tmpViewPrefabFullPath || _viewPrefab == null)
+                {
+                    viewPrefabFullPath = tmpViewPrefabFullPath;
+                    _viewPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(viewPrefabFullPath);
+                }
+            }
+
             public override void OnInspectorGUI()
 			{
                 base.DrawHeader();
@@ -130,7 +138,7 @@ return #TABLE_NAME#";
                 return "\t" + refNames.Trim();
             }
 
-            private static void DrawPrefabInfo(Object target, Object prefabAsset)
+            private void DrawPrefabInfo(Object target, Object prefabAsset)
             {
                 if (prefabAsset == null)
                 {
@@ -147,9 +155,9 @@ return #TABLE_NAME#";
                             {
                                 GameObject prefab = (target as UIBehaviour).gameObject;
                                 PrefabUtility.CreatePrefab(fullPath, prefab, ReplacePrefabOptions.ConnectToPrefab);
-
+                                CheckViewPrefab();
                                 Selection.activeObject = target;
-                                EditorGUIUtility.PingObject(target);
+                                EditorGUIUtility.PingObject(_viewPrefab);
                             }
                         }
                     }
@@ -161,7 +169,7 @@ return #TABLE_NAME#";
                         GUILayout.Label("【预置物路径】", GUILayout.Width(100));
                         if (GUILayout.Button(prefabAsset.name + ".prefab", "LargeTextField"))
                         {
-                            EditorGUIUtility.PingObject((prefabAsset as MonoView).gameObject.GetInstanceID());
+                            EditorGUIUtility.PingObject(_viewPrefab);
                         }
                     }
                 }
@@ -207,16 +215,15 @@ return #TABLE_NAME#";
                 }
             }
 
-            private static void DrawLuaFileInfo(Object target, Object prefabAsset)
+            private static void DrawLuaFileInfo(Object target, string luaName)
             {
-                if (prefabAsset == null)
+                if (string.IsNullOrEmpty(luaName))
                 {
                     return;
                 }
 
-                string viewLuaName = prefabAsset.name;
-                string viewLuaFileName = string.Format(PathConst.FORMAT_VIEW_NAME, viewLuaName, viewLuaName).Replace('.', '/') + ".txt";
-                string pLuaFileName = string.Format(PathConst.FORMAT_PRESENDER_NAME, viewLuaName, viewLuaName).Replace('.', '/') + ".txt";
+                string viewLuaFileName = string.Format(PathConst.FORMAT_VIEW_NAME, luaName, luaName).Replace('.', '/') + ".txt";
+                string pLuaFileName = string.Format(PathConst.FORMAT_PRESENDER_NAME, luaName, luaName).Replace('.', '/') + ".txt";
 
 
 
@@ -300,18 +307,13 @@ return #TABLE_NAME#";
             public static bool EditorIsChangeInHierarchy(MonoView monoView)
             {
                 string curSiblingPath = EditorGetSiblingPathInHierarchy(monoView.transform);
-                int curChildCnt = EditorGetAllChildCount(monoView.transform);
+                int curChildCnt = monoView.transform.GetComponentsInChildren<Transform>().Length - 1;
                 if (monoView.EditorSiblingPath != curSiblingPath || monoView.EditorChildCnt != curChildCnt)
                     return true;
 
                 monoView.EditorSiblingPath = curSiblingPath;
                 monoView.EditorChildCnt = curChildCnt;
                 return false;
-            }
-
-            private static int EditorGetAllChildCount(Transform transform)
-            {
-                return transform.GetComponentsInChildren<Transform>().Length - 1;
             }
 
             private static string EditorGetSiblingPathInHierarchy(Transform transform)
