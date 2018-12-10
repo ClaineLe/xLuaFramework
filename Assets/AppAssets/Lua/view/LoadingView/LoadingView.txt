@@ -1,0 +1,10 @@
+local LoadingView = {
+	m_Progress,
+} 
+
+setmetatable( LoadingView, { __index = BaseView})
+
+function LoadingView:init()
+end
+
+return LoadingView

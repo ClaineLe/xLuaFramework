@@ -38,6 +38,7 @@ function Framework:GetManagers()
 	self.m_EventMgr		= CSManager.EventMgr
     self.m_ViewMgr      = CSManager.ViewMgr
     self.m_ModelMgr     = CSManager.ModelMgr
+    self.m_SceneMgr     = CSManager.SceneMgr
 end
 
 function Framework:Start()
@@ -69,6 +70,8 @@ function Framework:StartUp()
     --local loginModelTmp = require('model.LoginModel')
     --local loginModel = loginModelTmp:Create()
 
+    local isAdditive = true
+    --Framework.m_SceneMgr:LoadScene("Login",isAdditive)
 end
 
 return Framework

@@ -6,15 +6,18 @@ local LoginModel = {
 setmetatable( LoginModel, { __index = BaseModel})
 
 local PanelDefine = {
-	login = "LoginView"
+	login = "LoginView",
+	loading = "LoadingView",
 }
 
 function LoginModel:OnStart()
 	print("LoginModel:Start")
 
 
-	local luaPresender = ViewFactory:CreateView(PanelDefine.login, LAYER_NAME.TOP)
-	luaPresender:SetLabel(C.CityStarConfig[1].count)
+	local loginPresender = ViewFactory:CreateView(PanelDefine.login, LAYER_NAME.TOP)
+	loginPresender:SetLabel(C.CityStarConfig[1].count)
+
+	local loadingPresender = ViewFactory:CreateView(PanelDefine.loading, LAYER_NAME.TOP)
 
 
 --	ViewFactory:CreateViewAsync(PanelDefine.login,function ( presender )

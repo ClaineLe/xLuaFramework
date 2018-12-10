@@ -1,0 +1,10 @@
+local LoadingViewPresender = {
+} 
+
+setmetatable( LoadingViewPresender, { __index = BasePresender})
+
+function LoadingViewPresender:init()
+	self.m_View.m_Progress.value = 0.5
+end
+
+return LoadingViewPresender
