@@ -32,8 +32,10 @@ namespace Framework.Editor
                     Type[] hotfixArray = new Type[by_property.Count];
                     by_property.CopyTo(hotfixArray);
                     List<Type> cs_call_lua_list_tmp = hotfixArray.ToList();
+					cs_call_lua_list_tmp.Add (typeof(System.Collections.IEnumerator));
+					cs_call_lua_list_tmp.Add (typeof(WaitForSeconds));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction));
-					cs_call_lua_list_tmp.Add (typeof(UnityAction<object>));
+                    cs_call_lua_list_tmp.Add (typeof(UnityAction<object>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<XLua.LuaTable>));
                     cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.Object>));
 					cs_call_lua_list_tmp.Add (typeof(UnityAction<UnityEngine.GameObject>));

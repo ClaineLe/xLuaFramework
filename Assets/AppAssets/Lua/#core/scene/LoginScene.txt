@@ -1,0 +1,22 @@
+LoginScene = {
+	m_Name = "Login"
+}
+
+function LoginScene:OnStartEnter( )
+	CommonView.m_LoadingPresender:show()
+	print("LoginScene:OnStartEnter")
+end
+
+function LoginScene:OnEndEnter( )
+	print("LoginScene:OnEndEnter")
+	local loginModel = ModelFactory:CreateModel(ModelDefine.Login)
+	CommonView.m_LoadingPresender:hide()
+end
+
+function LoginScene:OnStartExit( )
+	print("LoginScene:OnStartExit")
+end
+
+function LoginScene:OnEndExit( )
+	print("LoginScene:OnEndExit")
+end

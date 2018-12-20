@@ -3,7 +3,12 @@ ModelFactory={
 	
 }
 
+ModelDefine = {
+	Login  = "LoginModel",
+}
+
 function ModelFactory:CreateModel( modelName )
 	local model = Framework.m_ModelMgr:GetModel(modelName)
+	ModelFactory[modelName] = model
 	return model
 end

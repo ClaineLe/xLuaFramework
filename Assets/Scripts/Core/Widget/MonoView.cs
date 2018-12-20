@@ -45,11 +45,12 @@ namespace Framework.Core
             public void SetDefaultAnchor() {
                 RectTransform rectView = transform as RectTransform;
                 rectView.anchorMin = Vector2.zero;
-                rectView.anchorMax = Vector2.one;
+                rectView.anchorMax = Vector2.one;//对其锚柄
+                rectView.offsetMin = Vector2.zero;
+                rectView.offsetMax = Vector2.zero;//调整间距
                 rectView.anchoredPosition3D = Vector3.zero;
                 rectView.localScale = Vector3.one;
             }
-
         }
     }
 }

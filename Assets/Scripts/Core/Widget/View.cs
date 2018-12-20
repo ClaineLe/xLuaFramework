@@ -9,22 +9,59 @@ namespace Framework.Core
     {
         public class View : LuaCompatible<View>, ILuaCompatible
         {
-			public bool IsSubView{
-				get{
-					return this.m_MonoView.ParentView != null;
-				}
-			}
+            public bool IsSubView {
+                get {
+                    return this.m_MonoView.ParentView != null;
+                }
+            }
 
-			private MonoView m_MonoView;
+            private MonoView m_MonoView;
 
-			public string RefName{
-				get{
-					return m_MonoView.RefName;
-				}
-			}
+            public string RefName {
+                get {
+                    return m_MonoView.RefName;
+                }
+            }
 
-			public List<Presender> _subPresenders{ get; private set;}
+
+            public Transform showParentNode;
+            public int showSiblingIndex;
+
+
+            private bool _isShow = true;
+            public bool IsShow {
+                get {
+                    return _isShow;
+                }
+            }
+            public void Show() {
+                if (!_isShow)
+                {
+                    _isShow = true;
+                    m_MonoView.transform.SetParent(showParentNode);
+                    m_MonoView.transform.SetSiblingIndex(showSiblingIndex);
+                }
+            }
+
+            public void Hide()
+            {
+                if (_isShow)
+                {
+                    _isShow = false;
+                    showParentNode = m_MonoView.transform.parent;
+                    showSiblingIndex = m_MonoView.transform.GetSiblingIndex();
+                    SetParent(Game.Manager.ViewMgr.m_HideNode);
+                }
+            }
+
+
+            public List<Presender> _subPresenders{ get; private set;}
 			public List<Widget.IWidget> _widgets{ get; private set;}
+
+            public void SetParent(Transform parent)
+            {
+                this.m_MonoView.transform.SetParent(parent);
+            }
 
             protected override void onCreate()
             {
@@ -41,6 +78,9 @@ namespace Framework.Core
 			public View SetupViewGo(MonoView viewGo){
 				this.m_MonoView = viewGo.Init();
 				this.initWidgets ();
+
+                showParentNode = m_MonoView.transform.parent;
+                showSiblingIndex = m_MonoView.transform.GetSiblingIndex();
                 base.InitLuaTable(this);
                 return this;
             }

@@ -7,35 +7,19 @@ setmetatable( LoginModel, { __index = BaseModel})
 
 local PanelDefine = {
 	login = "LoginView",
-	loading = "LoadingView",
 }
 
 function LoginModel:OnStart()
 	print("LoginModel:Start")
+	--local loginPresender = ViewFactory:CreateView(PanelDefine.login, LAYER_NAME.TOP)
 
-
-	local loginPresender = ViewFactory:CreateView(PanelDefine.login, LAYER_NAME.TOP)
-	loginPresender:SetLabel(C.CityStarConfig[1].count)
-
-	local loadingPresender = ViewFactory:CreateView(PanelDefine.loading, LAYER_NAME.TOP)
-
-
---	ViewFactory:CreateViewAsync(PanelDefine.login,function ( presender )
---        presender:SetLabel(C.CityStarConfig[1].npcId)
---    end)
-    
+	ViewFactory:CreateViewAsync(PanelDefine.login, LAYER_NAME.TOP, function ( presender )
+		local loginPresender = presender
+	end)
 end
 
-function LoginModel:EventTest1( param )
-	print("OnNotify_Test_1 - " .. param)
-end
-
-function LoginModel:EventTest2( param )
-	print("OnNotify_Test_2 - " .. param)
-end
-
-function LoginModel:EventTest3( param )
-	print("OnNotify_Test_3 - " .. param)
+function LoginModel:EnterGame()
+	print("LoginModel:EnterGame")
 end
 
 function LoginModel:OnRelease()

@@ -1,6 +1,8 @@
 local CSManager = CS.Framework.Game.Manager
 
 Framework = {
+    m_AppFacade,
+    m_Coroutiner,
 	m_LuaMgr,
     m_AssetMgr,
     m_TimerMgr,
@@ -13,10 +15,10 @@ Framework = {
     m_ModelMgr,
 }
 
-function Framework:LoadLuaScript()
-    require 'util.ProtBufUtility'
-    require 'util.FrameworkUtility'
-    
+
+
+function Framework:PreLoadLua()
+
     require '#core.FrameworkDefine'
     require '#core.#model.BaseModel'
     require '#core.#model.ModelFactory'
@@ -25,6 +27,20 @@ function Framework:LoadLuaScript()
     require '#core.view.BaseView'
     require '#core.view.BasePresender'
     require '#core.view.ViewFactory'
+    require '#core.CommonView'
+    require '#core.scene.LoginScene'
+    require '#core.scene.MainScene'
+    require '#core.SceneFactory'
+
+end
+
+function Framework:LoadLuaScript()
+    require 'util.ProtBufUtility'
+    require 'util.FrameworkUtility'
+end
+
+function Framework:Requires( )
+    self.m_Coroutiner = require 'util.Coroutiner'
 end
 
 function Framework:GetManagers()
@@ -41,7 +57,10 @@ function Framework:GetManagers()
     self.m_SceneMgr     = CSManager.SceneMgr
 end
 
-function Framework:Start()
+function Framework:Start(appFacade)
+    self.m_AppFacade = appFacade
+    self:PreLoadLua()
+    self:Requires()
     self:LoadLuaScript()
     self:GetManagers()
     self:Option()
@@ -63,15 +82,30 @@ end
 function Framework:StartUp()
     print("Framework:StartUp")
 
-    local loginModel = ModelFactory:CreateModel("LoginModel")
+    CommonView:Init()
+    SceneFactory:Init()
+
+    SceneFactory:LoadSceneAsync(SceneDefine.Login)
+    
+    --local loginModel = ModelFactory:CreateModel(ModelDefine.Login)
     --Framework.m_ModelMgr:ActiveModel(1,"LoginModel")
 
 
     --local loginModelTmp = require('model.LoginModel')
     --local loginModel = loginModelTmp:Create()
 
-    local isAdditive = true
-    --Framework.m_SceneMgr:LoadScene("Login",isAdditive)
+end
+
+function Framework:InitCommonView()
+    -- body
+end
+
+function Framework:RunCoroutine( ... )
+    return self.m_AppFacade:StartCoroutine(self.m_Coroutiner.cs_generator(...))
+end
+
+function Framework:StopCoroutine(coroutine)
+    self.m_AppFacade:StopCoroutine(coroutine)
 end
 
 return Framework

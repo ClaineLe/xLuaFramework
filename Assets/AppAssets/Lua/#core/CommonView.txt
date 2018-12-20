@@ -1,0 +1,20 @@
+CommonView = {
+	m_LoadingPresender,
+	m_ConfirmPresender,
+}
+
+local PanelDefine = {
+	loading = "LoadingView",
+}
+
+function CommonView:Create( )
+	local obj = {}
+	setmetatable( obj, { __index = CommonView})
+	obj:Init()
+	return obj
+end
+
+function CommonView:Init( )
+	self.m_LoadingPresender = ViewFactory:CreateView(PanelDefine.loading, LAYER_NAME.TOP, false, true)
+end
+

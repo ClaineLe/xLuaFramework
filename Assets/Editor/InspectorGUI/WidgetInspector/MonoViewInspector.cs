@@ -64,13 +64,16 @@ return #TABLE_NAME#";
                     {
                         for (int i = 0; i < list.Count; i++)
                         {
-                            IWidget widget = list[i].GetComponent<IWidget>();
-                            using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
+                            if (list[i] != null)
                             {
-                                GUILayout.Label(widget.RefName, GUILayout.Width(100));
-                                if (GUILayout.Button((widget as UIBehaviour).name + string.Format(" ({0})", widget.GetType().Name), "LargeTextField"))
+                                IWidget widget = list[i].GetComponent<IWidget>();
+                                using (GUILayout.HorizontalScope hs_0 = new GUILayout.HorizontalScope())
                                 {
-                                    EditorGUIUtility.PingObject(list[i].GetInstanceID());
+                                    GUILayout.Label(widget.RefName, GUILayout.Width(100));
+                                    if (GUILayout.Button((widget as UIBehaviour).name + string.Format(" ({0})", widget.GetType().Name), "LargeTextField"))
+                                    {
+                                        EditorGUIUtility.PingObject(list[i].GetInstanceID());
+                                    }
                                 }
                             }
                         }
@@ -115,8 +118,11 @@ return #TABLE_NAME#";
                 if (m_Target._widgets != null && m_Target._widgets.Count > 0)
                 {
                     EditorGUILayout.Space();
-                    FoldOutPageList("【子面板】", _SubViewList, m_Target.ParentView, ref showSubViewList);
-                    FoldOutPageList("【控件】", _WidgetList, m_Target.ParentView, ref showWidgetList);
+                    if(_SubViewList != null && _SubViewList.Count > 0)
+                     FoldOutPageList("【子面板】", _SubViewList, m_Target.ParentView, ref showSubViewList);
+
+                    if (_SubViewList != null && _WidgetList.Count > 0)
+                        FoldOutPageList("【控件】", _WidgetList, m_Target.ParentView, ref showWidgetList);
                 }
             }
 

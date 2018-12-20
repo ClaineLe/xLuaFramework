@@ -1,5 +1,6 @@
 
 LAYER_NAME = {
-    NORMAL = "Normal",
-    TOP = "Top",
+    NORMAL 	= "Normal",
+    SYSTEM 	= "System",
+    TOP 	= "Top",
 }

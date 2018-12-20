@@ -59,7 +59,7 @@ namespace Framework
 			}
 
 			public void AddChild(MonoView monoView){
-				monoView.transform.SetParent (transform);
+				monoView.transform.SetParent (ViewRoot);
 				monoView.SetDefaultAnchor ();
 			}
 

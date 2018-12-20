@@ -61,7 +61,6 @@ namespace Framework.Editor
                 
                 EditorApplication.RepaintHierarchyWindow();
             }
-
         }
     }
 }

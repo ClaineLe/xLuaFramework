@@ -1,0 +1,19 @@
+BaseScene = {
+	m_Name,
+}
+
+function BaseScene:OnStartEnter( )
+	-- body
+end
+
+function BaseScene:OnEndEnter( )
+	-- body
+end
+
+function BaseScene:OnStartExit( )
+	-- body
+end
+
+function BaseScene:OnEndExit( )
+	-- body
+end

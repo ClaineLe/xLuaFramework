@@ -1,0 +1,38 @@
+SceneFactory={
+	m_CurActiveScene,	
+	m_SceneList,
+}
+
+SceneDefine = {
+	Login = "Login",
+	Main = "Main",
+}
+
+function SceneFactory:Init()
+	self.m_SceneList = {
+		[SceneDefine.Login] = LoginScene,
+		[SceneDefine.Main] = MainScene,
+	}
+end
+
+function SceneFactory:ChangeSceneAsync( toSceneFlag )
+	self:UnLoadSceneAsync(m_CurActiveScene)
+	self:LoadSceneAsync(toScene)
+end
+
+function SceneFactory:LoadSceneAsync( sceneFlag, isAdditive)
+	self.m_SceneList[sceneFlag]:OnStartEnter()
+	isAdditive = isAdditive or false
+ 	Framework.m_SceneMgr:LoadSceneAsync(self.m_SceneList[sceneFlag].m_Name,isAdditive,function ( )
+		self.m_SceneList[sceneFlag]:OnEndEnter()
+		self.m_CurActiveScene = sceneFlag
+    end) 
+end
+
+function SceneFactory:UnLoadSceneAsync( sceneFlag )
+	self.m_SceneList[sceneFlag]:OnStartExit()
+ 	Framework.m_SceneMgr:UnLoadSceneAsync(self.m_SceneList[sceneFlag].m_Name,function ( )
+		self.m_SceneList[sceneFlag]:OnEndExit()
+		self.m_CurActiveScene = nil
+    end) 
+end

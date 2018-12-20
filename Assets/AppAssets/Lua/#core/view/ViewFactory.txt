@@ -3,18 +3,33 @@ ViewFactory={
 	
 }
 
-function ViewFactory:CreateView(viewName, layerName, isCache)
+function ViewFactory:PreLoadView( viewName )
+	Framework.m_ViewMgr:PreLoadViewNode( viewName)
+end
+
+function ViewFactory:PreLoadViewNodeAsync(viewName, callback )
+	Framework.m_ViewMgr:PreLoadViewNodeAsync(viewName, function ()
+		callback()
+	end)
+end
+
+
+function ViewFactory:CreateView(viewName, layerName, isCache, defHide)
 	layerName = layerName or LAYER_NAME.NORMAL
 	isCache = isCache or true
 	local luaPresender = Framework.m_ViewMgr:LoadViewNode(viewName, layerName, isCache)
+	if defHide ~= nil or defHide == false then luaPresender:hide() end
 	return luaPresender
 end
 
-function ViewFactory:CreateViewAsync(viewName, layerName, isCache, callback )
+function ViewFactory:CreateViewAsync(viewName, layerName, callback, isCache, defHide )
 	layerName = layerName or LAYER_NAME.NORMAL
 	isCache = isCache or true
-	Framework.m_ViewMgr:LoadViewNodeAsync(viewName, layerName, isCache, function (presender)
+	Framework.m_ViewMgr:LoadViewNodeAsync(viewName, function (presender)
+		if defHide ~= nil or defHide == false then
+			luaPresender:hide()
+		end
 		callback(presender)
-	end)
+	end, layerName, isCache)
 end
 

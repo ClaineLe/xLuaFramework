@@ -33,12 +33,12 @@ namespace Framework.Core
 			}
 
 
-			public Model GetModel(string modelName, bool autoCreate = true){
+			public XLua.LuaTable GetModel(string modelName, bool autoCreate = true){
 				if(!this.m_ModelDic.ContainsKey(modelName)){
 					Model model = this.CreateModel (modelName);
 					this.m_ModelDic [modelName] = model;
 				}
-				return this.m_ModelDic [modelName];
+				return this.m_ModelDic [modelName].m_LuaTable;
 			}
 
 			public Model CreateModel(string modelName){

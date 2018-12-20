@@ -61,17 +61,21 @@ namespace Framework
 				}
 			}
 
-            private IEnumerator LoadSceneAsyncBase (string assetPath, bool isAdditive, UnityAction callback)
+            private IEnumerator LoadSceneAsyncBase (string assetPath, bool isAdditive, System.Action callback)
 			{
 				string assetbundlename = AssetPathController.GetAssetBundleName (assetPath);
 				string assetname = Path.GetFileNameWithoutExtension (assetPath);
 				LoadOperation request = this.m_BundleCenter.LoadSceneAsync (assetbundlename, assetname, isAdditive);
 				if (request == null)
 					yield break;
-				yield return request;
-				if (callback != null)
-					callback ();
-			}
+
+                yield return request;
+
+                if (callback != null)
+                {
+                    callback();
+                }
+            }
 
 			public UnityEngine.Object LoadAsset(string assetPath, System.Type type){
 				string assetBundleName = AssetPathController.GetAssetBundleName (assetPath);
@@ -95,12 +99,22 @@ namespace Framework
 			}
 
 
-			public void LoadSceneAsync(string scenePath, bool isAdditive, UnityAction callback){
-				AppFacade.Instance.StartCoroutine(LoadSceneAsyncBase (scenePath,isAdditive,()=>{
-					if(callback != null)
-						callback();
-				}));
+			public void LoadSceneAsync(string scenePath, bool isAdditive, System.Action callback){
+				AppFacade.Instance.StartCoroutine(LoadSceneAsyncBase (scenePath, isAdditive, callback));
 			}
-		}
+
+            public void UnLoadSceneAsync(string scenePath, UnityAction callback)
+            {
+                AppFacade.Instance.StartCoroutine(UnLoadSceneAsyncBase(scenePath, callback));
+            }
+
+            private IEnumerator UnLoadSceneAsyncBase(string scenePath, UnityAction callback)
+            {
+                AsyncOperation operation = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scenePath);
+                WaitUntil waiter = new WaitUntil(() => operation.isDone);
+                yield return waiter;
+                callback();
+            }
+        }
 	}
 }

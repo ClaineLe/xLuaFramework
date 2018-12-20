@@ -27,6 +27,14 @@ function BaseView:ParentView( )
 	return self.m_csView.ParentView
 end
 
+function BaseView:Show()
+	self.m_csView:Show()
+end
+
+function BaseView:Hide( )
+	self.m_csView:Hide()
+end
+
 --虚方法，子类重写
 function BaseView:init()
 end

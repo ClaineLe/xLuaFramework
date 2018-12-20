@@ -41,8 +41,7 @@ namespace Framework
 				AppFacade.Instance.AddManager<SceneManager>(ManagerName.Scene);
                 AppFacade.Instance.InitManager();
 
-                bool isAdditive = false;
-                Manager.SceneMgr.LoadScene("Main",isAdditive);
+                Manager.LuaMgr.StartUpLuaFramework();
 
             }
 		}

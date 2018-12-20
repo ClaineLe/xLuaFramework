@@ -14,3 +14,10 @@ end
 function BasePresender:init( )
 end
 
+function BasePresender:show()
+	self.m_View:Show()
+end
+
+function BasePresender:hide()
+	self.m_View:Hide()
+end

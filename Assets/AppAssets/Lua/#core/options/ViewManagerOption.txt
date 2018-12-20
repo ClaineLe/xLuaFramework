@@ -1,9 +1,9 @@
 local CSViewLayerOption = CS.Framework.Core.Manager.ViewLayer.Option
 
-
 local VIEW_LAYER_OPTIONS={
-    {Name = LAYER_NAME.NORMAL, Depth = 1000, Near = 0,  Far = 1000, FOV = 60},
-    {Name = LAYER_NAME.TOP,    Depth = 500,  Near = 10, Far = 500,  FOV = 60},
+    {Name = LAYER_NAME.NORMAL,  Depth = 2000,  Near = 0,  Far = 1000, FOV = 60},
+    {Name = LAYER_NAME.SYSTEM,  Depth = 1500,  Near = 10, Far = 500,  FOV = 60},
+    {Name = LAYER_NAME.TOP,     Depth = 1000,  Near = 10, Far = 500,  FOV = 60},
 }
 
 local function ViewLayer_Option()

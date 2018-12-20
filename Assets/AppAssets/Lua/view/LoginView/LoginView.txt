@@ -1,10 +1,11 @@
 
 local LoginView = {
-	m_Text,
+	m_EnterGame,
 }
 setmetatable( LoginView, { __index = BaseView})
 
 function LoginView:init()
+	
 end
 
 return LoginView

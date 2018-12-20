@@ -167,7 +167,7 @@ namespace Framework
                 m_FrameworkTick = frameworkTable.Get<XLua.LuaFunction>("Tick");
                 m_FrameworkRelease = frameworkTable.Get<XLua.LuaFunction>("Release");
 				if (m_FrameworkStart != null) {
-					m_FrameworkStart.Call(frameworkTable);
+					m_FrameworkStart.Call(frameworkTable, AppFacade.Instance);   
 				}
                 return true;
             }

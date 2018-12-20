@@ -1,0 +1,23 @@
+MainScene = {
+	m_Name = "Main"
+}
+
+function MainScene:OnStartEnter( )
+	-- body
+	print("MainScene:OnStartEnter")
+end
+
+function MainScene:OnEndEnter( )
+	print("MainScene:OnEndEnter")
+	-- body
+end
+
+function MainScene:OnStartExit( )
+	print("MainScene:OnStartExit")
+	-- body
+end
+
+function MainScene:OnEndExit( )
+	print("MainScene:OnEndExit")
+	-- body
+end
