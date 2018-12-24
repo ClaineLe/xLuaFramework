@@ -17,29 +17,6 @@ function LoginViewPresender:OnBtn_Enter( )
 	--ModelFactory[ModelDefine.Login]:EnterGame()
 	
 
-	local a = Framework:RunCoroutine(function()
-	    print('coroutine a started')
-
-		coroutine.yield(Framework:RunCoroutine(function() 
-			print('coroutine b stated inside cotoutine a')
-			coroutine.yield(CS.UnityEngine.WaitForSeconds(1))
-			print('i am coroutine b')
-		end))
-		print('coroutine b finish')
-
-		while true do
-			coroutine.yield(CS.UnityEngine.WaitForSeconds(1))
-			print('i am coroutine a')
-		end
-	end)
-
-	Framework:RunCoroutine(function()
-	    print('stop coroutine a after 5 seconds')
-		coroutine.yield(CS.UnityEngine.WaitForSeconds(5))
-		Framework:StopCoroutine(a)
-	    print('coroutine a stoped')
-	end)
-
 
 end
 return LoginViewPresender

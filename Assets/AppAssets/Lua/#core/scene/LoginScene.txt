@@ -10,6 +10,7 @@ end
 function LoginScene:OnEndEnter( )
 	print("LoginScene:OnEndEnter")
 	local loginModel = ModelFactory:CreateModel(ModelDefine.Login)
+	
 	CommonView.m_LoadingPresender:hide()
 end
 

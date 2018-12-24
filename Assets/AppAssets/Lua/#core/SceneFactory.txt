@@ -23,10 +23,18 @@ end
 function SceneFactory:LoadSceneAsync( sceneFlag, isAdditive)
 	self.m_SceneList[sceneFlag]:OnStartEnter()
 	isAdditive = isAdditive or false
- 	Framework.m_SceneMgr:LoadSceneAsync(self.m_SceneList[sceneFlag].m_Name,isAdditive,function ( )
-		self.m_SceneList[sceneFlag]:OnEndEnter()
-		self.m_CurActiveScene = sceneFlag
-    end) 
+	local progress = 0
+	Framework:RunCoroutine(function()
+		while progress < 100 do
+			progress = progress + 1
+			coroutine.yield(CS.UnityEngine.WaitForSeconds(0.01))
+			CommonView.m_LoadingPresender:SetProgress(progress/100)
+		end
+	 	Framework.m_SceneMgr:LoadSceneAsync(self.m_SceneList[sceneFlag].m_Name,isAdditive,function ( )
+				self.m_SceneList[sceneFlag]:OnEndEnter()
+				self.m_CurActiveScene = sceneFlag
+		    end) 
+		end)
 end
 
 function SceneFactory:UnLoadSceneAsync( sceneFlag )

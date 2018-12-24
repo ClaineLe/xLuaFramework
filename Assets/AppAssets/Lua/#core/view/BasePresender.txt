@@ -14,6 +14,10 @@ end
 function BasePresender:init( )
 end
 
+function BasePresender:IsShow()
+	return self.m_View.IsShow
+end
+
 function BasePresender:show()
 	self.m_View:Show()
 end
