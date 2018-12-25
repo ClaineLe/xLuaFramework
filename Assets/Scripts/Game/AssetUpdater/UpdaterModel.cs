@@ -57,6 +57,10 @@ namespace Framework
 			public IEnumerator StartSyncBundle ()
 			{
 				yield return DownLoadBundleInfo ();
+				if (appInfo == null) {
+					Debug.LogError ("appInfo is Null");
+					yield break;
+				}
 				yield return DownLoadBundleList ();
                 UpdateClientResVersion(appInfo.resVersion);
                 Complete ();

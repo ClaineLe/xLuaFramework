@@ -26,14 +26,20 @@ namespace Framework
 
             public static AppInfo ValuleOf(string content)
             {
-                JObject json = JObject.Parse(content);
-                AppInfo appInfo = new AppInfo();
-                appInfo.appVersion = json["appVersion"].Value<string>();
-                appInfo.resVersion = json["resVersion"].Value<int>();
-                appInfo.listContentSize = json["listContentSize"].Value<long>();
-                appInfo.change = (eChange)System.Enum.Parse(typeof(eChange), json["change"].Value<string>());
-                appInfo.platform = (ePlatform)System.Enum.Parse(typeof(ePlatform), json["platform"].Value<string>());
-                return appInfo;
+				try{
+					AppInfo appInfo = new AppInfo();
+					JObject json = JObject.Parse(content);
+					appInfo.appVersion = json["appVersion"].Value<string>();
+					appInfo.resVersion = json["resVersion"].Value<int>();
+					appInfo.listContentSize = json["listContentSize"].Value<long>();
+					appInfo.change = (eChange)System.Enum.Parse(typeof(eChange), json["change"].Value<string>());
+					appInfo.platform = (ePlatform)System.Enum.Parse(typeof(ePlatform), json["platform"].Value<string>());
+					return appInfo;
+				}
+				catch(Newtonsoft.Json.JsonReaderException jsEx) {
+					Debug.LogError ("Parse Json Fail. Content:" + content);
+				}
+				return null;
             }
         }
 
